@@ -1,0 +1,11 @@
+<extend name="base/common"/>
+
+<block name="style">
+	<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+<div id="page" style="padding-top:20px;padding-bottom:20px;">
+{:W($module.'/UcenterBlock/'.$control,array('page'=>$page))}
+</div>
+</block>

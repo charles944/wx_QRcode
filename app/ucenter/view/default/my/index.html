@@ -1,0 +1,69 @@
+<extend name="base/common"/>
+
+<block name="style">
+<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page" style="padding-top:20px;padding-bottom:20px;">
+	<div class="ucenter-module-hd">
+		<h2>我的概况</h2>
+		<div class="operation">
+		</div>
+	</div>
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md6">
+		    <div class="layui-card">
+		        <div class="layui-card-header">资金管理</div>
+		        <div class="layui-card-body layui-text">
+		            <ul class="wrap">
+						<php>$scoretype = D('User/Score')->getTypeList('status = 1');</php>
+						<volist name="scoretype" id="v">
+							<li class="item">
+							<h5>可用{:getScoreTypeName($v['mark'])}</h5>
+							<p class="focus">{$self[$v['mark']]|number_format=2}</p>
+							</li>
+						</volist>
+					</ul>
+		        </div>
+		    </div>
+		</div>
+		<div class="layui-col-md6">
+		    <div class="layui-card">
+		        <div class="layui-card-header">消息管理</div>
+		        <div class="layui-card-body layui-text">
+		            <ul id="nav_message" class="dropdown-menu-list scroller  list-data" style="width: auto;">
+						<if condition="count($unreadMessage) eq 0">
+							<div style="font-size: 18px;color: #ccc;font-weight: normal;text-align: center;line-height: 150px">
+								暂无任何消息!
+							</div>
+							<else/>
+							<volist name="unreadMessage" id="message">
+								<li style="border-bottom:1px solid #f0f0f0;margin-bottom:10px;padding-bottom:10px;padding-left:16px;padding-right:16px">
+									<a data-url="{$message.content.web_url}" onclick="Notify.readMessage(this,{$message.id})">
+									   <h3 class="margin-top-0 margin_bottom_10">
+									   <i class="icon-bell"></i>
+										{$message.content.title}</h3>
+										<p> {$message.content.content}</p>
+									<span class="time" style="text-align:right;display:block;">{$message.ctime}</span>
+									</a>
+								</li>
+							</volist>
+						</if>
+					</ul>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+	$(function () {
+		$(window).resize(function () {
+			$(".wrapper").css("min-height", $(window).height() - 243);
+		}).resize();
+	})
+</script>
+</block>

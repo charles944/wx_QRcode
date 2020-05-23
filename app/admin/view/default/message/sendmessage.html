@@ -1,0 +1,114 @@
+<link href="__LAYER__/css/layui.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__JS__/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="__JS__/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.cookie.js"></script>
+<script type="text/javascript" src="__JS__/jquery-ui.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.bgColorSelector.js"></script>
+<script type="text/javascript" src="__LAYER__/layui.js"></script>
+<div style="padding:20px;">
+    <style>
+        .layui-layout-body{overflow:auto !important;}
+        .modal-dialog {
+            width: 600px;
+        }
+
+        .select_box_this {
+            margin: 10px 0 20px;
+            width: 100%;
+            text-align: right;
+            font-size: 16px;
+        }
+
+        .select_box_this .form-group {
+            margin-top: 5px;;
+        }
+    </style>
+    <form id="migration" action="__SELF__" method="post" class="ajax-form">
+        <input type="hidden" value="{$method}" name="method" />
+        <php>if(empty($users)){</php>
+        <div style="margin-bottom:10px">
+            用户组：
+            <volist name="groups" id="one_group">
+                <label style="margin-right: 5px">
+                    <input type="checkbox" name="user_group[]" value="{$one_group['id']}"
+                    <if condition="$aUserGroup eq $one_group['id'] or $aUserGroup eq 0">checked</if>
+                    style="cursor:pointer;">
+                    {$one_group['value']}
+                </label>
+            </volist>
+        </div>
+        <php>}else{</php>
+        <div style="margin-bottom:10px">
+            用户：
+            <volist name="users" id="one_user">
+                <label style="margin-right: 10px">
+                    <switch name="method">
+                        <case value="shortmsg">
+                           [{$one_user['id']}]{$one_user['username']}
+                       </case>
+                       <case value="email">
+                            [{$one_user['id']}]{$one_user['email']}
+                       </case>
+                       <case value="mobile">
+                            [{$one_user['id']}]<empty name="one_user.mobile">空<else/>{$one_user['mobile']}</empty>
+                       </case>
+                    </switch>
+                </label>
+            </volist>
+        <input type="hidden" name="uids" value="{$uids}">
+        </div>
+        <php>}</php>
+        <div class="form-group clearfix" style="margin-bottom:10px">
+            <input type="text" name="title" class="layui-input" placeholder="输入消息的标题">
+        </div>
+        <div class="form-group clearfix" style="margin-bottom:10px">
+            <input type="text" name="url" class="layui-input" placeholder="输入消息的URL链接">
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+            
+            <switch name="method">
+                <case value="shortmsg">
+                   <textarea name="content" placeholder="输入站内信内容" class="layui-input" style="min-height:200px;padding:10px"></textarea>
+               </case>
+               <case value="email">
+                    {:W('Common/Ueditor/editor',array('content','content','','100%','200px','','',array('is_load_script'=>1,'zIndex'=>1050)))}
+               </case>
+               <case value="mobile">
+                    <textarea name="content" placeholder="输入短信内容，可以是活动推广，也可以是用户推荐等等" class="layui-input" style="min-height:200px;padding:10px"></textarea>
+               </case>
+            </switch>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+            使用参数： [nickname]=用户昵称，[uid]=用户ID；
+            举例：尊敬的[nickname]，本站将推出周年纪念活动，您已经很久没有来看我们了，欢迎您的随时光临！
+        </div>
+        <div style="width: 100%;text-align: center;">
+            <a class="layui-btn layui-btn-xs" data-role="submit">发送</a>
+            <a onclick="$('.close').click();" class="layui-btn layui-btn-xs layui-btn-primary">取消</a>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('[data-role="submit"]').click(function () {
+            var query = $('#migration').serialize();
+            var url = $('#migration').attr('action');
+            $.post(url, query, function (msg) {
+                if (msg.status) {
+                    layer.msg(msg.info, {icon: 1, fixed: true, offset: '80%', time:1000});
+                    setTimeout(function () {
+                        location.reload()
+                       // window.location.href = msg.url;
+                    }, 1500);
+                } else {
+                    layui.qn.handleAjax(msg);
+                }
+            }, 'json');
+        });
+    });
+</script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/editor/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/editor/ueditor/ueditor.all.min.js"></script>
+<script>
+layui.config({version: "2.0.1",base: '__ADMIN__/mods/'}).extend({qn: 'index'}).use('qn');
+</script>

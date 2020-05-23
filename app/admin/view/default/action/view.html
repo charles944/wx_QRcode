@@ -1,0 +1,66 @@
+<extend name="public/base" />
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href=""><cite>查看行为日志</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<!-- BEGIN FORM-->
+		<form action="#" class="layui-form">
+			<div class="form-body">
+				<div class="layui-form-item">
+					<label class="layui-form-label">行为名称</label>
+					<div class="layui-input-inline">
+						{:get_action($info['action_id'], "title")}
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">行为执行者</label>
+					<div class="layui-input-inline">
+						{:get_nickname($info['user_id'])}
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">行为执行IP</label>
+					<div class="layui-input-inline">
+						{:long2ip($info['action_ip'])}
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">行为执行时间</label>
+					<div class="layui-input-inline">
+						{:date('Y-m-d H:i:s',$info['create_time'])}
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">行为备注</label>
+					<div class="layui-input-inline">
+						{$info.remark}
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label"></label>
+					<div class="layui-input-inline">
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+</block>

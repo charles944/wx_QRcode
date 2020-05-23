@@ -1,0 +1,59 @@
+<volist name="tree" id="list">
+
+<tr url="{:U('categoryEdit'.$model)}">
+	<td>{$list.id}</td>
+	<td class="order"><input type="text" name="sort" class="layui-input" value="{$list.sort}"></td>
+	<td class="name">
+	<if condition="$level eq 0">
+	<span class="tab-sign">├─</span>
+	</if>
+		<input type="hidden" name="id" value="{$list.id}">
+		<input type="text" name="title" class="layui-input layui-input-inline" style="width:60%" value="{$list.title}">
+		<if condition="$level gt 0">
+			<a class="layui-btn layui-btn-primary layui-btn-xs" title="添加子分类" href="{:U('categoryEdit'.$model.'?pid='.$list['id'])}">
+				添加子分类
+			</a>
+		</if>
+		<span class="help-inline msg"></span>
+	</td>
+	<td>
+		<span class="label label-default">
+			<switch name ="list['status']">
+			<case value="-1">已删除</case>
+			<case value="0">已禁用</case>
+			<case value="1">正常</case>
+			<case value="2">待审核</case>
+			</switch>
+		</span>
+	</td>
+	<notempty name="keyList">
+		<volist name="keyList" id="field">
+			<td>{$list[$field['name']]}</td>
+		</volist>
+	<else/>
+		<td>
+			
+			<a title="编辑" class="layui-btn layui-btn-primary layui-btn-xs category">快捷保存</a>
+			<a title="编辑" class="layui-btn layui-btn-primary layui-btn-xs" href="{:U('categoryEdit?id='.$list['id'].'&pid='.$list['pid'])}">编辑</a>
+			<a title="{$list.status|show_status_op}" class="layui-btn layui-btn-primary layui-btn-xs <eq name ="list['status']" value="0">green<else/>red</eq> ajax-get" href="{:U('setCategoryStatus?ids='.$list['id'].'&status='.abs(1-$list['status']))}">{$list.status|show_status_op}</a>
+			<a title="标记删除" href="{:U('setCategoryStatus?ids='.$list['id'].'&status=-1')}"class="ajax-get layui-btn layui-btn-primary layui-btn-xs confirm" >标记删除</a>
+			<a title="彻底删除" href="{:U('delCategory?ids='.$list['id'].'&status=-1')}"class="ajax-get layui-btn layui-btn-primary layui-btn-xs red confirm" >彻底删除</a>
+			<eq name="canMove" value="true">
+				<a title="移动" href="{:U('operate?type=move&from='.$list['id'])}" class="layui-btn layui-btn-primary layui-btn-xs">移动</a>
+			</eq>
+			<eq name="canMerge" value="true">
+				<a title="合并" href="{:U('operate?type=merge&from='.$list['id'])}" class="layui-btn layui-btn-primary layui-btn-xs">合并</a>
+			</eq>
+		</td>
+	</notempty>
+</tr>
+
+<notempty name="list['_']">
+<php>
+	$tree_list = new admin\builder\AdminTreeListBuilder();
+	$tree_list->setLevel($level);
+	$tree_list->setModel($model);
+	$tree_list->tree($list['_']);
+</php>
+</notempty>
+</volist>

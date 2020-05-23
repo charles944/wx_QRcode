@@ -1,0 +1,60 @@
+<php>if(!$isLoadScript){</php>
+
+<php>}</php>
+
+<div id="file_list_{$id}">
+    <volist name="files" id="vo">
+        <div>{$vo.name} <a onclick="del_file_{$id}(this,{$vo.id})">删除</a> </div>
+    </volist>
+
+</div>
+
+
+<div id="uploader_{$id}" style="clear:both;margin-top:10px;">
+	<input type="button" id="insertfile_{$id}" value="选择文件" />
+</div>
+<input name="{$name}" id="file_upload_{$id}" type="hidden" value="{$value}">
+<script>
+	layui.use('upload', function(){
+		var upload = layui.upload;
+		upload.render({
+			url: '{:U("Home/File/uploadFile",array("session_id"=>session_id()))}'
+			,elem: '#insertfile_{$id}' //指定原始元素，默认直接查找class="layui-upload-file"
+			,method: 'post' //上传接口的http类型
+			,accept: 'file'
+			,field: '{$name}_id'
+			,before: function(input){
+				//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+				layer.load(2, {shade: false});
+			}
+			,done: function(res, index, upload){
+				layer.closeAll('loading'); //关闭loading
+				$("#file_list_{$id}").html('<div>'+ res.url.{$name}_id.name +' <a onclick="del_file_{$id}'+'(this,'+ res.url.{$name}_id.id +')">删除</a></div>');
+				upAttachVal($('#file_upload_{$id}'),'add',res.url.{$name}_id.id);
+			}
+			,error: function(index, upload){
+				layer.closeAll('loading'); //关闭loading
+				layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+			}
+		});
+	});
+
+    function upAttachVal(input,type, attachId) {
+        var $attach_ids =input ;
+        var attachVal = $attach_ids.val();
+        var attachArr = attachVal.split(',');
+        var newArr = [];
+
+        for (var i in attachArr) {
+            if (attachArr[i] !== '' && attachArr[i] !== attachId.toString()) {
+                newArr.push(attachArr[i]);
+            }
+        }
+        type === 'add' && newArr.push(attachId);
+        $attach_ids.val(newArr.join(','));
+    }
+    function del_file_{$id}(obj, attachId) {
+        upAttachVal($('#file_upload_{$id}'),'del', attachId);
+        $(obj).parent('div').remove();
+    }
+</script>

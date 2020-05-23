@@ -1,0 +1,100 @@
+<extend name="base/common"/>
+<block name="header"></block>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>[ID:{$pdata.id}]【{$pdata.title}】子二维码管理</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<div class="" style="margin-bottom:10px">
+			<a href="{:U('qrcode/index/editchild',array('pid'=>$pdata['id']))}" class="layui-btn-sm layui-btn">新增子码</a>
+			<a href="{:U('qrcode/index/editmultichild',array('pid'=>$pdata['id']))}" class="layui-btn-sm layui-btn">批量添加子码</a>
+			<a href="{:U('qrcode/index/index')}" class="layui-btn-sm layui-btn" style="background:#fff;color:#555;border: 1px solid #C9C9C9;">返回主列表</a>
+			<span>&nbsp;&nbsp;&nbsp;当前显示模式： <eq name="pdata.view_mode" value="1">随机显示</eq> <eq name="pdata.view_mode" value="2">逐个显示</eq></span>
+
+			<span>&nbsp;&nbsp;&nbsp;当前活码类型： <switch name="pdata.type_mode"><case value="1">微信群活码</case><case value="2">城市分组码（城市分组码请设置一组或多组默认不设置城市的子码已应对定位获取失败时显示，默认地区级别没有子码时，优先显示市级子码）</case><case value="3">自定义分组码</case><case value="4">客服循环码</case><case value="5">机型码</case></switch></span>
+
+			<span>&nbsp;&nbsp;&nbsp;每码阀值：{$pdata.max_scan}</span>
+			</div>
+			<table class="layui-table" lay-skin="line" lay-even>
+				<thead>
+				  <tr>
+					<th>排序</th>
+					<th>内容</th>
+					<th>类型</th>
+					<th>模型</th>
+					<th>名称</th>
+					<th>展现量（每日统计）</th>
+					<th>识别量</th>
+					<th>最后更新</th>
+					<th>状态</th>
+					<th>操作</th>
+				  </tr>
+				</thead>
+				<tbody>
+				<notempty name="list">
+					<volist name="list" id="data">
+					<tr <switch name="data.status"><case value="0">style="background-color:#FFFFE5"</case><case value="3">style="background-color:#FFE5E5"</case><case value="-1">style="background-color:#FFE5E5"</case></switch>>
+						<td>{$data.sort}</td>
+						<td><a href="qrcodeid={$data.id}" target="_blank" style="border:none;">
+						<switch name="data.qr_type">
+						<case value="1">
+						<if condition="is_numeric($data['qr_img'])"><img class="qrcode" src="{$data.qr_img|get_cover='path'}" style="width:60px"><else/><img class="qrcode" src="{$data.qr_img|str_replace='./','/',###}" style="width:60px"></if>
+						</case>
+						<case value="2">
+						{$data.qr_link}
+						</case>
+						<case value="3">
+						{$data.qr_text}
+						</case>
+						</switch>
+						</a></td>
+						<td>
+						<switch name="data.qr_type">
+						<case value="1">
+						图片
+						</case>
+						<case value="2">
+						链接
+						</case>
+						<case value="3">
+						文本
+						</case>
+						</switch>
+						</td>
+						<td>{$data.mod}</td>
+						<td>{$data.title}</td>
+						<td><a href="{:U('qrcode/index/log',array('cid'=>$data['id']))}">共 {$data.scan_count} 次（<a href="{:U('qrcode/index/tjlog',array('cid'=>$data['id']))}">查看每日</a>）</a></td>
+						<td>共 {$data.scan_child_count} 次</td>
+						<td>{$data.update_time|date='Y-m-d H:i:s',###}</td>
+						<td>
+							<switch name="data.status">
+								<case value="0">违规禁用</case>
+								<case value="1">使用中</case>
+								<case value="-1">违规删除</case>
+						    </switch>
+						</td>
+						<td>
+							<a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/editchild',array('id'=>$data['id']))}">编辑</a>
+							<a class="layui-btn-danger layui-btn-xs layui-btn ajax-get confirm" href="{:U('qrcode/index/delchild',array('id'=>$data['id']))}" >删除</a></td>
+					</tr>
+					</volist>
+				<else/>
+				<tr>
+					<td colspan="8">暂无数据</td>
+				</tr>
+				</notempty>
+				</tbody>
+			</table>
+			<div class='layui-table-page'>{:getPagination($totalCount,$r)}</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+</block>

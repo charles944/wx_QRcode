@@ -1,0 +1,17 @@
+<div class="footer">
+<p>
+	Copyright © 2013-2018 版权所有 {:modC('ICP','','Config')}
+</p>
+<p>
+{:modC('COPY_RIGHT','','Config')}
+{:modC('ABOUT_US','','Config')}
+{:modC('SUBSCRIB_US','','Config')}
+</p>
+</div>
+
+<block name="script"></block>
+<include file="public/js"/>
+{:hook('pagefooter', 'widget')}
+<div class="hidden">
+    <block name="hidden">{:C('COUNT_CODE')}</block>
+</div>

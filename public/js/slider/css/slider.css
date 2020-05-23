@@ -1,0 +1,35 @@
+/**幻灯 start**/
+/*本例css*/
+.main_visual { width: 1000px; height: 330px; margin:10px auto; position: relative; overflow:hidden;}
+
+/*数字按钮样式*/
+.main_visual .num { overflow:hidden; height: 25px; position: absolute; bottom:12px; left: 15px; zoom:1; z-index:3 }
+.main_visual .num li { width: 25px; height: 25px; line-height: 25px; text-align: center; font-weight: 400; font-family: "微软雅黑", Arial; color: #FFFFFF; background: #444444; margin-right: 10px; border-radius:50%; cursor:pointer; float: left; }
+.main_visual .num li.on { background: #FF7700; } /*当前项*/
+
+/*上一个  下一个*/
+.main_visual .prev,
+.main_visual .next { display: none; width: 40px; height: 100px; position: absolute; top: 115px;}
+.main_visual .prev { left: 0; }
+.main_visual .next { right: 0; background-position: right }
+/**幻灯 end**/
+
+/* 滑动css start */
+.slideTxtBox{ width:100%; border:1px solid #ddd; text-align:left;  }
+.slideTxtBox .hd{ height:40px; line-height:40px; background:#f4f4f4; padding:0 10px 0 20px;   border-bottom:1px solid #ddd;  position:relative; }
+.slideTxtBox .hd ul{ float:left; position:absolute; left:20px; top:-1px; height:32px;   }
+.slideTxtBox .hd ul li{ float:left; padding:0 15px; cursor:pointer;  }
+.slideTxtBox .hd ul li.on{ height:41px;  background:#fff; border:1px solid #ddd; border-bottom:2px solid #fff; }
+.slideTxtBox .bd ul{ padding:15px;  zoom:1; overflow:hidden}
+.slideTxtBox .bd li{ height:24px; line-height:24px; width:48%; margin:0 1%; float:left; text-overflow: ellipsis; white-space: nowrap;}
+.slideTxtBox .bd li .date{ float:right; color:#999;  }
+.slideTxtBox .bd li em { margin-right: 8px; color: silver;}
+
+/* 下面是前/后按钮代码，如果不需要删除即可 */
+.slideTxtBox .arrow{  position:absolute; right:10px; top:0; }
+.slideTxtBox .arrow a{ display:block;  width:5px; height:9px; float:right; margin-right:5px; margin-top:10px;  overflow:hidden;
+ cursor:pointer; background:url("../images/arrow.png") 0 0 no-repeat; }
+.slideTxtBox .arrow .next{ background-position:0 -50px;  }
+.slideTxtBox .arrow .prevStop{ background-position:-60px 0; }
+.slideTxtBox .arrow .nextStop{ background-position:-60px -50px; }
+/* 滑动css end */

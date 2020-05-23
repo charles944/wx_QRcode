@@ -1,0 +1,39 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+{:hook('syncmeta')}
+<include file="public/seo"/>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<block name="style"></block>
+<link rel="stylesheet" href="__Layer__/css/layui.css">
+<script src="__PUBLIC__/js/lib.js"></script>
+<script src="__Layer__/layui.js"></script>
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/global.css"/>
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/control.css"/>
+
+<!-- __PUBLIC__/js.php?f=js/jquery-2.0.3.min.js,js/com/com.functions.js,js/core.js,js/com/com.ucard.js -->
+<include file="public/var"/>
+<php>
+$open_quick_login = modC('OPEN_QUICK_LOGIN', 0, 'USERCONFIG');
+$open_quick_register = modC('OPEN_QUICK_REGISTER', 0, 'USERCONFIG');
+$register_type = modC('REGISTER_TYPE','normal','UserConfig');
+$register_type = explode(',',$register_type);
+$only_open_register = 0;
+if(in_array('invite',$register_type)&&!in_array('normal',$register_type)){
+$only_open_register=1;
+}
+</php>
+<script>
+//全局内容的定义
+var _ROOT_ = "__ROOT__";
+var MID = "{:is_login()}";
+var MODULE_NAME="<php>echo MODULE_NAME;</php>";
+var ACTION_NAME="<php>echo ACTION_NAME;</php>";
+var OPEN_QUICK_LOGIN = "{$open_quick_login}";
+var OPEN_QUICK_REGISTER = "{$open_quick_register}";
+var ONLY_OPEN_REGISTER = "{$only_open_register}";
+</script>
+<audio id="music" src="" autoplay="autoplay"></audio>
+<!-- 页面header钩子，一般用于加载插件CSS文件和代码 -->
+{:hook('pageheader')}

@@ -1,0 +1,221 @@
+.top-bar {
+  background: url('../images/bg.png') repeat;
+}
+a {
+  color: #333;
+}
+a:hover {
+  color: #444;
+}
+/**幻灯 start**/
+/*本例css*/
+.main_visual { width: 1000px; height: 330px; margin:10px auto; position: relative; overflow:hidden;}
+
+/*数字按钮样式*/
+.main_visual .num { overflow:hidden; height: 25px; position: absolute; bottom:12px; left: 15px; zoom:1; z-index:3 }
+.main_visual .num li { width: 25px; height: 25px; line-height: 25px; text-align: center; font-weight: 400; font-family: "微软雅黑", Arial; color: #FFFFFF; background: #444444; margin-right: 10px; border-radius:50%; cursor:pointer; float: left; }
+.main_visual .num li.on { background: #FF7700; } /*当前项*/
+
+/*上一个  下一个*/
+.main_visual .prev,
+.main_visual .next { display: none; width: 40px; height: 100px; position: absolute; top: 115px;}
+.main_visual .prev { left: 0; }
+.main_visual .next { right: 0; background-position: right }
+/**幻灯 end**/
+
+/* 滑动css start */
+.slideTxtBox{ width:100%; border:1px solid #ddd; text-align:left;  }
+.slideTxtBox .hd{ height:40px; line-height:40px; background:#f4f4f4; padding:0 10px 0 20px;   border-bottom:1px solid #ddd;  position:relative; }
+.slideTxtBox .hd ul{ float:left; position:absolute; left:20px; top:-1px; height:32px;   }
+.slideTxtBox .hd ul li{ float:left; padding:0 15px; cursor:pointer;  }
+.slideTxtBox .hd ul li.on{ height:41px;  background:#fff; border:1px solid #ddd; border-bottom:2px solid #fff; }
+.slideTxtBox .bd ul{ padding:15px;  zoom:1; overflow:hidden}
+.slideTxtBox .bd li{ height:24px; line-height:24px; width:48%; margin:0 1%; float:left; text-overflow: ellipsis; white-space: nowrap;}
+.slideTxtBox .bd li .date{ float:right; color:#999;  }
+.slideTxtBox .bd li em { margin-right: 8px; color: silver;}
+
+/* 下面是前/后按钮代码，如果不需要删除即可 */
+.slideTxtBox .arrow{  position:absolute; right:10px; top:0; }
+.slideTxtBox .arrow a{ display:block;  width:5px; height:9px; float:right; margin-right:5px; margin-top:10px;  overflow:hidden;
+ cursor:pointer; background:url("../images/arrow.png") 0 0 no-repeat; }
+.slideTxtBox .arrow .next{ background-position:0 -50px;  }
+.slideTxtBox .arrow .prevStop{ background-position:-60px 0; }
+.slideTxtBox .arrow .nextStop{ background-position:-60px -50px; }
+/* 滑动css end */
+
+/*布局样式*/
+/*大型块*/
+.common-block-lg {
+  background: #ffffff;
+}
+.common-block-lg > header {
+  padding: 15px;
+  font-size: 18px;
+}
+.common-block-lg section {
+  padding: 20px;
+  padding-top: 0;
+}
+.common-block-sm {
+  background: #ffffff;
+}
+.common-block-sm > header {
+  padding: 15px;
+  font-size: 18px;
+}
+.common-block-sm section {
+  padding: 20px;
+  padding-top: 0;
+}
+.common-block,
+.common-block-md {
+  background: #ffffff;
+}
+.common-block > header,
+.common-block-md > header {
+  padding: 10px 10px 10px 15px;
+  font-size: 16px;
+}
+.common-block section,
+.common-block-md section {
+  padding: 15px;
+  padding-top: 0;
+}
+.common-block.bottom-line,
+.common-block-md.bottom-line,
+.common-block .bottom-line,
+.common-block-md .bottom-line {
+  border-bottom: 1px solid #4f8ad0;
+  font-size: 15px;
+  top: 1px;
+  clear: right;
+  margin: 10px 10px 10px 10px ;
+  padding: 0 0 0 0;
+  line-height: 28px;
+}
+.common-block {
+  background: #fff;
+  clear: both;
+  border: 1px solid #e8e8e8;
+}
+.common-block h2,
+.common-block > header {
+  /*不同尺寸有不同的排版，默认为md*/
+  /*划线样式*/
+}
+.common-block .common-block-body,
+.common-block section {
+  padding: 20px;
+  padding-top: 0;
+}
+.common-block-title {
+  padding: 8px 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #333333;
+  font-size: 1.2em;
+  margin: 5px 0 10px 15px;
+}
+.common_block_title_right {
+  padding: 8px 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #333333;
+  font-size: 1.2em;
+  margin: 5px 0 10px 15px;
+  padding-left: 5px;
+  margin-left: 5px;
+}
+.common_block_border {
+  background: #ffffff;
+  background: #fff;
+  clear: both;
+}
+.common_block_border > header {
+  padding: 10px 10px 10px 15px;
+  font-size: 16px;
+}
+.common_block_border section {
+  padding: 15px;
+  padding-top: 0;
+}
+.common_block_border.bottom-line,
+.common_block_border .bottom-line {
+  border-bottom: 1px solid #4f8ad0;
+  font-size: 15px;
+  top: 1px;
+  clear: right;
+  margin: 10px 10px 10px 10px ;
+  padding: 0 0 0 0;
+  line-height: 28px;
+}
+.common_block_border h2,
+.common_block_border > header {
+  /*不同尺寸有不同的排版，默认为md*/
+  /*划线样式*/
+}
+.common_block_border .common-block-body,
+.common_block_border section {
+  padding: 20px;
+  padding-top: 0;
+}
+.common_block_title {
+  padding: 8px 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #333333;
+  font-size: 1.2em;
+  margin: 5px 0 10px 15px;
+}
+.common_block_title_right {
+  padding: 8px 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #333333;
+  font-size: 1.2em;
+  margin: 5px 0 10px 15px;
+  padding-left: 5px;
+  margin-left: 5px;
+}
+.padding_10 {
+  padding: 10px;
+}
+.margin_10 {
+  margin: 10px;
+}
+.margin-0 {
+  margin: 0;
+}
+.margin-bottom-0 {
+  margin-bottom: 0 !important;
+}
+.margin_bottom_10 {
+  margin-bottom: 10px;
+}
+.margin_bottom_0 {
+  margin-bottom: 0px;
+}
+.margin_bottom_15 {
+  margin-bottom: 15px;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+.margin-bottom-15 {
+  margin-bottom: 15px;
+}
+.margin-top-15 {
+  margin-top: 15px;
+}
+.margin-top-0 {
+  margin-top: 0;
+}
+/*布局样式end*/

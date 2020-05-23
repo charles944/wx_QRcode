@@ -1,0 +1,61 @@
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/layui/layui.js"></script>
+
+<input type="button" id="J_selectImage_{$name}" class="layui-upload-file" value="批量上传图片" />
+<input class="" type="hidden" name="{$name}" value="{$value}"/>
+
+<div class="upload-img-box" style="margin-top:10px;overflow:hidden">
+	<div class="upload-pre-items popup-gallery" id="J_imageView">
+		<notempty name="value">
+			<php>$aIds = explode(',',$value);</php>
+			<volist name="aIds" id="aId">
+				<div class="each">
+					<a href="{$aId|get_cover='path'}" title="点击查看大图">
+						<img src="{$aId|get_cover='path'}">
+					</a>
+					<div class="text-center opacity del_btn" ></div>
+					<div onclick="admin_image.removeImage($(this),'{$aId}')"  class="text-center del_btn">删除</div>
+				</div>
+			</volist>
+		<else/>
+			<div class="each">
+				<a href="{$aId|get_cover='path'}" title="点击查看大图">
+					<img src="{$aId|get_cover='path'}">
+				</a>
+				<div class="text-center opacity del_btn" ></div>
+				<div onclick="admin_image.removeImage($(this),'{$aId}')"  class="text-center del_btn">删除</div>
+			</div>
+		</notempty>
+	</div>
+</div>
+<script type="text/javascript">
+layui.use('upload', function(){
+	var upload = layui.upload;
+	upload.render({
+		url: '{:U("Home/File/uploadPicture",array("session_id"=>session_id()))}'
+		,elem: '#J_selectImage_{$name}' //指定原始元素，默认直接查找class="layui-upload-file"
+		,method: 'post' //上传接口的http类型
+		,accept: 'images'
+		,field: '{$name}_id'
+		,before: function(input){
+			layer.load(2, {shade: false});
+		}
+		,done: function(res){
+			layer.closeAll('loading'); //关闭loading
+			var div = $('#J_imageView');
+			admin_image.upAttachVal('add',res.url.{$name}_id.id, $("[name='{$name}_id']"));
+			div.append('<div class="each"><a href="'+ res.url.{$name}_id.path +'" title="点击查看大图"><img src="'+ res.url.{$name}_id.path +'"></a><div class="text-center opacity del_btn" ></div><div onclick="admin_image.removeImage($(this),'+res.url.{$name}_id.id +')"  class="text-center del_btn">删除</div></div>');
+		}
+	});
+});
+function uploadPicture{$name}(data){
+	var data = eval('(' + data + ')');
+	var src = '';
+	if(data.status){
+		var div = $('#J_imageView');
+		admin_image.upAttachVal('add',data.id, $("[name='{$name}_id']"));
+		div.append('<div class="each"><a href="'+ data.path +'" title="点击查看大图"><img src="'+ data.path +'"></a><div class="text-center opacity del_btn" ></div><div onclick="admin_image.removeImage($(this),'+data.id +')"  class="text-center del_btn">删除</div></div>');
+	} else {
+		layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+	}
+}
+</script>

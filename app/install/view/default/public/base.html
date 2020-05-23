@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{$version_name} V{$version} 安装</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Le styles -->
+		<link rel="stylesheet" href="__Layer__/css/layui.css">
+		<link rel="stylesheet" href="__CSS__/install.css">
+		<script src="__Layer__/layui.js"></script>
+		<script>
+			layui.config({
+			  version: "2.0.1"
+			  ,base: 'public/js/'
+			}).extend({
+			  qncore: 'install'
+			}).use('qncore');
+		</script>
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="__PUBLIC__/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+	<block name="body"></block>
+	<footer class="footer">
+		<div style="text-align:center">
+			<block name="footer"></block>
+		</div>
+	</footer>
+	<div style="clear:both"></div>
+    </body>
+</html>

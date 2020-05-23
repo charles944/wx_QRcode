@@ -1,0 +1,96 @@
+<div class="wideFont clearfix" style="margin-top:0">
+<div class="contLeft fl">
+<div class="notes" style="margin-top:0">
+			<span>兑换记录</span>
+			<div class="recordList fl">
+				<ul style="overflow: hidden;" id="new_exchange_list">
+					<volist name="goods_buy_list" id="vo">
+					<li><i>{$vo.member|msubstr=0,5}</i>兑换了：<em>{$vo.goods.goods_name|op_t}</em></li>
+					</volist>
+				</ul>
+			</div>
+		</div>
+		<div class="tryStep">
+			<img src="__COMMON_STATIC__/images/step.jpg" />
+		</div>
+</div>
+<div class="contRight fr">
+<div class="loginMain">
+
+			<if condition="is_login()">
+			<div class="afterLogin">
+				<dl>
+					<dt>
+						<span><img src="{$self.avatar64}"></span>
+						<a href="javascript:;" style="background:none; color:#aaa">{$self.title}</a>
+						
+					</dt>
+					<dd>
+						<h4>
+							<span>{$self.nickname|htmlspecialchars}</span>
+							<php>
+                                $title=D('User/Title')->getCurrentTitleInfo(is_login());
+                            </php>
+                            <script>
+                                $(function () {
+                                    $('#upgrade').tooltip({
+                                                html: true,
+                                                title: '当前阶段：{$self.title} <br/>下一阶段：{$title.next}<br/>现有：{$self.score}<br/>需要：{$title.upgrade_require}<br/>剩余需要： {$title.left}<br/>升级进度：{$title.percent}% <br/> '
+                                            }
+                                    );
+                                })
+                            </script>
+							<a event-node="logout">[退出]</a>
+						</h4>
+						<p>
+							<em>{:getScoreTypeName('gold_coin')}：<span class="number bg_gray" id="user_coin_show">{$self.gold_coin|number_format=2}</span></em>
+						</p>
+						<p>
+							<em>{:getScoreTypeName('money')}：<span class="bean beans_num">{$self.money|number_format=0}</span></em>
+						</p>
+						<p>
+							<a href="{:U('Ucenter/cash/index')}" target="_blank" style="padding-right: 10px;">[提现]</a><a href="">[兑换记录]</a>
+						</p>
+						<div class="trying">
+							<span>近期试玩：</span>
+							<ul>
+								<li><a href="javascript:;">您还没有玩过游戏！</a></li>
+							</ul>
+						</div>
+					</dd>
+				</dl>
+				
+			</div>
+			<div class="checkin">
+				<div id="upgrade" data-toggle="tooltip" data-placement="bottom" title="" style="">
+                    <div style="border-top:1px solid #eee;"></div>
+                    <div style="border-top: 1px solid rgb(3, 199, 3);margin-top: -1px;width: {$title.percent}%;z-index: 9999;">
+
+                    </div>
+                </div>
+                {:hook('checkin')}
+                {:hook('rank')}
+            </div>
+			<else />
+			<div class="beforeLogin" style="display: block;">
+				<dl>
+					<dt>
+						<span><img src="{$self.avatar64}" /></span><a data-login="do_login" style="display: block;" class="nx">签到</a>
+					</dt>
+					<dd>
+						<h4>
+							<span>Hi,你好！</span><a data-login="do_login" class="fr nx">[提现]</a>
+						</h4>
+						<div class="login-btn">
+							<a data-login="do_login" class="nx">快速登录</a>
+						</div>
+						<div class="forget">
+							<a href="{:U('home/member/mi')}" target="_blank" class="f-a">忘记密码？</a><a data-role="quick_register" class="r-a">快速注册</a>
+						</div>
+					</dd>
+				</dl>
+			</div>
+			</if>
+		</div>
+</div>
+</div>

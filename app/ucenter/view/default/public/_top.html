@@ -1,0 +1,99 @@
+<div class="layui-row">
+<div class="uc-info clearfix">
+	<div class="uc-avatar">
+		<div class="avatar-box">
+			<s class="vl"></s>
+			<img class="" src="{$self.avatar128}" style="">
+		</div>
+		<div class="avatar-operation">
+			<s></s>
+			<a href="{:U('Ucenter/config/avatar')}" target="_blank" >设置头像</a>
+		</div>
+	</div>
+	<div class="uc-information">
+		<div class="hd">
+			<h1 ucard="{$self.uid}" style="height:40px; line-height:40px" title="{$self.nickname|text}">{$self.nickname|text}</h1>
+			<ul class="icons fs">
+				<if condition="$self['rank_link'][0]['num']">
+					<volist name="self['rank_link']" id="vl">
+					<li>
+						<a href="" ><img src="{$vl.logo_url}" title="{$vl.title}" alt="{$vl.title}" style="width: 18px;height: 18px;vertical-align: middle;margin-left: 2px;"/></a>
+					</li>
+					</volist>
+				</if>
+				<notempty name="purse_list">
+				<volist name="purse_list" id="vo">
+						<notempty name="vo.user.pursecardno">
+						<if condition="$vo.pursename eq '支付宝'">
+						<li><a title="支付宝已绑定" class="a_1" style="margin-top:10px;"></a></li>
+						<elseif condition="$vo.pursename eq '财付通'" />
+						<li><a title="财付通已绑定" class="a_2" style="margin-top:10px;"></a></li>
+						<else/>
+						<li><a title="银行卡已绑定" class="a_3" style="margin-top:10px;"></a></li>
+						</if>
+						<else/>
+						<if condition="$vo.pursename eq '支付宝'">
+						<li><a title="支付宝已绑定" class="a_1 a_1no" style="margin-top:10px;"></a></li>
+						<elseif condition="$vo.pursename eq '财付通'" />
+						<li><a title="财付通未绑定" class="a_2 a_2no" style="margin-top:10px;"></a></li>
+						<else/>
+						<li><a title="银行卡未绑定" class="a_3 a_3no" style="margin-top:10px;"></a></li>
+						</if>
+						</notempty>
+					</a>
+				</volist>
+				<else/>
+				</notempty>
+			</ul>
+		</div>
+		<div class="bd">
+			<div class="payment clearfix">
+				账号：
+				<switch name="self['type']">
+				<case value="1">{$self.username}</case>
+				<case value="2">{$self.email}</case>
+				<case value="3">{$self.mobile}</case>
+				</switch>&nbsp;（ID：{$self.uid}）
+			</div>
+			<div class="payment clearfix">
+				个性签名：
+				<if condition="$self['signature'] eq ''">
+					还没想好O(∩_∩)O
+				<else/>
+					{$self.signature}
+				</if>
+			</div>
+			<div class="warranty">
+				上次登录时间：{$self.last_login_time|date='Y-m-d H:i:s',###}
+			</div>
+		</div>
+	</div>
+	<div class="uc-ratings">
+		<ul class="uc-ratings-slide">
+			<li>
+				<h2>等级评分</h2>
+				<ol class="dynamic-ratings clearfix">
+					<li class="higher">
+						<div class="title">安全等级:</div>
+						<div class="value">
+						<if condition="$self['mobile'] neq null and $self['mobile_ver'] eq 1">
+						中
+						<elseif condition="$self['email'] neq null and $self['email_ver'] eq 1" />
+						中
+						<elseif condition="$self['mobile'] neq null and $self['email'] neq null and $self['mobile_ver'] eq 1 and $self['email_ver'] eq 1" />
+						高
+						<else/>
+						低
+						</if>
+						</div>
+					</li>
+					<li class="lower">
+						<div class="title">成长等级:</div>
+						<div class="value">{$self.title}</div>
+					</li>
+				</ol>
+			</li>
+		</ul>
+	</div>
+</div>
+</div>

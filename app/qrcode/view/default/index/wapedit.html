@@ -1,0 +1,99 @@
+<extend name="base/wapcommon"/>
+<block name="body">
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$title}</h1>
+</header>
+<div class="page hui-wrap" id="">
+    <div class="page__bd page__bd_spacing">
+        <form style="" class="hui-form" action="__SELF__" id="form1" method="post">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">活码标题</div>
+                <input type="text" class="hui-input hui-input-clear" name="title" placeholder="活码标题" value="{$data.title}"/>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">扫描阀值</div>
+                <input type="text" value="{$data.max_scan}" class="hui-input hui-input-clear" name="max_scan" placeholder="100" />
+            </div>
+			<div class="hui-form-items">
+                <div class="hui-form-items-title">阀值模式</div>
+                <div class="hui-form-select">
+                    <select name="scan_mode">
+                        <option value="1" <eq name="data['scan_mode']" value="1">selected="selected"</eq>>按子码长按识别量</option>
+                        <option value="2" <eq name="data['scan_mode']" value="2">selected="selected"</eq>>按子码展现量</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">活码类型</div>
+                <div class="hui-form-select">
+                    <select name="type_mode">
+                        <option value="1" <eq name="data['type_mode']" value="1">selected="selected"</eq>>微信群活码</option>
+                        <option value="2" <eq name="data['type_mode']" value="2">selected="selected"</eq>>城市分组码</option>
+                        <option value="3" <eq name="data['type_mode']" value="3">selected="selected"</eq>>自定义分组码</option>
+                        <option value="4" <eq name="data['type_mode']" value="4">selected="selected"</eq>>客服循环码</option>
+                        <option value="5" <eq name="data['type_mode']" value="5">selected="selected"</eq>>机型码</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">活码模式</div>
+                <div class="hui-form-select">
+                    <select name="view_mode">
+                        <option value="1" <eq name="data['view_mode']" value="1">selected="selected"</eq>>随机显示</option>
+                        <option value="2" <eq name="data['view_mode']" value="2">selected="selected"</eq>>逐个显示</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">显示模式</div>
+                <div class="hui-form-select">
+                    <select name="view_limit_mode">
+                        <option value="1" <eq name="data['view_limit_mode']" value="1">selected="selected"</eq>>每刷新都不相同</option>
+                        <option value="2" <eq name="data['view_limit_mode']" value="2">selected="selected"</eq>>同IP显示一个</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">排序</div>
+                <input type="number" class="hui-input" placeholder="0" name="sort" value="{$data.sort}"/>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">备注</div>
+                <div class="hui-form-textarea">
+                    <textarea placeholder="可写可不写..." name="remark">{$data.remark}</textarea>
+                </div>
+            </div>
+            <div style="padding:15px 8px;">
+                <button type="button" class="hui-button hui-button-large hui-primary" id="submitBtn">{$title}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="hui-fooer-line"></div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__PUBLIC__/wap/js/hui-form.js"></script>
+<script type="text/javascript">
+hui.formInit();
+hui('#submitBtn').click(function(){
+    var res = huiFormCheck('#form1');
+    if(res){
+        var data = hui.getFormData('#form1');
+        var url = '__SELF__';
+        $post(url, data, function(x) {
+            hui.toast(x.info);
+        }, function(x) {
+            hui.toast(x.info);
+            location.href = '{:U("qrcode/index/index")}';
+        });
+    }
+});
+</script>
+</body>
+</block>

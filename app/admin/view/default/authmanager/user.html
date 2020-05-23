@@ -1,0 +1,85 @@
+<extend name="public/base" />
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>权限管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<div class="layui-input-inline">
+			<select name="group"  style="display:block;min-width:140px;margin-bottom:10px;border:1px solid #ddd;padding:10px;">
+				<volist name="auth_group" id="vo">
+				<option value="{:U('AuthManager/user',array('group_id'=>$vo['id'],'group_name'=>$vo['title']))}" <eq name="vo['id']" value="$this_group['id']">selected</eq> >{$vo.title}</option>
+				</volist>
+			</select>
+		</div>
+		<div class="widget-container fluid-height clearfix">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li onclick="javascript:location.href='{:U('AuthManager/access',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">管理后台授权</li>
+					<li onclick="javascript:location.href='{:U('AuthManager/accessUser',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">用户前台授权</li>
+					<li class="layui-this">成员授权</li>
+					<li onclick="javascript:location.href='{:U('AuthManager/union',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">提成设置</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<div class="table-scrollable">
+							<table class="layui-table" lay-even lay-skin="line">
+							<thead>
+							<th>UID</th>
+							<th>昵称/邮箱/手机</th>
+							<th>最后登录时间</th>
+							<th>最后登录IP</th>
+							<th>开始时间</th>
+							<th>结束时间</th>
+							<th>状态</th>
+							<th>操作</th>
+							</thead>
+							<tbody>
+							<volist name="_list" id="vo">
+							<tr>
+							<td>{$vo.id} </td>
+							<td><p>{$vo.username}</p><p>{$vo.email}</p><p>{$vo.mobile}</p></td>
+							<td><span>{$vo.last_login_time|time_format}</span></td>
+							<td><span>{$vo.last_login_ip|long2ip}</span></td>
+							<td>{$vo.start_time|date='Y-m-d H:i:s',###}</td>
+							<td>{$vo.end_time|date='Y-m-d H:i:s',###}</td>
+							<td>{$vo.status_text}</td>
+							<td><a href="{:U('AuthManager/removeFromGroup?uid='.$vo['uid'].'&group_id='.I('group_id'))}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash"><i class="layui-icon">&#x1006;</i> 解除授权</a>
+							</td>
+							</tr>
+							</volist>
+							</tbody>
+							</table>
+						</div>
+						<div class="heading" style="height:65px;" >
+						<form class="add-user layui-form" action="{:U('addToGroup')}" method="post" enctype="application/x-www-form-urlencoded" >
+							<div class="layui-form-item">
+								<label class="layui-form-label">新增授权</label>
+								<div class="layui-input-block">
+									<input class="layui-input" type="text" name="uid" placeholder="请输入uid,多个用英文逗号分隔" style="width:273px; display:inline-block">
+									<input type="hidden" name="group_id" value="{:I('group_id')}">
+									<button type="submit" class="ajax-post layui-btn" target-form="add-user" style="margin:0">新 增</button>
+								</div>
+							</div>
+						</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+	$('select[name=group]').change(function(){
+		location.href = this.value;
+	});
+</script>
+</block>

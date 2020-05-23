@@ -1,0 +1,21 @@
+html {font-size:80%}
+.page__ft.j_bottom {font-size:.9rem;font-weight:300;color:#75797c}
+.page__ft a {color:#75797c}
+.weui-cells {font-size:1.2rem}
+.is-color-red {color:red}
+.is-color-blue {color:#00f}
+.is-color-48b281 {color:#48b281}
+.is-color-5798b6 {color:#5798b6}
+.is-color-d98837 {color:#d98837}
+.is-text-center {text-align:center}
+
+.proxy-list .weui-cells,.proxy-room-list .weui-cells {margin-top:0}
+.weui-label {width:80px}
+.weui-cell {padding:15px 15px}
+.weui-cell_vcode {padding-top:0;padding-right:0;padding-bottom:0}
+.weui-vcode-btn {height:52px;line-height:52px}
+.weui-picker__bd {font-size:1.2rem}
+.weui-picker__action {color:#000}
+.is-cell {position:relative;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;padding:2px 0}
+.is-cell .weui-cell__bd {text-align:left}
+.weui-dialog {top:40%}

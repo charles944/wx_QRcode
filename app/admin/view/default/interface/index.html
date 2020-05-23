@@ -1,0 +1,107 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>接口管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+			<div class="layui-tab">
+			  <ul class="layui-tab-title">
+				<li class="layui-this">本地接口</li>
+				<!-- <li>在线接口</li> -->
+			  </ul>
+			  <div class="layui-tab-content">
+				<div class="layui-tab-item layui-show">
+					<div class="portlet-title">
+						<div class="actions">
+							<a href="{:U('Interface/create')}" class="layui-btn layui-btn-xs fbutton">新增</a>
+							<a href="{:U('Interface/log')}" class="layui-btn layui-btn-xs fbutton"><i class="fa fa-bars"></i> 回调记录</a>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="portlet-body">
+					<div class="table-scrollable">
+						<table class="layui-table" lay-even lay-skin="line">
+							<thead>
+							<tr>
+							<th>名称</th>
+							<th>标识</th>
+							<th>描述</th>
+							<th>网站ID</th>
+							<th>加密值</th>
+							<th>是否审核</th>
+							<th width="33px">状态</th>
+							<th width="33px">作者</th>
+							<th width="33px">版本</th>
+							<th width="84px">操作</th>
+							</tr>
+							</thead>
+							<tbody>
+								<volist name="_list" id="vo">
+									<tr>
+										<td>{$vo.title}</td>
+										<td>{$vo.name}</td>
+										<td>{$vo.description}</td>
+										<td>{$vo.websiteid}</td>
+										<td>{$vo.key}</td>
+										<td>
+										<switch name="vo.review">
+										<case value="0">不审核</case>
+										<case value="1">审核</case>
+										<default />不审核
+										</switch>
+										</td>
+										<td>
+										<switch name="vo.status">
+										<case value="0">未安装</case>
+										<case value="1">正常</case>
+										<case value="2">冻结</case>
+										<default />正常
+										</switch>
+										</td>
+										<td>{$vo.author}</td>
+										<td>{$vo.version}</td>
+										<td>
+											<empty name="vo.uninstall">
+													<a class="layui-btn layui-btn-xs hbutton btn_see" href="{:U('config',array('id'=>$vo['id']))}">设置</a>
+											<?php if ($vo['status'] >=0): ?>
+												<eq name="vo.status" value="0">
+													<a class="ajax-get layui-btn layui-btn-xs hbutton btn_see" href="{:U('enable',array('id'=>$vo['id']))}">启用</a>
+												<else />
+													<a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" href="{:U('disable',array('id'=>$vo['id']))}">禁用</a>
+												</eq>
+											<?php endif ?>
+											<a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" href="{:U('del?ids='.$vo['id'])}">卸载</a>
+											<else />
+												<a class="ajax-get layui-btn layui-btn-xs hbutton btn_see" href="{:U('install?name='.$vo['name'])}">安装</a>
+											</empty>
+										</td>
+									</tr>
+									</volist>
+							</tbody>
+							</table>
+						</div>
+						<div class="layui-table-page">
+						{$_page}
+						</div>
+					</div>
+				</div>
+				<div class="layui-tab-item">暂无</div>
+			  </div>
+			</div>
+		</div>
+	 </div>
+</div>
+</block>
+
+<block name="script">
+</block>
+<block name="jquery_script">
+</block>

@@ -1,0 +1,87 @@
+<extend name="public/base"/>
+<block name="style"></block>
+
+<block name="body">
+<ul class="page-breadcrumb breadcrumb">
+	<li>
+		<a href="#">首页</a><i class="fa fa-circle"></i>
+	</li>
+	<li class="active">
+		 网站数据统计报表 
+		 <a href="{:U('index')}" class="btn btn-sm purple">全部</a><a href="{:U('game')}" class="btn btn-sm purple">游戏</a><a href="{:U('dama')}" class="btn btn-sm purple">打码</a><a href="{:U('task')}" class="btn btn-sm purple">广告</a>
+	</li>
+</ul>
+<div class="portlet light">
+	<div class="portlet-body>
+			<!-- BEGIN PAGE CONTENT-->
+			<div class="invoice">
+				<hr/>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 style="display:none">账单:</h3>
+						<ul class="list-unstyled">
+
+						</ul>
+					</div>
+				</div>
+				<hr/>
+				<div class="row">
+					<div class="col-xs-12">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a aria-expanded="true" href="#tab_1_1" data-toggle="tab">
+							统计数据 </a>
+						</li>
+						
+					</ul>
+					<div class="tab-content">
+						<table class="table table-striped table-hover">
+						<thead>
+						<tr>
+							<th>
+								 #
+							</th>
+							<th>
+								 用户名|ID
+							</th>
+							<th class="hidden-480">
+								 姓名
+							</th>
+							<th class="hidden-480">
+								 卡号
+							</th>
+							<th class="hidden-480">
+								 钱包
+							</th>
+							<th>
+								 总额
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+
+					</div>
+					<div class="col-xs-8 invoice-block" style="text-align:right">
+						<a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();">
+						Print <i class="fa fa-print"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- END PAGE CONTENT-->
+	</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+</script>
+</block>

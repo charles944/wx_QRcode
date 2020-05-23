@@ -1,0 +1,3 @@
+<?php
+//000000000000a:17:{s:2:"id";s:2:"22";s:4:"name";s:4:"home";s:5:"alias";s:12:"网站主页";s:7:"version";s:5:"2.0.0";s:6:"is_com";s:1:"0";s:8:"show_nav";s:1:"1";s:7:"summary";s:45:"首页模块，主要用于展示网站内容";s:9:"developer";s:18:"靑年PHP开发组";s:7:"website";s:0:"";s:5:"entry";s:16:"home/index/index";s:8:"is_setup";s:1:"1";s:4:"sort";s:1:"0";s:4:"icon";s:4:"home";s:13:"can_uninstall";s:1:"1";s:11:"admin_entry";s:17:"admin/home/config";s:8:"has_tage";s:1:"0";s:5:"token";N;}
+?>

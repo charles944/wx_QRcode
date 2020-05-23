@@ -1,0 +1,282 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+    <style>
+#processor {padding:15px 10px;position:relative}
+.processorBox{display: -webkit-flex;display:flex;flex-direction: row;justify-content:space-around}
+.processorBox li {flex:1;}
+.step_inner {color:#fff;text-align:center;width:100px;margin:0 auto}
+.step_line {width:100%;background-color:#e8e8e8;height:6px;position:absolute;top:50%;left:0;margin:-15px auto auto auto;z-index:1}
+.processorBox li .icon_step {width:36px;height:36px;line-height:36px;display:inline-block;border-radius:50%;-webkit-border-radius:50%;-moz-border-radius:50%;color:#fff;font-size:18px;text-align:center;background-color:#e8e8e8;position:relative;z-index:2}
+.processorBox li.current .icon_step {background-color:#64bd2e}
+.processorBox h4 {color:#bbb;margin-top:5px}
+.processorBox li.current h4 {color:#64bd2e}
+.oh {
+    overflow: hidden;
+}
+  </style>
+</block>
+
+<block name="body">
+<div class="wrap">
+  <div class="processor" id="processor">
+    <ol class="processorBox oh">
+      <li class="current">
+        <div class="step_inner fl">
+        <span class="icon_step"></span>
+        <h4>完善个人资料</h4>
+        </div>
+      </li>
+      <eq name="cash_sms_on" value="1">
+      <li class="current">
+        <div class="step_inner">
+        <span class="icon_step">2</span>
+        <h4>绑定手机号</h4>
+        </div>
+      </li>
+      </eq>
+      <eq name="cash_email_on" value="1">
+      <li class="current">
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>绑定邮箱</h4>
+        </div>
+      </li>
+      </eq>
+      <li class="current">
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>设置交易密码</h4>
+        </div>
+      </li>
+      <li class="current">
+        <div class="step_inner fr">
+        <span class="icon_step"></span>
+        <h4>绑定支付方式</h4>
+        </div>
+      </li>
+    </ol>
+    <div class="step_line"></div>
+  </div>
+  <div class="">
+  <div id="step1" class="">
+    <ul class="prompt">
+        <li>需要<i class="red">至少绑定一种支付方式</i>，否则将无法使用“申请提现”功能。</li>
+        <li>以下资料绑定后，可以在<i class="red">会员中心进行更改绑定设置</i>。</li>
+        <li>当前只有：<i class="red" style="font-size:18px;"><volist name="purse_offer" id="v">{$v.pursename}，</volist></i>可以申请提现，其他支付方式无法提现，请注意绑定</i>。</li>
+    </ul>
+
+    <div class="methods clearfix">
+    	<if condition="$purse_zhifubao neq null">
+        <span id="two1" <if condition="$purse_first['id'] eq $purse_zhifubao['id']">class="hover"</if> onclick="setTab('two', 1, 3)"><notempty name="purse_zhifubao_data">修改<else/>绑定</notempty>支付宝<i class="ico"></i></span>
+        </if>
+        <if condition="$purse_caifutong neq null">
+        <span id="two2" <if condition="$purse_first['id'] eq $purse_caifutong['id']">class="hover"</if> onclick="setTab('two', 2, 3)"><notempty name="purse_caifutong_data">修改<else/>绑定</notempty>财付通<i class="ico"></i></span>
+        </if>
+        <if condition="$purse_yinhang neq null">
+        <span id="two3" <if condition="$purse_caifutong eq null and $purse_zhifubao eq null and $purse_yinhang neq null">class="hover"</if> onclick="setTab('two', 3, 3)">绑定银行卡<i class="ico"></i></span>
+        </if>
+    </div>
+
+
+
+    <if condition="$purse_zhifubao neq null">
+        <form id="alipay" action="{:U('')}" method="post" class="layui-form">
+        <input type="hidden" name="purseid" value="{$purse_zhifubao.id}" />
+        <input type="hidden" name="step" id="step" value="5" class="form_check">
+    	<input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+		<div class="input_k clearfix con_two" id="con_two_1" <if condition="$purse_first['id'] neq $purse_zhifubao['id']">style="display:none"</if>>
+			<div class="layui-form-item">
+		        <label class="layui-form-label">姓名</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="name" value="{$purse_zhifubao_data.name}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请务必填写您的真实姓名</div>
+		    </div>
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">账号</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="account" value="{$purse_zhifubao_data.pursecardno}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请输入支付宝登陆账号</div>
+		    </div>
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">确认账号</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="account2" value="{$purse_zhifubao_data.pursecardno}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请再次输入支付宝登陆账号</div>
+		    </div>
+		    <notempty name="purse_zhifubao_data">
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">交易安全码</label>
+		        <div class="layui-input-inline">
+		        	<input type="password" name="safecode" value="" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请再次输入交易安全码</div>
+		    </div>
+			</notempty>
+			<div class="layui-form-item">
+		        <div class="layui-input-block">
+		        	<notempty name="purse_zhifubao_data">
+		            <a class="layui-btn layui-btn-sm layui-btn-primary" lay-submit lay-filter="*">修改绑定</a>
+		            <else/>
+		            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">马上绑定</button>
+		          	</notempty>
+		        </div>
+		    </div>
+        </div>
+		</form>
+		</if>
+		
+		<if condition="$purse_caifutong neq null">
+			<form id="treasure" action="{:U('')}" method="post" class="layui-form">
+			<input type="hidden" name="purseid" value="{$purse_caifutong.id}" />
+			<input type="hidden" name="step" id="step" value="5" class="form_check">
+    		<input type="hidden" name="uid" value="{:is_login()}">
+			<div class="input_k clearfix con_two" id="con_two_2" <if condition="$purse_first['id'] neq $purse_caifutong['id']">style="display:none"</if>>
+			<div class="layui-form-item">
+		        <label class="layui-form-label">姓名</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="name" value="{$purse_caifutong_data.name}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请务必填写您的真实姓名</div>
+		    </div>
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">账号</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="account" value="{$purse_caifutong_data.pursecardno}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请输入财付通登陆账号</div>
+		    </div>
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">确认账号</label>
+		        <div class="layui-input-inline">
+		        	<input type="text" name="account2" value="{$purse_caifutong_data.pursecardno}" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请再次输入财付通登陆账号</div>
+		    </div>
+		    <notempty name="purse_caifutong_data">
+		    <div class="layui-form-item">
+		        <label class="layui-form-label">交易安全码</label>
+		        <div class="layui-input-inline">
+		        	<input type="password" name="safecode" value="" class="layui-input">
+		        </div>
+		        <div class="layui-form-mid layui-word-aux">请再次输入交易安全码</div>
+		    </div>
+			</notempty>
+			<div class="layui-form-item">
+		        <div class="layui-input-block">
+		        	<notempty name="purse_caifutong_data">
+		            <a class="layui-btn layui-btn-sm layui-btn-primary" lay-submit lay-filter="*">修改绑定</a>
+		            <else/>
+		            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">马上绑定</button>
+		          	</notempty>
+		        </div>
+		    </div>
+        	</div>
+			</form>
+			</if>
+
+			<if condition="$purse_yinhang neq null">
+			<div id="con_two_3" class="con_two" style="display:none">
+				<div class="input_k clearfix" >
+					<div class="layui-form-item">
+				        <label class="layui-form-label">银行</label>
+				        <div class="layui-input-inline">
+				        	<select class="layui-input" id="bank" name="purseid" onchange="Change(this)">
+								<volist name="purse_yinhang" id="v">
+								<option value="{$v.id}" name="purseid" >{$v.pursename}</option>
+								</volist>
+							</select>
+				        </div>
+				        <div class="layui-form-mid layui-word-aux">请选择相关银行</div>
+				    </div>
+				<volist name="purse_yinhang" id="v">
+				<php>$purse_yinhang_data = D('MemberPurseId')->where('uid='.is_login().' and status = 1 and pid = '.$v['id'])->find();</php>
+				<div id="div{$v.id}" <eq name="i" value="1"><else/>style="display:none"</eq>>
+				<form id="bank{$v.id}" action="{:U('')}" method="post" class="layui-form">
+				<input type="hidden" name="step" id="step" value="5" class="form_check">
+				<input type="hidden" name="purseid" id="purseid" value="{$v.id}" class="form_check">
+				<input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+
+				<div class="layui-form-item">
+			        <label class="layui-form-label">开户银行</label>
+			        <div class="layui-input-inline">
+			        	<input class="layui-input" name="banksub" id="banksub" type="text" value="{$purse_yinhang_data.banksit}">
+			        </div>
+			        <div class="layui-form-mid layui-word-aux">请填写相关开户行银行</div>
+			    </div>
+			    <div class="layui-form-item">
+			        <label class="layui-form-label">姓名</label>
+			        <div class="layui-input-inline">
+			        	<input class="layui-input" name="name" id="name" type="text" value="{$purse_yinhang_data.name}">
+			        </div>
+			        <div class="layui-form-mid layui-word-aux">请务必填写您的真实姓名</div>
+			    </div>
+			    <div class="layui-form-item">
+			        <label class="layui-form-label">卡号</label>
+			        <div class="layui-input-inline">
+			        	<input class="layui-input" name="account" id="account" type="text" value="{$purse_yinhang_data.pursecardno}">
+			        </div>
+			        <div class="layui-form-mid layui-word-aux">请输入银行卡号</div>
+			    </div>
+			    <div class="layui-form-item">
+			        <label class="layui-form-label">确认卡号</label>
+			        <div class="layui-input-inline">
+			        	<input class="layui-input" name="account2" id="account2" type="text" value="{$purse_yinhang_data.pursecardno}">
+			        </div>
+			        <div class="layui-form-mid layui-word-aux">请再次输入银行卡号</div>
+			    </div>
+
+				<notempty name="purse_yinhang_data">
+				<div class="layui-form-item">
+			        <label class="layui-form-label">交易安全码</label>
+			        <div class="layui-input-inline">
+			        	<input type="password" name="safecode" value="" class="layui-input">
+			        </div>
+			        <div class="layui-form-mid layui-word-aux">请再次输入交易安全码</div>
+			    </div>
+				</notempty>
+				<div class="layui-form-item">
+			        <div class="layui-input-block">
+			        	<notempty name="purse_yinhang_data">
+			            <a class="layui-btn layui-btn-sm layui-btn-primary" lay-submit lay-filter="*">修改绑定</a>
+			            <else/>
+			            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">马上绑定</button>
+			          	</notempty>
+			        </div>
+			    </div>
+				</form>
+				</div>
+				</volist>
+				</ul>
+			</div>
+		</if>
+    </div>
+  </div>
+</div>
+<script>
+    function Change(obj){
+        $("#con_two_3").find("div").each(function(){
+            $(this).hide();
+        });
+        $("#div" + obj.value).show();
+    }
+</script>
+<script>
+//tab切换
+function setTab(name, cursel, n) {
+	$('div.methods').children().attr('class', '');
+	$('.con_two').css('display', 'none');
+    var menu = document.getElementById(name + cursel);
+    var con = document.getElementById("con_" + name + "_" + cursel);
+    menu.className =  "hover";
+    con.style.display = "block";
+}
+</script>
+</block>
+
+<block name="script">
+</block>

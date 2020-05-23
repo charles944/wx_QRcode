@@ -1,0 +1,99 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="{:U('index')}"><cite>{$info['id']?'编辑':'新增'}导航 </cite></a>
+		<notempty name="pid">[&nbsp;父导航：<a href="{:U('index','pid='.$pid)}">{$parent.title}</a>&nbsp;]</notempty>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<form action="{:U()}" id="form" class="layui-form" method="post">
+		<div class="form-body">
+			<div class="layui-form-item">
+				<label class="layui-form-label">导航标题</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="title" value="{$info.title|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">用于显示的文字</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">导航连接</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="url" value="{$info.url|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">用于调转的URL，支持带http://的URL或U函数参数格式</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">父导航</label>
+				<div class="layui-input-inline">
+					<select class="form-control select2me" name="pid">
+						<option <empty name="pid" > selected</empty>value="0">顶级菜单</option>
+					   <volist name="pnav" id="p">
+						   <option <eq name="p.id" value="$pid" >selected</eq> value="{$p.id}">{$p.title}</option>
+					   </volist>
+					</select>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">新窗口打开</label>
+				<div class="layui-input-inline">
+					<select class="form-control select2me" name="target">
+						 <option value="0" >否</option>
+						 <option value="1"  <eq  name="info.target" value="1">selected</eq>>是</option>
+					</select>
+				</div>
+				<div class="layui-form-mid layui-word-aux">是否新窗口打开链接</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">优先级</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="sort" value="{$info.sort|default='0'}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">导航显示顺序</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">文字颜色</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="color" value="{$info.color|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">右上角的标志点颜色，支持各类css表示方式</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">标志点颜色</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="band_color" value="{$info.band_color|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">右上角的标志点颜色，支持各类css表示方式</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">标志点文字</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="band_text" value="{$info.band_text|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">右上角的标志点文字，不要太长，没有自动隐藏</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-inline">
+					<input type="hidden" name="id" value="{$info.id|default=''}">
+					<button class="layui-btn layui-btn-sm ajax-post" id="submit" type="submit" target-form="layui-form">确 定</button>
+					<button class="layui-btn layui-btn-sm layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+</block>
+<block name="jquery_script">
+</block>
+<block name="script">
+</block>

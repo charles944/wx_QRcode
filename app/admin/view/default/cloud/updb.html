@@ -1,0 +1,117 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+h3,h4{padding:10px 0; line-height:25px; height:25px; clear:both}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>核心自动升级 - 更新数据库</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+
+	<div class="alert alert-info">
+		<p>当前需要升级的版本：<strong>{$nextVersion.name}</strong></p>
+
+		<p>当前的系统版本号：<strong>{$currentVersion.name}</strong></p>
+	</div>
+	<div class="portlet-body">
+		<h3>
+			<strong class="text-success">1.下载更新包，获取更新文件列表  &gt;  2.本地文件对比  &gt;  3.代码升级  &gt;  4.数据库升级 </strong>  &gt;  升级完成
+		</h3>
+
+		<empty name="sql">
+			<div class="alert alert-warning">
+				本次更新不涉及数据库改动，可以直接跳过。
+			</div>
+			<a href="{:U('finish')}"  class="layui-btn layui-btn-sm">无需升级数据库，跳过数据库升级</a>
+		<else/>
+			<h4>
+				本次更新的数据库改动：
+			</h4>
+			<p class="alert alert-info">如果您改动过数据库，请手动核对下面的数据库改动，如存在冲突，请自行修改数据库后，<strong>跳过数据库升级</strong></p>
+			<div style="border: 1px solid #ccc;padding: 20px;height: 243px;overflow: auto">
+				{$sql}
+			</div>
+			<h4>涉及的数据库更新脚本位置：</h4>
+			<p class="alert alert-warning">
+				{$path}/update.sql
+			</p>
+			<a id="compare_btn" class="layui-btn layui-btn-sm" onclick="updateDB(this)">我未改动过数据库，升级数据库</a>
+		
+			<a href="{:U('finish')}" class="layui-btn layui-btn-sm layui-btn-primary" onclick="if(!confirm('确定跳过数据库升级步骤？如果您不是开发人员，或者还未对数据库进行合并操作，请不要跳过。')){return false}">我已经自行合并数据库升级，跳过</a>
+		</empty>
+	</div>
+</div>
+</div>
+</div>
+
+<script>
+	function updateDB(obj) {
+		if (!confirm('确定导入？强烈建议在导入之前进行数据库备份。')) {
+			return false;
+		} else {
+			$(obj).attr('disabled', 'disabled');
+			$(obj).text('正在升级数据库，请耐心等待……');
+			$.post('__SELF__', function (msg) {
+				if (msg.status) {
+					$(obj).removeAttr('disabled');
+					
+					layer.msg('数据库升级成功', {icon: 1, fixed: true, offset: '80%', time:1000});
+					$(obj).text('升级数据库成功，进入下一步');
+					$(obj).attr('href',"{:U('finish')}");
+					$(obj).attr('onclick','');
+				} else {
+					layer.msg('升级失败，请检测后再试', {icon: 2, fixed: true, offset: '80%', time:1000})
+				}
+			})
+		}
+	}
+	function writeFile($data) {
+		$('#file').append('<div><i class="icon-file"></i> ' + $data + '</div>');
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	var progress = {
+		'show': function () {
+			$('#progress').parent().show();
+		},
+		'setValue': function ($value) {
+			$('#progress').css('width', $value);
+		},
+		'hide': function () {
+			$('#progress').parent().hide();
+		}
+	};
+	function enable() {
+		$('#compare_btn').removeAttr('disabled', '');
+	}
+</script>
+</block>

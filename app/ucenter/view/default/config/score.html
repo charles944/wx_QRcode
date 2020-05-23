@@ -1,0 +1,58 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的积分</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<div class="layui-tab">
+			<ul class="layui-tab-title">
+				<li class="layui-this">我的积分</li>
+				<li>成长等级经验</li>
+				<li>积分获取规则</li>
+			</ul>
+			<div class="layui-tab-content">
+				<div class="layui-tab-item layui-show">
+					<div class="title" style="font-size: 18px;line-height: 50px;">现有积分</div>
+					<volist name="scores" id="vo">
+						<div class="qn-msg">{$vo.title}：{$vo.value} {$vo.unit}</div>
+					</volist>
+				</div>
+				<div class="layui-tab-item">
+					<div class="title" style="font-size: 18px;line-height: 50px;">升级所需经验</div>
+					<div class="qn-msg">{$level}</div>
+					<div class="qn-msg">
+						当前经验：{$self.score}
+					</div>
+				</div>
+				<div class="layui-tab-item">
+					<volist name="action_module" id="m">
+						<div class="title" style="font-size: 18px;line-height: 50px;">{$m.module.alias|default='系统'}</div>
+						<volist name="m.action" id="vo">
+							<if condition="$vo['rule_array'] neq false">
+								<div class="qn-msg">
+									<h4 class="list-group-item-heading"><strong>{$vo.title}：</strong></h4>
+									<volist name="vo.rule_array" id="r">
+										<p class="list-group-item-text">【{:get_usergroups($r['usergroups'])}】每次【{$r.score.title}】【{$r.rule}】{$r.score.unit}
+											，每间隔【{$r.cycle}】{:get_time_unit($r['time_unit'])}，可最多【{$r.max}】次
+										</p>
+									</volist>
+								</div>
+							</if>
+						</volist>
+					</volist>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</block>

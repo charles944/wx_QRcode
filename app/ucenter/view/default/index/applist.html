@@ -1,0 +1,32 @@
+<extend name="base/common"/>
+
+<block name="style">
+	<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+<div class="main">
+	<div class="qn-home" style="background: url(<if condition="$user_info['cover_id']">{$user_info['cover_path']}<else/>__IMG__/user_top_default_bg.jpg</if>) no-repeat;">
+		<img src="{$user_info.avatar128}" alt="">
+		<h1>{$user_info.nickname|text}</h1>
+		<p class="qn-home-info">
+		<if condition="$user_info['rank_link'][0]['num']">
+			<volist name="user_info['rank_link']" id="vl">
+				<img src="{$vl.logo_url}" title="{$vl.title}" alt="{$vl.title}" style="width: 18px;height: 18px;vertical-align: middle;margin-left: 2px;"/>
+			</volist>
+		</if>
+		</p>
+		<p class="qn-home-sign">（
+		<if condition="$user_info['signature'] eq ''">
+				还没想好O(∩_∩)O
+			<else/>
+			{$user_info.signature|text}
+		</if>
+		）</p>
+	</div>
+	<div class="clear"></div>
+	{:W($module.'/UcenterBlock/render',array('uid'=>$uid,'page'=>$page))}
+</div>
+</block>
+<block name="script">
+</block>

@@ -1,0 +1,120 @@
+<extend name="public/base" />
+<block name="style">
+<style>
+.upload-img-box .upload-pre-items img {
+    width: 100px;
+}
+.upload-img-box .upload-pre-items .opacity {
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    background: #000;
+    opacity: 0.5;
+}
+.upload-img-box .upload-pre-items .each{
+    width:100px;
+    height:100px;
+    border:1px solid #f1f1f1;
+    margin-right:10px;
+    margin-bottom:10px;
+    display:inline-block;
+    position:relative;
+    float:left;
+}
+.upload-img-box .upload-pre-items .del_btn {
+    width: 90px;
+    position: absolute;
+    bottom:0px;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    padding-left:10px;
+}
+.uploadify {position:relative;}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+    <div class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href=""><cite></cite></a>
+    </div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+        <notempty name="suggest">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+            <p>{$suggest}</p>
+        </div>
+        </notempty>
+        <form action="__SELF__" id="form" class="layui-form" method="post">
+        <div class="layui-tab">
+          <ul class="layui-tab-title">
+                <volist name="authgroup_data" id="val">
+                    <li id="tab_1_{$val.id}" class="<if condition="$i eq 1">layui-this</if>">{$val.title}权限</li>
+                </volist>
+          </ul>
+          <div class="layui-tab-content">
+                <php>
+                if($authgroup_data){
+                $p = 0;
+                </php>
+                <volist name="authgroup_data" id="val">
+                <php>$p = $p+1;</php>
+                    <div class="layui-tab-item <if condition="$p eq 1">layui-show</if>" id="tab_1_{$val.id}">
+                        <input type="hidden" value="{$val.id}" name="group_id[]" />
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">可使用活码类型</label>
+                            <div class="layui-input-block">
+                                <php>$qr_type_tmp = explode(',', $qrcode_config_all_data[$val['id']]['allow_type_mode']);</php>
+                                <input type="checkbox" lay-skin="primary" name="allow_type_mode[{$p-1}][]" value="1" title="微信群活码" <if condition="in_array(1, $qr_type_tmp)">checked=""</if>>
+                                <input type="checkbox" lay-skin="primary" name="allow_type_mode[{$p-1}][]" value="2" title="城市分组码" <if condition="in_array(2, $qr_type_tmp)">checked=""</if>>
+                                <input type="checkbox" lay-skin="primary" name="allow_type_mode[{$p-1}][]" value="3" title="自定义分组码" <if condition="in_array(3, $qr_type_tmp)">checked=""</if>>
+                                <input type="checkbox" lay-skin="primary" name="allow_type_mode[{$p-1}][]" value="4" title="客服循环码" <if condition="in_array(4, $qr_type_tmp)">checked=""</if>>
+                                <input type="checkbox" lay-skin="primary" name="allow_type_mode[{$p-1}][]" value="5" title="机型码" <if condition="in_array(5, $qr_type_tmp)">checked=""</if>>
+                            </div>
+                            <div class="layui-form-mid layui-word-aux"></div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">每日扫描总次数限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="allow_max_scan[]" value="{$qrcode_config_all_data[$val['id']]['allow_max_scan']}" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">次</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">创建活码总数限制</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="allow_max_qr[]" value="{$qrcode_config_all_data[$val['id']]['allow_max_qr']}" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">个</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">每个活码下可上传子码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="allow_max_qr_child[]" value="{$qrcode_config_all_data[$val['id']]['allow_max_qr_child']}" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">个</div>
+                        </div>
+                    </div>
+                </volist>
+                <php>}</php>
+          </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-sm ajax-post" id="submit" type="submit" target-form="layui-form">确定</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+</block>
+
+<block name="script">
+</block>

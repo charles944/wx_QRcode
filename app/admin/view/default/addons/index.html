@@ -1,0 +1,172 @@
+<extend name="public/base" />
+<block name="style">
+<style>
+.content-wrapper {
+	float:left;
+}
+.cover-wrapper .cover-icon {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    background: #fff;
+    border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    display: inline-block;
+	border:none;
+	border:1px solid #f1f1f1;
+}
+.cover-wrapper {
+    width: 60px;
+    margin-right: 15px;
+    float: left;
+}
+.thumbnail{
+	position:relative;
+    padding: 10px;
+	min-height:44px; 
+	overflow:hidden;
+	width:50%;
+	float:left;
+	box-sizing: border-box;
+}
+.cover-wrapper .cover-icon i {
+    font-size: 64px;
+    line-height: 120px;
+    color: white;
+}
+.content-wrapper .bottom-btns {
+    margin-top: 10px;
+}
+.content-wrapper .title a {
+    font-size: 14px;
+    color: #333;
+}
+.content-wrapper .title{
+    margin-bottom:0;
+}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href=""><cite>插件管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+		<div class="portlet-title">
+			<div class="actions">
+				<a href="{:U('hooks')}" class="layui-btn layui-btn-xs fbutton">钩子列表</a>
+				<a href="{:U('updatelist')}" class="layui-btn layui-btn-xs fbutton ajax-get">重置插件列表（更新插件信息）</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="portlet-body">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li id="type_all" class="layui-this" onclick="javascript:location.href='{:U('index',array('type'=>'all'))}'">全部</li>
+					<li id="type_yes" onclick="javascript:location.href='{:U('index',array('type'=>'yes'))}'">未安装</li>
+					<li id="type_no" onclick="javascript:location.href='{:U('index',array('type'=>'no'))}'">已安装</li>
+				</ul>
+				<script>
+					$('#type_{$type}').addClass('layui-this').siblings().removeClass('layui-this');
+				</script>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+					<notempty name="_list">
+						<volist name="_list" id="vo">
+							<div class="thumbnail">
+								<div class="cover-wrapper">
+									<div style="position:relative; border-radius: 16px; -moz-border-radius: 16px; -webkit-border-radius: 16px;">
+										<img src=".{$vo.path}/preview.jpg" alt="{$vo.name}" class="cover-icon" style="width:100%;">
+									</div>
+								</div>
+								<div class="content-wrapper">
+									<div class="title">
+										<a href="{:U('config',array('id'=>$vo['id']))}" class="" title="{$vo.title}（{$vo.name}），{$vo.description}，{$vo.author}">{$vo.title}</a>
+										<empty name="vo['version_info']['goods']">
+											<span class="layui-btn layui-btn-xs layui-btn-primary" style="">本地</span>
+										<else/>
+											<span class="layui-btn layui-btn-xs layui-btn-primary" style="">云</span>
+										</empty>
+										<empty name="vo['update_list']">
+											<empty name="vo['token']">
+												<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version}</span>
+											<else/>
+												<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version_info.goods.version}</span>
+											</empty>
+										<else/>
+											<php>$vt = version_compare($vo['version'],$vo['update_list'][0]['version']);
+											if($vt < 0){</php>
+												<span class="layui-btn layui-btn-xs layui-btn-danger">有新版{$vo.update_list.0.version}</span>
+											<php>}else{</php>
+												<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version}</span>
+											<php>}</php>
+										</empty>
+										<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.status_text|default="未安装"}</span>
+									</div>
+									<div class="" style="position:relative;">
+										<empty name="vo.uninstall">
+											<?php
+											$class	= get_addon_class($vo['name']);
+											if(!class_exists($class)){
+												$has_config = 0;
+											}else{
+												$addon = new $class();
+												$has_config = count($addon->getConfig($vo['name']));
+											}
+											?>
+											<?php if ($has_config): ?>
+											<a class="layui-btn layui-btn-xs layui-btn-primary" href="{:U('config',array('id'=>$vo['id']))}">设置</a>
+											<?php endif ?>
+											<?php if ($vo['status'] >=0): ?>
+											<eq name="vo.status" value="0">
+												<a class="layui-btn layui-btn-xs layui-btn-primary ajax-get" href="{:U('changeStatus',array('method'=>'enableaddons','id'=>$vo['id']))}">启用</a>
+												<else/>
+												<a class="layui-btn layui-btn-xs layui-btn-primary ajax-get" href="{:U('changeStatus',array('method'=>'disableaddons','id'=>$vo['id']))}">禁用</a>
+											</eq>
+											<?php endif ?>
+											
+											<a class="layui-btn layui-btn-xs layui-btn-danger ajax-get" href="{:U('uninstall?id='.$vo['id'])}">卸载</a>
+										   
+										<else/>
+											<a class="layui-btn layui-btn-xs layui-btn-info ajax-get" href="{:U('install?addon_name='.$vo['name'])}">安装</a>
+										</empty>
+										
+										<empty name="vo['update_list']">
+											<else/>
+											<php>$vt = version_compare($vo['version'],$vo['update_list'][0]['version']);
+											if($vt < 0){</php>
+												<a class="layui-btn layui-btn-xs layui-btn-info btn-success" href="{:U('Cloud/updateGoods',array('token'=>$vo['token'],'oid'=>$vo['oid'],'md5'=>$vo['md5']))}">更新</a>
+												<a target="_blank" href="{:appstoreU('Appstore/Index/goodsDetail',array('token'=>$vo['token']))}" class="layui-btn layui-btn-xs layui-btn-primary">查看</a>
+											<php>}else{</php>
+												<a target="_blank" href="{:appstoreU('Appstore/Index/goodsDetail',array('token'=>$vo['token']))}" class="layui-btn layui-btn-xs layui-btn-primary">查看</a>
+											<php>}</php>
+											
+										</empty>
+									</div>
+								</div>
+							</div>
+						
+						</volist>
+						<else/>
+						<div class="text-center"> aOh! 暂时还没有内容!</div>
+					</notempty>
+					<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 数据列表 -->
+			<!-- 分页 -->
+			<div class="layui-table-page">
+				{$_page}
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>

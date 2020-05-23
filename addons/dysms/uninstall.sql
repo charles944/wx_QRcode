@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `qn_dysms_tpl`;

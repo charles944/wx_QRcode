@@ -1,0 +1,212 @@
+<extend name="base/common"/>
+
+<block name="style">
+	<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+	<style>
+	table tr,table td,table th{text-align:center !important;min-height:80px !important; line-height:80px !important;}
+	</style>
+</block>
+
+<block name="body">
+
+<div id="page" style="padding-top:20px;padding-bottom:20px;" class="vip-usergroup-wrapper">
+	<div class="layui-breadcrumb">
+	  <a href="">会员中心</a>
+	  <a><cite>升级用户组</cite></a>
+	</div>
+	<table class="layui-table">
+	  <thead>
+		<tr>
+			<volist name="already_roles" id="role">
+			<th>{$role.title}</th>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<th>{$role.title}</th>
+			</volist>
+		</tr> 
+	  </thead>
+	  <tbody>
+	  <php>
+	  $PAN_FREE_PERMISSIONS = modC('PAN_FREE_PERMISSIONS','','FORUM');
+	  $PAN_SCORE_TYPE = modC('PAN_SCORE_TYPE','','FORUM');
+	  if(!empty($PAN_FREE_PERMISSIONS)){
+		$pan_free_arr = explode(',',$PAN_FREE_PERMISSIONS);
+	  }else{
+		$pan_free_arr = array();
+	  }
+	  </php>
+		<tr>
+			<volist name="already_roles" id="role">
+			<td><if condition="in_array($role['user_groups'],$pan_free_arr)">下载无限制<else/>部分受限</if></td>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<td><if condition="in_array($role['user_groups'],$pan_free_arr)">下载无限制<else/>部分受限</if></td>
+			</volist>
+		</tr>
+		<tr>
+			<volist name="already_roles" id="role">
+			<td><if condition="in_array($role['user_groups'],$pan_free_arr)">免币下载<else/>扣{:getScoreTypeName($PAN_SCORE_TYPE)}下载</if></td>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<td><if condition="in_array($role['user_groups'],$pan_free_arr)">免币下载<else/>扣{:getScoreTypeName($PAN_SCORE_TYPE)}下载</if></td>
+			</volist>
+		</tr>
+		<tr>
+			<volist name="already_roles" id="role">
+			<td>
+			<switch name="role.levelmod">
+			<case value="buy">
+				{$role.buyvalue}元 升级
+			</case>
+			<case value="invite">
+				邀请升级
+			</case>
+			<case value="authen">
+				认证升级
+			</case>
+			<case value="close">
+				X
+			</case>
+			</switch>
+			</td>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<td>
+			<switch name="role.levelmod">
+			<case value="buy">
+				{$role.buyvalue}元 升级
+			</case>
+			<case value="invite">
+				邀请升级
+			</case>
+			<case value="authen">
+				认证升级
+			</case>
+			<case value="close">
+				X
+			</case>
+			</switch>
+			</td>
+			</volist>
+		</tr>
+		<tr>
+			<volist name="already_roles" id="role">
+			<td>{$role.user_status}</td>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<td>
+				<switch name="role.levelmod">
+				<case value="close">
+					X
+				</case>
+				<default />可升级
+				</switch>
+			</td>
+			</volist>
+		</tr>
+		<tr>
+			<volist name="already_roles" id="role">
+			<td>
+			<neq name="role.user_role_status" value="0">
+				<eq name="role.can_login" value="1">
+					<a data-role="changeLoginRole" data-id="{$role.id}" class="layui-btn layui-btn-sm">切换登录</a>
+				<else/>
+					当前登录
+				</eq>
+			</neq>
+			</td>
+			</volist>
+			<volist name="can_have_roles" id="role">
+			<td>
+				<switch name="role.levelmod">
+					<case value="buy">
+						<a data-role="up_role" data-url="{:U('home/member/upRole')}" data-id="{$role.id}" data-type="buy" class="layui-btn layui-btn-sm">{$role.buyvalue}元 升级该身份</a>
+					</case>
+					<case value="invite">
+						<a data-role="up_role" data-url="{:U('home/member/upRole')}" data-id="{$role.id}" data-type="invite" class="layui-btn layui-btn-sm">升级该身份</a>
+					</case>
+					<case value="authen">
+						<a data-role="up_role" data-url="{:U('home/member/upRole')}" data-id="{$role.id}" data-type="authen" class="layui-btn layui-btn-sm">升级该身份</a>
+					</case>
+					<case value="close">
+						X
+					</case>
+				</switch>
+			</td>
+			</volist>
+		</tr>
+	  </tbody>
+	</table>
+	<table class="layui-table">
+	<tbody>
+	<tr>
+		<td>* 如遇到不能付款的情况，请联系客服处理<br/>* 付款时请不要关闭付款页面，等待浏览器自动跳转完成，否则无法自动开通</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+
+</block>
+<block name="script">
+<script type="text/javascript">
+        $(function () {
+            $(window).resize(function () {
+                $(".wrapper").css("min-height", $(window).height() - 243);
+            }).resize();
+			$('[data-role="changeLoginRole"]').click(function(){
+				var role_id=$(this).attr('data-id');
+				$.post(U('home/member/changeLoginRole'),{role_id:role_id},function(data){
+					if(data.status){
+						if(data.url!=undefined){
+							layer.msg('切换身份登录成功！页面即将跳转~', {icon: 1, fixed: true, offset: '80%', time: 1000});
+							setTimeout(function(){
+								window.location.href=data.url;
+							},1500);
+						}else{
+							layer.msg('切换身份登录成功！', {icon: 1, fixed: true, offset: '80%', time: 1000});
+							setTimeout(function(){
+								window.location.reload();
+							},1500);
+						}
+					}else{
+						layui.qn.handleAjax(data);
+					}
+				});
+			});
+			$('[data-role="up_role"]').click(function(){
+				var url = $(this).attr('data-url');
+				var role_id = $(this).attr('data-id');
+				var type = $(this).attr('data-type');
+				if(type == 'buy'){
+					$.post(url,{role_id:role_id},function(data){
+						if(data.status == 1){
+							if(data.url!=undefined){
+								layer.msg(data.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+								setTimeout(function(){
+									window.location.href=data.url;
+								},1500);
+							}else{
+								layer.msg(data.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+								setTimeout(function(){
+									window.location.reload();
+								},1500);
+							}
+						}else{
+							layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+							setTimeout(function(){
+								window.location.reload();
+							},1500);
+						}
+					});
+				}else if(type == 'invite'){
+				
+				}else if(type == 'authen'){
+				
+				}else{
+				
+				}
+				
+			});
+        })
+    </script>
+</block>

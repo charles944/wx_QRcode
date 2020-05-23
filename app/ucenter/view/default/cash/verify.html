@@ -1,0 +1,155 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>我的概况</h2>
+    <div class="operation">
+    </div>
+</div>
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+    <div class="usercenter">
+        <div class="uc">
+<div class="uc_content clearfix">
+<div class="col-xs-12 col-sm-12">
+<div class="account-info fn-clear">
+<ul class="account-info-list" style="width:500px;">
+<li class="fn-clear">
+      <span class="fn-left">Hi，&nbsp;<b style="color:red;font-size:16px">{$self.nickname}</b>，目前资产：</span>
+</li>
+<li class="fn-clear">
+<volist name="scores" id="vo">
+    <p><b>{$vo.title}</b>：<b style="color:red;font-size:16px">{$vo.value|number_format=2}</b> {$vo.unit}</p>
+	<eq name="vo.cash" value="1">
+	<p class="fn-clear" style="text-indent:2em"><b>当前兑换比例为</b>：<b style="color:red;font-size:16px">{$vo.exchange}</b> {$vo.title} =  <b style="color:red;font-size:16px">1</b> 元 </p>
+	<php>$str = $self[$vo['mark']]/$vo['exchange'];
+	$str = explode('.',$str);
+	</php>
+	<p class="fn-clear" style="text-indent:2em"><b>当前可兑换金额</b>：<b style="color:red;font-size:16px">{$str[0]}</b> 元 </p>
+	</eq>
+</volist>
+</li>
+</ul>
+</div>
+<div class="mytable col-md-12 content">
+<div class="cont">
+    <form id="memfrom" action="{:U('')}"  class="ajax-form center_info" method="post">
+    <input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+    <input type="hidden" class="form-control" name="type" value="<eq name="cash_take_sms_on" value="0">mobile<else/>email</eq>">
+    <input type="hidden" class="form-control" name="id" value="{$order_list.id}">
+    <div class="cont">
+        <ul class="input_k clearfix">
+        	<li class="li_1 clearfix">
+                <span class="name">提现方式：</span>
+                <span class="sr" style="height: 34px;line-height: 34px;font-size: 14px;">{$order_list.purse_pname}</span>
+            </li>
+            <li class="li_1 clearfix">
+                <span class="name">提现账号：</span>
+                <span class="sr" style="height: 34px;line-height: 34px;font-size: 14px;">{$order_list.pursecardno}</span>
+            </li>
+            <li class="li_1 clearfix">
+                <span class="name">姓名：</span>
+                <span class="sr" style="height: 34px;line-height: 34px;font-size: 14px;">{$order_list.name}</span>
+            </li>
+        	<li class="li_1 clearfix">
+                <span class="name">申请提现：</span>
+                <span class="sr" style="height: 34px;line-height: 34px;font-size: 14px;">{$order_list.pay_offer}元</span>
+            </li>
+            <li class="li_1 clearfix">
+                <span class="name">提现时间：</span>
+                <span class="sr" style="height: 34px;line-height: 34px;font-size: 14px;">{$order_list.create_time|date="Y-m-d H:i:s",###}</span>
+            </li>
+            <php>$verf = modC('SMS_SENDVERIF_TYPE',0,'USERCONFIG');</php>
+            <eq name="cash_take_sms_on" value="0">
+            <li class="li_1 clearfix">
+                <span class="name">手机号码：</span>
+                <span class="sr">
+                    <input class="sframe sframe_1 form_check" placeholder="" check-type="Phone" name="phone" id="account" type="text" <if condition="$self['mobile'] neq '' or $self['mobile'] neq null">value="{$self.mobile}" readonly="readonly"</if>>
+                    <if condition="$self['mobile'] neq '' or $self['mobile'] neq null">
+                    <input name="mobile" value="{$self.mobile}" type="hidden" />
+                    </if>
+                    </span>
+                    <span class="zs "><i>*&nbsp;</i> 不可修改 </span>
+            </li>
+            <else/>
+            <li class="li_1 clearfix">
+                <span class="name">邮箱：</span>
+                <span class="sr">
+                    <input class="sframe sframe_1 form_check" placeholder="" check-type="email" name="email" id="account" type="text" <if condition="$self['email'] neq '' or $self['email'] neq null">value="{$self.email}" readonly="readonly"</if>>
+                    <if condition="$self['email'] neq '' or $self['email'] neq null">
+                    <input name="email" value="{$self.email}" type="hidden" />
+                    </if>
+                    </span>
+                    <span class="zs "><i>*&nbsp;</i> 不可修改</span>
+            </li>
+            </eq>
+            <li class="li_1 clearfix">
+                <span class="name">验证码：</span>
+                <span class="sr">
+                    <input class="sframe sframe_2" size="6" name="verify" id="Memsecond_code" type="text">
+                    <input id="btnSendVCode" type="button" data-role="getVerify" class="btn btn-success" value="<eq name="cash_take_sms_on" value="0"><eq name="verf" value="1">获取语音验证码<else/>获取短信验证码</eq><else/>发送邮箱验证码</eq>" style="border:none; margin-left:10px">
+                </span>
+                <span class="zs "><i>*&nbsp;</i> 请输入验证码 </span>
+            </li>
+            <li class="li_2">
+               <button class="ann_1" type="submit" name="" style="border-left:none; border-right:none; border-top:none">完成验证</button>
+            </li>
+        </ul>
+    </div>
+    </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+
+</block>
+<block name="script">
+<script type="text/javascript">
+    $(function () {
+        $("[data-role='getVerify']").click(function () {
+            var account = $(this).parents('.center_info').find('#account').val();
+            var type = $(this).parents('.center_info').find('[name="type"]').val();
+			var $this = $(this);
+            $("[data-role='getVerify']").attr("disabled","disabled");
+            $("[data-role='getVerify']").val('正在发送中...');
+            $.post("{:U('home/verify/sendVerify')}", {account: account, type: type,action:'config', todo: 'cash'}, function (res) {
+                if(res.status){
+                	DecTime.obj = $this;
+					DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+					DecTime.dec_time();
+					layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+                }
+                else{
+                	DecTime.obj = $this;
+					DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+					DecTime.dec_time();
+					layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+                }
+            })
+        })
+    });
+	
+	var DecTime = {
+	obj:0,
+	time:0,
+	dec_time : function(){
+		if(this.time > 0){
+			this.obj.val(this.time--+'S');
+			setTimeout("DecTime.dec_time()",1000);
+		}else{
+			this.obj.val('发送邮箱验证码');
+			this.obj.attr('disabled',false);
+		}
+	}
+	}
+</script>
+</block>

@@ -1,0 +1,60 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>我的站内信</h2>
+    <div class="operation">
+    </div>
+</div>
+
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+<div class="layui-tab">
+  <ul class="layui-tab-title">
+	 <!-- <li onclick="javascript:location.href='{:U('Ucenter/Message/message',array('t'=>'unread'))}'" 
+	 <eq name="t" value="unread"> class="layui-this"</eq>
+	 >未读消息</li> -->
+	 <li onclick="javascript:location.href='{:U('Ucenter/Message/message',array('t'=>'all'))}'" 
+	 <eq name="t" value="all"> class="layui-this"</eq>
+	 >全部消息</li>
+   <div style="float:right;"><a href="{:U('Ucenter/Message/setmessageread')}" class="layui-btn layui-btn-primary layui-btn-xs ajax-get confirm" style="display:inline-block">全部已读</a><a href="{:U('Ucenter/Message/clearmessage')}" class="layui-btn layui-btn-danger layui-btn-xs ajax-get confirm" style="display:inline-block">清空</a></div>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+	<if condition="count($messages) eq 0">
+	<div class="title" style="font-size: 18px;line-height: 50px;">暂无消息～</div>
+    <else/>
+    <volist name="messages" id="message">
+        <div class="qn-msg">
+                <div class="message_icon">
+				<if condition="$message.from_uid eq 1">
+					【平台推送】
+				<else/>
+                  【{$message.from_user.nickname|default='匿名'}】
+				</if>
+				<div class="message-ctime">{$message.create_time|friendlyDate}</div>
+                </div>
+                <dl class="message-dl">
+                    <dt>
+                        <h3 style="font-weight:bold"><eq name="message.is_read" value="0">【未读】</eq>{$message.content.title}</h3>
+                    </dt>
+                    <eq name="t" value="all"><dd>{$message.content.content}</dd></eq>
+                </dl>
+        </div>
+    </volist>
+
+	{:getPagination($totalCount)}
+	</if>
+	
+	</div>
+  </div>
+</div>
+
+</div>
+</div>
+</block>

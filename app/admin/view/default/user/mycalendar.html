@@ -1,0 +1,29 @@
+<extend name="public/base"/>
+<block name="style">
+<link href="__STATIC__/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>日程安排</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script src="__STATIC__/moment.min.js"></script>
+<script src="__STATIC__/fullcalendar/fullcalendar.js"></script>
+<script src="__ADMIN__/pages/scripts/calendar.js"></script>
+
+</block>
+<block name="jquery_script">
+Calendar.init();
+</block>

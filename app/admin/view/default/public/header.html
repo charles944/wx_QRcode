@@ -1,0 +1,58 @@
+<ul class="layui-nav layui-layout-left">
+    <li class="layui-nav-item qn-flexible">
+        <a href="javascript:;" qn-event="flexible" title="侧边伸缩">
+          <i class="layui-icon layui-icon-shrink-right" id="qn_app_flexible"></i>
+        </a>
+    </li>
+	
+	<li class="layui-nav-item layui-this layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{:U('/manage')}" data-show="home">控制面板</a></li>
+	<li class="layui-nav-item layui-hide-xs layui-hide-sm layui-show-md-inline-block">
+        <a href="/" target="_blank" title="">
+          前台
+        </a>
+    </li>
+    <span class="layui-nav-bar" style="width: 0px; left: 0px; opacity: 0;"></span>
+</ul>
+<ul class="layui-nav layui-layout-right" lay-filter="layout-right">
+	<php>
+		$common_header_user = query_user(array('nickname','avatar64'));
+		$mymsgmap['to_uid'] = UID;
+		$mymsgmap['is_read'] = 0;
+		$mymsgcount = M('Message')->where($mymsgmap)->count();
+	</php>
+	<li class="layui-nav-item layui-hide-xs">
+		<a href="{:U('user/mymsg')}" qn-event="message">
+			<i class="layui-icon layui-icon-notice"></i>
+			<if condition="$mymsgcount gt 0">
+			<span class="layui-badge-dot"></span>
+			</if>
+		</a>
+	</li>
+	<li class="layui-nav-item layui-hide-xs">
+		<a href="javascript:void(0);" id="trace_show">
+			<i class="layui-icon" style="font-size:20px">&#xe61b;</i>
+		</a>
+	</li>
+	<li class="layui-nav-item layui-hide-xs">
+		<a href="javascript:;" qn-event="note">
+			<i class="layui-icon layui-icon-note"></i>
+		</a>
+	</li>
+	<script>
+	function clear_cache() {$.get('__ROOT__/clearcache.php');layer.msg('清理缓存成功',{icon: 1, time: 1000, fixed: true, offset: '80%'});}
+	</script>
+	<li class="layui-nav-item" style="margin-right:40px">
+		<a href="javascript:;">
+			<cite>{$common_header_user.nickname}</cite>
+		</a>
+		<dl class="layui-nav-child">
+			<dd><a ><if condition="UID eq 1">超级管理员<else/>{$group_name}</if></a></dd>
+			<dd><a href="{:U('user/account')}">基本资料</a></dd>
+			<dd><a href="{:U('action/actionlog')}">操作日志</a></dd>
+			<dd><a href="javascript:void(0);" onclick="clear_cache();">清理缓存</a></dd>
+			<dd><a id="lock_screen" href="javascript:void(0);">锁定屏幕</a></dd>
+			<hr>
+			<dd><a href="{:U('public/logout')}" class="ajax-get">退出</a></dd>
+		</dl>
+	</li>
+</ul>

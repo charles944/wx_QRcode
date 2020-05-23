@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if IE 8]><html lang="zh" class="ie8 no-js"><![endif]-->
+<!--[if IE 9]><html lang="zh" class="ie9 no-js"><![endif]-->
+<!--[if !IE]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+<head>
+	<include file="public/head"/>
+</head>
+<body class="layui-layout-body">
+<div id="qn_app" class="">
+<div class="layui-layout layui-layout-admin">
+	<include file="public/header"/>
+
+	<div class="layui-body" id="qn_app_body">
+		<include file="public/body"/>
+	</div>
+</div>
+</div>
+<block name="script"></block>
+<include file="public/js"/>
+{:hook('pagefooter', 'widget')}
+<div class="hidden">
+    <block name="hidden">{:C('COUNT_CODE')}</block>
+</div>
+</body>
+</html>

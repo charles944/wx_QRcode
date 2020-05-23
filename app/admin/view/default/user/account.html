@@ -1,0 +1,178 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>帐号设置</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+<div class="layui-tab">
+  <ul class="layui-tab-title">
+	<li class="layui-this">个人资料</li>
+	<li>更换密码</li>
+	<li>更改昵称</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+		<php>if(check_reg_type('username')){</php>
+		<div class="layui-form-item">
+			<label class="layui-form-label">用户名</label>
+			<div class="layui-input-block">
+				<php>if($accountInfo['username']){</php>
+				<span class="lh32">{$accountInfo['username']}</span>
+				<php>}else{</php>
+				<input type="text" class="layui-input" id="aUsername" value="" placeholder="还未设置用户名，赶快来设置吧~">
+				<a class="pull-left lh32 saveUsername" style="margin-left: 10px">设置</a>
+				<script>
+					$(function () {
+						$('.saveUsername').click(function () {
+							var username = $(this).prev().val();
+							if (!username) {
+								layer.msg('用户名不能为空！', {icon: 2, fixed: true, offset: '80%', time:1000});
+								return false;
+							}
+							if (confirm('用户名一经设置就不能修改，确定要设置么？')) {
+								$.post("{:U('ucenter/config/saveUsername')}", {username: username}, function (res) {
+									layui.qn.handleAjax(res);
+								})
+							}
+						})
+					})
+				</script>
+				<php>}</php>
+			</div>
+		</div>
+		<php>}</php>
+
+		<php>if(check_reg_type('email')){</php>
+		<div class="layui-form-item">
+			<label class="layui-form-label">邮箱</label>
+			<div class="layui-input-block">
+				{$accountInfo.email|default='未设置'}
+			</div>
+		</div>
+		<php>}</php>
+
+		<php>if(check_reg_type('mobile')){</php>
+		<div class="layui-form-item">
+			<label class="layui-form-label">手机</label>
+			<div class="layui-input-block">
+				{$accountInfo.mobile|default='未设置'}
+			</div>
+		</div>
+		<php>}</php>
+		<form class="layui-form center_info" role="form" action="{:U('')}" method="post">
+			<div class="layui-form-item">
+				<label class="layui-form-label">昵称</label>
+				<div class="layui-input-block">
+					<input type="text" class="layui-input" id="nickname" name="nickname" value="{$user.nickname|op_t}" placeholder="昵称">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">性别</label>
+				<div class="layui-input-block">
+					<div class="radio-list">
+						<input name="sex" type="radio" value="1" <eq name="user.sex" value="1"> checked</eq> title="男" />
+						<input name="sex" type="radio" value="2" <eq name="user.sex" value="2"> checked</eq> title="女" />
+						<input name="sex" type="radio" value="0" <eq name="user.sex" value="0"> checked</eq> title="保密" />
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">QQ</label>
+				<div class="layui-input-block">
+					<input type="text" class="layui-input" id="qq" name="qq" value="{$user.qq|op_t}" placeholder="QQ">
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">所在地</label>
+				<div class="layui-input-block">{:hook('j_china_city',array('province'=>$user['pos_province'],'city'=>$user['pos_city'],'district'=>$user['pos_district'],'community'=>$user['pos_community']))}
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">个性签名</label>
+				<div class="layui-input-block">
+					<textarea id="signature" name="signature" class="layui-input" style="width: 100%; height: 6em;resize: none">{$user.signature|htmlspecialchars}</textarea>
+				</div>
+			</div>
+
+			<div class="layui-form-item">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-block">
+					<button class="layui-btn layui-btn-sm ajax-post" id="submit" type="submit" target-form="center_info">保存</button>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div class="layui-tab-item">
+		<form action="{:U('User/submitPassword')}" method="post" class="layui-form form3">
+		<div class="layui-form-item">
+			<label class="layui-form-label">原密码：</label>
+			<div class="layui-input-block">
+			  <input class="layui-input" placeholder="请输入密码" type="password" name="old" value="">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">新密码：</label>
+			<div class="layui-input-block">
+			  <input class="layui-input" placeholder="请输入新密码" type="password" name="password" value="">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">确认密码：</label>
+			<div class="layui-input-block">
+			  <input class="layui-input" placeholder="请确认密码" type="password" name="repassword" value="">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<div class="layui-input-block">
+				<button class="layui-btn layui-btn-sm submit-btn ajax-post" type="submit" target-form="form3">确 定</button>
+				<button class="layui-btn layui-btn-sm default" onclick="javascript:history.back(-1);return false;">返 回</button>
+			</div>
+		  </div>
+		</form>
+	</div>
+    <div class="layui-tab-item">
+		<blockquote class="layui-elem-quote">温馨提示：昵称不是用户名，后台登录时请使用用户名登录</blockquote>
+		<form action="{:U('User/submitNickname')}" method="post" class="layui-form form4">
+		<div class="layui-form-item">
+			<label class="layui-form-label">当前昵称：</label>
+			<div class="layui-input-block">
+			<input class="layui-input" placeholder="" type="text" name="" disabled value="{:get_nickname()}">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">登录密码：</label>
+			<div class="layui-input-block">
+			<input class="layui-input" placeholder="请输入登录密码" type="password" name="password" value="">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">昵称：</label>
+			<div class="layui-input-block">
+			<input class="layui-input" placeholder="请输入新昵称" type="text" name="nickname" value="">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<div class="layui-input-block">
+				<button class="layui-btn layui-btn-sm submit-btn ajax-post" type="submit" target-form="form4">确 定</button>
+				<button class="layui-btn layui-btn-sm default" onclick="javascript:history.back(-1);return false;">返 回</button>
+			</div>
+		  </div>
+		</form>
+	</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</block>

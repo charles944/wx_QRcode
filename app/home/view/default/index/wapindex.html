@@ -1,0 +1,150 @@
+<extend name="base/wapcommon"/>
+<block name="style">
+<style>
+::after, ::before {
+    box-sizing: border-box;
+}
+body{background: #f8f8f8 !important;}
+.page{background: transparent !important;}
+.iconcolor {
+   width: 3em; height: 3em;
+   fill: currentColor;
+   overflow: hidden;
+}
+.box-shadow{box-shadow: 0 4px 8px -8px rgba(0,0,0,0.4);}
+
+#title {
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center;
+    background: #ff711c;
+}
+
+.i_m{ width:100%; padding:0 10px; margin-top:10px;box-sizing: border-box;}
+.i_m li{ width:50%; float:left; margin-bottom:10px; text-align:center;box-sizing:border-box;}
+.i_m li a{ display:block; width:100%; padding:10px 0; color:#FFF;}
+.i_m li a img{ width:60%; max-width:160px; height:60px; vertical-align:top;}
+.i_m li a{ line-height:30px; font-size:15px; font-weight:normal;}
+.i_m li.i_m1 a{ background:#2d99ed;}
+.i_m li.i_m2 a{ background:#6b6298;}
+.i_m li.i_m3 a{ background:#38b48b;}
+.i_m li.i_m4 a{ background:#ec6d51;}
+.i_ma{ width:100%; padding:0 10px;}
+
+ul.ab_list li{display:-webkit-box; background:#fff;padding:10px 10px 10px 18px; margin-bottom:10px;}
+ul.ab_list li:last-child{border-bottom:none;}
+ul.ab_list li .ab_l{width:56px;margin-right:23px;}
+ul.ab_list li .ab_r { -webkit-box-flex:1;}
+ul.ab_list li .ab_r h3{margin-bottom:3px;color:#4b4b4b;font-size:16px; padding-top:3px;}
+ul.ab_list li .ab_l i{width:56px;height:56px;vertical-align:middle;}
+ul.ab_list li .ab_l i.pj{background-position:0 -61px}
+ul.ab_list li .ab_l i.za{background-position:-69px -62px}
+ul.ab_list li .ab_l i.yc{background-position:-135px -62px}
+.f12{ font-size:14px;} .gray3 { color: #989898;}
+
+.clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+.am-icon-img{width:56px; height:56px;display:block;}
+.am-icon-img img{width:100%;height:100%;}
+</style>
+</block>
+<block name="body">
+<body id="index">
+<header id="title"  class="hui-header">
+    <h1 class="white_span">微信活码管理系统</h1>
+</header>
+<div style="height:60px;"></div>
+<div class="page index_list hui-wrap" id="index_list">
+<ul class="ab_list">
+    <if condition="is_login()">
+        <php>
+            $common_header_user = query_user(array('nickname','avatar32'));
+            $scoreModel = D('User/Score');
+            $scores = $scoreModel->getTypeList(array('status'=>1));
+            foreach ($scores as &$v) {
+                $v['value'] = $scoreModel->getUserScore(is_login(), $v['id']);
+            }
+            unset($v);
+        </php>
+        <li>
+            <div class="ab_l"><span class="am-icon-img" style=""><img src="{$common_header_user.avatar32}" /></span></div>
+            <div class="ab_r">
+                <p>{$common_header_user.nickname}</p>
+                <p>会员级别：{:get_login_group_name()}</p>
+                <p><php>
+                        $g_e_time = get_login_group_endtime();
+                        if($g_e_time > 0){
+                    </php>
+                    <span>到期时间：{:get_login_group_endtime()}</span>
+                    <php>}</php>
+                </p>
+                <!-- <a event-node="logout" href="javascript:void(0);">退出</a> -->
+            </div>
+        </li>
+    </else>
+
+
+    </if>
+</ul>
+<ul class="i_m clearfix">
+  <li class="i_m1" style="padding-right: 10px;">
+      <a href="javascript:hui.open('qrcode/index/edit');">
+            创建微信活码
+        </a>
+    </li>
+    <li class="i_m2" style="margin-right: 0px;">
+      <a href="javascript:hui.open('qrcode/index/index');">
+            活码管理
+        </a>
+    </li>
+</ul>
+<ul class="i_m clearfix">
+  <li class="i_m3" style="padding-right: 10px;">
+      <a href="javascript:hui.open('qrcode/index/tjlog');">
+            每日扫描统计
+        </a>
+    </li>
+    <li class="i_m4" style="margin-right: 0px;">
+      <a href="javascript:hui.open('qrcode/index/domain');">
+            域名管理
+        </a>
+    </li>
+</ul>
+
+<ul class="ab_list">
+<li>为了降低入口活码被封的风险， <span style="color:#ff0000">建议绑定自己的独立域名</span>作为活码入口域名(<a href="">怎么绑定？</a>)</li>
+<li>【怎么使用活码系统】<br> 
+   1、创建一个新的活码。<br>
+   2、填写活码标题，扫描阀值。<br>
+   3、上传多张你自己的真实群二维码。<br>
+   4、(可选)设置二维码的显示顺序。<br>
+   5、下载活码图片，用于对外统一宣传。<br>
+</li>
+</ul>
+</div>
+<div class="hui-fooer-line"></div>
+<div id="hui-footer">
+    <a href="javascript:hui.open('{:U('home/index/index')}');" id="nav-home" class="hui-footer-active">
+        <div class="hui-footer-icons iconfont icon-51"></div>
+        <div class="hui-footer-text">首页</div>
+    </a>
+    <a href="javascript:hui.open('{:U('qrcode/index/index')}');" id="nav-rengou">
+        <div class="hui-footer-icons iconfont icon-baoxiang"></div>
+        <div class="hui-footer-text">活码</div>
+    </a>
+    <a href="javascript:hui.open('{:U('ucenter/my/index')}');" id="nav-my" >
+        <div class="hui-footer-icons iconfont icon-wodexuanzhong"></div>
+        <div class="hui-footer-text">我的</div>
+    </a>
+</div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</block>

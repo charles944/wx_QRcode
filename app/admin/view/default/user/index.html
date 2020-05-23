@@ -1,0 +1,239 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>用户列表</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+<php>
+    if($_REQUEST['nickname']||$_REQUEST['email']||$_REQUEST['qq']||$_REQUEST['mobile'])
+	{
+		$show=1;
+	}
+</php>
+<div style="margin-bottom: 10px; display:none" <eq name='show' value="1">class="show" </eq> id="search_form">
+<style>
+.tb_search td{padding: 5px 10px;}
+</style>
+<form id="searchForm" method="get" action="{:U()}" class="layui-form layui-form-pane form-dont-clear-url-param">
+    <div class="search-form  cf " style="margin-bottom: 10px">		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">用户昵称或用户ID</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="nickname" id="nickname" autocomplete="off" class="layui-input" value="{:I('nickname')}" />
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">邮箱</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="email" id="email" autocomplete="off" class="layui-input" value="{:I('email')}" />
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">手机</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="mobile" id="mobile" autocomplete="off" class="layui-input" value="{:I('mobile')}" />
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">QQ</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="qq" id="qq" autocomplete="off" class="layui-input" value="{:I('qq')}" />
+			</div>
+		</div>
+		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-inline">
+			<php> $vst = I('vsort',0);</php>
+				 <select style="float: none" name="vsort" class="search-input form-control form-input-width" >
+					 <option value="uid" <eq name="vst" value="uid">selected="selected"</eq>>ID</option>
+					 <option value="reg_time" <eq name="vst" value="reg_time">selected="selected"</eq>>注册日期</option>
+					 <option value="last_login_time" <eq name="vst" value="last_login_time">selected="selected"</eq>>登录日期</option>
+					 <option value="lower_num" <eq name="vst" value="lower_num">selected="selected"</eq>>下线数量</option>
+					 <option value="login" <eq name="vst" value="lower_num">selected="selected"</eq> >登录次数</option>
+					 <option value="lower_gold_coin" <eq name="vst" value="lower_gold_coin">selected="selected"</eq>>下线提成</option>
+					 <option value="pay_money" <eq name="vst" value="pay_money">selected="selected"</eq>>总提现</option>
+					 <volist name="scoretypelist" id="v">
+						<option value="{$v['mark']}" <eq name="vst" value="$v['mark']">selected="selected"</eq>>{:getScoreTypeName($v['mark'])}</option>
+					 </volist>
+				 </select>
+			</div>
+		</div>
+		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">升降</label>
+			<div class="layui-input-inline">
+				<php> $st = I('st',0);</php>
+				 <select style="float: none" name="st" class="search-input form-control form-input-width" >
+					 <option value="asc" <eq name="st" value="asc">selected="selected"</eq> >升序</option>
+					 <option value="desc" <eq name="st" value="desc">selected="selected"</eq>>降序</option>
+				 </select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			  <input type="submit" class="layui-btn layui-btn-sm green" value="确定"/>
+			  <button class="layui-btn layui-btn-sm layui-btn-primary toggle_search" id="">关闭</button>
+		</div>
+	</div>
+</form>
+<div style="border-top:1px solid #ccc;border-bottom: 1px solid white"></div>
+</div>
+<div class="portlet">
+	<div class="portlet-title">
+		<div class="actions">
+				<button class="layui-btn layui-btn-xs toggle_search fbutton"><i class="layui-icon">&#xe615;</i> 搜索</button>
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('User/mingxi')}">查看收入明细</a>
+				<a class="layui-btn layui-btn-xs fbutton green" href="{:U('User/add')}">新 增 用 户</a>
+                
+	            <button class="ajax-post layui-btn layui-btn-xs fbutton" url="{:U('User/changeStatus',array('method'=>'resumeUser'))}" target-form="ids"><i class="fa fa-check"></i> 启 用</button>
+	            <button class="ajax-post layui-btn layui-btn-xs fbutton" url="{:U('User/changeStatus',array('method'=>'forbidUser'))}" target-form="ids"><i class="fa fa-ban"></i> 冻 结</button>
+	            <button class="layui-btn layui-btn-xs ajax-post fbutton" url="{:U('User/changeStatus',array('method'=>'deleteUser'))}" target-form="ids"><i class="fa fa fa-trash-o"></i> 删 除</button>
+	            <a class="layui-btn layui-btn-xs fbutton" href="{:U('User/import')}"><i class="fa fa-file-excel-o"></i> 导入会员</a>
+	            <button class="layui-btn layui-btn-xs ajax-post fbutton" data-confirm="密码重置为“123456”" url="{:U('User/initPass')}" target-form="ids"><i class="fa fa-refresh"></i> 重置密码：123456</button>
+                <a class="layui-btn layui-btn-xs fbutton" href="{:U('Userlog/index')}"><i class="fa fa-search"></i> 查看违规记录</a>
+				
+				<!-- <button data-title="群发邮件" target-form="ids" can_null="true" class="layui-btn layui-btn-xs fbutton ajax-post layui-btn layui-btn-xs" data-url="{:U('Message/sendMessage', array('user_group' => $aUserGroup, 'role' => $aRole))}" data-role="modal" style="border-color: rgb(70, 142, 51); color: rgb(70, 142, 51);"><i class="layui-icon"></i> 群发邮件</button> -->
+				
+				<!-- <button data-title="群发短信" target-form="ids" can_null="true" class="layui-btn layui-btn-xs fbutton ajax-post layui-btn layui-btn-xs" data-url="{:U('Message/sendMessage', array('user_group' => $aUserGroup, 'role' => $aRole))}" data-role="modal" style="border-color: rgb(70, 142, 51); color: rgb(70, 142, 51);"><i class="layui-icon"></i> 群发短信</button> -->
+		</div>
+		<php>foreach($selects as $select){
+	            if($_REQUEST[$select['name']]){
+	               $show=1;
+	            }
+             }
+        	</php>
+            <!-- 选择框select -->
+		<div class="actions">
+			<form id="selectForm" method="get" action="{:U()}" class="layui-form layui-form-pane filter">
+					<div class="oneselect">
+						<div class="title">显示：</div>
+						<div class="select_box">
+						<select name="r" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+								<option value="50" <eq name="r" value="50">selected</eq>>显示50行</option>
+								<option value="100" <eq name="r" value="100">selected</eq>>显示100行</option>
+								<option value="200" <eq name="r" value="200">selected</eq>>显示200行</option>
+						</select>
+						</div>
+					</div>
+					<div class="oneselect">
+						<div class="title">状态：</div>
+						<div class="select_box">
+						<select name="dead" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+								<option value="0" <eq name="dead" value="0">selected</eq>>全部</option>
+								<option value="1" <eq name="dead" value="1">selected</eq>>正常</option>
+								<option value="2" <eq name="dead" value="2">selected</eq>>冻结</option>
+								<option value="3" <eq name="dead" value="3">selected</eq>>未激活</option>
+								<option value="4" <eq name="dead" value="4">selected</eq>>已删除</option>
+						</select>
+						</div>
+					</div>
+					<div class="oneselect">
+						<div class="title">身份：</div>
+						<div class="select_box">
+						<select name="urole" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+							<volist name="user_role" id="vo">
+								<option value="{$vo.id}" <eq name="urole" value="$vo['id']">selected</eq>>{$vo.value}</option>
+							</volist>
+						</select>
+						</div>
+					</div>
+			</form>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="portlet-body">
+	<div class="table-scrollable layui-form">
+		<table class="layui-table" lay-even lay-skin="line" lay-filter="userlist" id="">
+			<thead>
+			<tr>
+			<th>
+				<input type="checkbox" class="group-checkable" lay-skin="primary" lay-filter="allChoose">
+			</th>
+            <th>UID</th>
+			<th>昵称/用户名</th>
+            <th>基本信息</th>
+            <th>邮箱/手机号</th>
+            <th>注册/登录时间（次数 & IP）</th>
+            <th>状态</th>
+            <th width="99px">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+				<volist name="_list" id="vo">
+					<tr <switch name="vo.status"><case value="0">style="background-color:#FFFFE5"</case><case value="3">style="background-color:#FFE5E5"</case></switch>>
+						<td class="check">
+							<input class="ids" type="checkbox" name="ids[]" value="{$vo.uid}" lay-skin="primary" lay-filter="ids"/>
+						</td>
+						<td>{$vo.uid}</td>
+						<td>
+							<a href="{:U('User/mingxi',array('nickname'=>$vo['uid']))}" class="layui-btn layui-btn-sm layui-btn-danger" style="line-height:25px;height:25px;font-size:14px;padding:0 5px">{$vo.nickname|op_t}</a><br>{$vo.username|op_t}<br/>
+							<volist name="vo.user_role" id="vx">
+							身份：{$role_arr[$vx['role_id']]}<br/>
+							</volist>
+						<td>
+							<volist name="scoretypelist" id="v">
+							{:getScoreTypeName($v['mark'])}：{$vo[$v['mark']]}<br />
+							</volist>
+							提现：
+							<a href="{:U('pay/payoffer',array('title'=>$vo['username']))}" >{$vo.pay_money|default=0} 元</a>
+							<br />
+							下线：
+							<a href="{:U('User/userlower',array('uid'=>$vo['uid']))}" >{$vo.lower_num|default=0} 个</a>
+							<br />
+							提成：
+							{$vo.lower_gold_coin|default=0} 元
+						</td>
+						<td>
+							{$vo.email}（{$vo.email_ver}）
+							<br />
+							{$vo.mobile}（{$vo.mobile_ver}）
+						</td>
+						<td>
+							<span>注册：{$vo.reg_time|time_format}</span><br />
+							<span>登录：{$vo.last_login_time|time_format}</span><br />
+							<span>登录：{$vo.login}次</span><br />
+							<span>IP：{$vo['last_login_ip']|long2ip}</span><br/>
+							<span>地址：{$vo['last_login_ip']|long2ip|ipfrom}</span>
+						</td>
+						<td>{$vo.status_txt}</td>
+						<td class="handle">
+							<div class="ht_tdiv">
+								<a href="{:U('User/expandinfo_details',array('uid'=>$vo['uid']))}" class="layui-btn layui-btn-xs hbutton btn_see">查看资料</a>
+								<a href="{:U('User/initPass?ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash">重置密码</a>
+								<if condition="$vo['status'] eq 1">
+									<a href="{:U('User/changeStatus?method=forbidUser&ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash">冻结账号</a>
+								<elseif condition="$vo['status'] eq 0"/>
+									<a href="{:U('User/changeStatus?method=resumeUser&ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_see">解冻</a>
+								</if>
+								<!-- <a href="{:U('role/userlist?uid='.$vo['uid'])}" class="authorize layui-btn layui-btn-xs hbutton btn_see">管理身份</a> -->
+								<a href="{:U('User/freshuserlower?ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_see">刷新上下级</a>
+								<a href="{:U('Userlog/index?nickname='.$vo['uid'])}" class="layui-btn layui-btn-xs hbutton btn_see">查看违规记录</a>
+							</div>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+			</table>
+			</div>
+	</div>
+	<div class="layui-table-page">
+	{$_page}
+	</div>
+</div>
+</div>
+</div>
+</div>
+</block>
+<block name="script"></block>
+<block name="jquery_script"></block>

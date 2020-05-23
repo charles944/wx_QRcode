@@ -1,0 +1,95 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>用户行为列表</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<div class="portlet-title">
+				<div class="caption">
+				</div>
+				<div class="actions">
+					<a class="layui-btn layui-btn-xs fbutton" href="{:U('user/addaction')}">新 增</a>
+					<button class="ajax-post layui-btn layui-btn-xs fbutton" target-form="ids" url="{:U('setactionStatus',array('status'=>1))}" >启 用</button>
+					<button class="ajax-post layui-btn layui-btn-xs fbutton" target-form="ids" url="{:U('setactionStatus',array('status'=>0))}">禁 用</button>
+					<button class="ajax-post layui-btn layui-btn-xs fbutton" target-form="ids" url="{:U('delaction',array('status'=>-1))}"><i class="fa fa-trash-o"></i> 删 除</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="portlet-body">
+				<div class="table-scrollable">
+				<table class="layui-table" lay-even lay-skin="line">
+					<thead>
+					<tr>
+					<th width="2%">
+						<input type="checkbox" class="group-checkable">
+					</th>
+					<th class="">编号</th>
+					<th>分类</th>
+					<th>标识</th>
+					<th>名称</th>
+					<th>类型</th>
+					<th>状态</th>
+					<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+						<volist name="_list" id="vo">
+						<tr>
+							<td><input class="ids" type="checkbox" value="{$vo.id}" name="ids[]"></td>
+							<td>{$vo.id} </td>
+							<td>{$vo.class_type}</td>
+							<td><a href="{:U('ActionLimit/limitlist',array('action'=>$vo['name']))}" title="查看限制">{$vo.name}</a></td>
+							<td><a href="{:U('editAction?id='.$vo['id'])}">{$vo.title}</a></td>
+							<td><span>{:get_action_type($vo['type'])}</span></td>
+							<td>
+							<switch name="vo.status_text">
+							<case value="正常" >
+							<span class="btn btn-xs btn-info">
+							</case>
+							<case value="禁用">
+							<span class="btn btn-xs red">
+							</case>
+							<default />
+							</switch>
+							{$vo.status_text}
+							</span></td>
+							<td><a href="{:U('User/editAction?id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_edit"><i class="fa fa-edit"></i> 编辑</a>
+								<a href="{:U('User/setactionStatus?ids='.$vo['id'].'&status='.abs(1-$vo['status']))}" class="ajax-get layui-btn layui-btn-xs hbutton btn_edit">{$vo.status|show_status_op}</a>
+								<a href="{:U('User/delaction?status=-1&ids='.$vo['id'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" >删除</a>
+							</td>
+						</tr>
+						</volist>
+					</tbody>
+				</table>
+				</div>
+				<div class="with-padding">{$_page}</div>
+			</div>
+</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script>
+var table;
+ // handle group checkboxes check/uncheck
+$('.group-checkable', table).change(function() {
+    var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
+    var checked = $(this).is(":checked");
+    $(set).each(function() {
+        $(this).attr("checked", checked);
+    });
+});
+</script>
+</block>
+<block name="jquery_script">
+
+</block>

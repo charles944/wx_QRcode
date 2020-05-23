@@ -1,0 +1,139 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>导入会员</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+		<form class="layui-form" action="{:U('User/user_import')}" id="form" method="post">
+		<input name="filename" type="hidden" id="filename" value="" />
+		<input name="exts" type="hidden" id="exts" value="" />
+  		<php>$c = modC('UPS_TYPE_MODE','','USERCONFIG');
+			switch($c){
+				case 'id':
+					$c= '上线用户ID';
+					break;
+				case 'username':
+					$c= '上线用户名';
+					break;
+			}
+			</php>
+		<div class="layui-form-item">
+			<label class="layui-form-label">表单格式</label>
+			<div class="layui-input-block">
+				<table class="layui-table" lay-even>
+					<tbody>
+					<tr>
+					<td>1</td>
+					<td>会员名（必须，由字母和数字组成）</td>
+					<td>默认密码（必须）</td>
+					<td>邮箱</td>
+					<td>手机号码</td>
+					<td>上线一</td>
+					<td>上线二</td>
+					<td>上线三</td>
+					<td>上线四</td>
+					<td>上线五</td>
+					<td>上线六</td>
+					<td>上线七</td>
+					</tr>
+					<tr>
+					<td>2</td>
+					<td>xxx1</td>
+					<td>123123</td>
+					<td>xxx@xx.com</td>
+					<td>1xxxxxx</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					</tr>
+					<tr>
+					<td>3</td>
+					<td>xxx2</td>
+					<td>123123</td>
+					<td>xxx@xx.com</td>
+					<td>1xxxxxx</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					<td>{$c}</td>
+					</tr>
+					<tr class="alt-row">
+					<td colspan="12">更多...</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="layui-form-mid layui-word-aux">表单第一行是系统默认标题，请随便填写一些字符，不要在第一行写数据，Excel文档保存为97~2003兼容格式.xls格式</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">上传表格</label>
+			<div class="layui-input-block">
+				<button type="button" id="upload_file_excelData" class="layui-box layui-upload-button">上传EXCEL</button>
+				<div class="upload-img-box">
+					<present name="excelData">
+						<div class="upload-pre-file"><span class="upload_icon_all"></span></div>
+					</present>
+				</div>
+			</div>
+			<script type="text/javascript">
+			layui.use('upload', function(){
+				var upload = layui.upload;
+				upload.render({
+					url: "{:U('User/upload',array('session_id'=>session_id()))}"
+					,elem: '#upload_file_excelData' //指定原始元素，默认直接查找class="layui-upload-file"
+					,accept: 'file'
+					,exts: 'xls|xlsx|csv'
+					,field: 'excelData_id'
+					,method: 'post' //上传接口的http类型
+					,before: function(input){
+						//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:1000});
+						layer.load(2, {shade: false});
+					}
+					,done: function(res, index, upload){
+						layer.closeAll('loading'); //关闭loading
+						if(res.status){
+							$("input[name=filename]").val('./uploads/' + res.url.excelData_id.savepath + res.url.excelData_id.savename);
+							$("input[name=exts]").val(res.url.excelData_id.ext);
+							$('.upload-img-box').html(
+								"<div class=\"upload-pre-file\"><span class=\"upload_icon_all\"></span>" + res.info + "</div>"
+							);
+						} else {
+							layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+							setTimeout(function(){
+								$(that).removeClass('disabled').prop('disabled',false);
+							},1500);
+						}
+					}
+				});
+			});
+			</script>
+			<div class="layui-form-mid layui-word-aux"></div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+			  <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">立即导入</button>
+			  <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">重置</button>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+</div>
+</block>
+
+<block name="script"></block>

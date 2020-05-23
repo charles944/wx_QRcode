@@ -1,0 +1,66 @@
+<extend name="public/base"/>
+<block name="style">
+<style>
+.layui-form-item .layui-input-inline{width:290px !important;}
+.layui-form-label{width:120px !important;}
+</style>
+</block>
+<block name="body">
+<div class="main">
+	<div class="layui-breadcrumb" style="margin-top:10px">
+	  <a href="">首页</a>
+	  <a href="">插件配置</a>
+	  <a><cite><if condition="$_GET['_action'] eq 'add'">新增<else/>编辑</if>阿里云短信短信模板</cite></a>
+	</div>
+	<!-- 表单 -->
+	<form id="form" action="{:U('adminList',array('name'=>'dysms','method'=>'update'))}" method="post" class="layui-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label">操作名称</label>
+			<div class="layui-input-inline">
+			  <input type="text" name="action" required  lay-verify="required" placeholder="" autocomplete="off" value="{$info.action}" class="layui-input" />
+			</div>
+			<div class="layui-form-mid layui-word-aux">（如：register：表示注册，bindmobile：表示绑定手机号，unbindmobile：表示解绑手机号,cash：表示提现）</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">模板类型</label>
+			<div class="layui-input-inline">
+				<if condition="$_GET['_action'] eq 'add'">
+					<input type="radio" name="type" value="1" checked="checked" title="验证码">
+					<input type="radio" name="type" value="2" title="短信通知">
+			    <else/>
+					<input type="radio" name="type" value="1" <if condition="$info.type eq 1">checked="checked"</if> title="验证码">
+					<input type="radio" name="type" value="2" <if condition="$info.type eq 2">checked="checked"</if> title="短信通知">
+			  </if>
+			</div>
+			<div class="layui-form-mid layui-word-aux"></div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">短信签名</label>
+			<div class="layui-input-inline">
+			  <input type="text" name="sign" required  lay-verify="required" placeholder="" autocomplete="off" value="{$info.sign}" class="layui-input" />
+			</div>
+			<div class="layui-form-mid layui-word-aux">（请查看：阿里大鱼-》管理中心-》短信签名管理）</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">模板ID</label>
+			<div class="layui-input-inline">
+			  <input type="text" name="template_code" required  lay-verify="required" placeholder="" autocomplete="off" value="{$info.template_code}" class="layui-input" />
+			</div>
+			<div class="layui-form-mid layui-word-aux">（请查看：阿里大鱼-》管理中心-》短信模板管理）</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">模板内容</label>
+			<div class="layui-input-inline">
+			  <input type="text" name="template_content" required  lay-verify="required" placeholder="" autocomplete="off" value="{$info.template_content}" class="layui-input" />
+			</div>
+			<div class="layui-form-mid layui-word-aux">（${code}：表示验证码，${product}：表示商家名）</div>
+		</div>
+		<input type="hidden" name="id" value="{$info.id}"/>
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<input class="layui-btn layui-btn-sm submit-btn" lay-submit lay-filter="*" value="确 定" />
+			<input class="layui-btn layui-btn-sm btn-return" type="reset" value="重置" />
+		</div>
+	</form>
+</div>
+</block>

@@ -1,0 +1,92 @@
+<extend name="public/base"/>
+<block name="style">
+<style>
+/* 二级分类 */
+.tab-sign {
+	width: 55px;
+	display:inline-block;
+	background-position: 0 0;
+}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>{$title|htmlspecialchars}</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<notempty name="suggest">
+			<div class="explanation" id="explanation" style="margin-bottom:10px">
+				<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+				<p>{$suggest}</p>
+			</div>
+		</notempty>
+		<div class="heading">
+			<volist name="buttonList" id="button">
+			<{$button.tag} {$button.attr}>{$button.title|htmlspecialchars}</{$button.tag}>
+			</volist>
+		</div>
+		<div class="widget-content padded clearfix">
+			<table class="layui-table" lay-skin="line">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th width="10%">排序</th>
+					<th>名称</th>
+					<th>状态</th>
+					<notempty name="keyList">
+						<volist name="keyList" id="field">
+							<th>{$field.title|htmlspecialchars}</th>
+						</volist>
+					<else/>
+					<th>操作</th>
+					</notempty>
+				</tr> 
+				</thead>
+				<tbody>
+				<php>
+					$tree_list = new admin\builder\AdminTreeListBuilder();
+					$tree_list->setLevel($level);
+					$tree_list->setModel($model);
+					$tree_list->tree($tree);
+				</php>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        (function($){
+			
+            $(".category").on("click", function(){
+				var self = $(this);
+				var sort = self.parents().parents().find("input[name='sort']").val();
+				var title = self.parents().parents().find("input[name='title']").val();
+				var id = self.parents().parents().find("input[name='id']").val();
+				var url = self.parents().parents().attr("url");
+				$.post(
+					url,
+					{sort: sort, title: title, id: id},
+					function(data){
+						/* 提示信息 */
+						var name = data.status ? "success" : "error", msg;
+						//msg = self.find(".msg").addClass(name).text(data.info).css("display", "inline-block");
+						//, {icon: 2, time:1000}
+						if(data.status){
+							layer.msg(data.info, {icon: 1, fixed: true, offset: '80%', time:1000});
+						}else{
+							layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+						}
+					},"json");
+				return false;
+			});
+        })(jQuery);
+    </script>
+</block>

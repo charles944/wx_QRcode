@@ -1,0 +1,3 @@
+<?php
+//000000000000a:17:{s:2:"id";s:2:"25";s:4:"name";s:6:"qrcode";s:5:"alias";s:12:"活码系统";s:7:"version";s:5:"1.2.0";s:6:"is_com";s:1:"0";s:8:"show_nav";s:1:"1";s:7:"summary";s:12:"活码系统";s:9:"developer";s:12:"朝兮夕兮";s:7:"website";s:0:"";s:5:"entry";s:18:"qrcode/index/index";s:8:"is_setup";s:1:"1";s:4:"sort";s:1:"0";s:4:"icon";s:9:"book-open";s:13:"can_uninstall";s:1:"1";s:11:"admin_entry";s:18:"admin/qrcode/index";s:8:"has_tage";s:1:"0";s:5:"token";N;}
+?>

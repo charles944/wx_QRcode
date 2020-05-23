@@ -1,0 +1,330 @@
+<div class="qn-user-login qn-user-display-show" id="qn-user-login">
+    <div class="qn-user-login-main">
+      <div class="qn-user-login-box qn-user-login-header">
+        <h2>注册{:modC('WEB_SITE_NAME','','CONFIG')}</h2>
+        <p>请认真填写以下表单</p>
+      </div>
+      <div class="qn-user-login-box qn-user-login-body layui-form">
+      	<div class="layui-tab layui-tab-brief" style="margin-bottom:0">
+			<ul class="layui-tab-title">
+				<php>if(check_reg_type('username')){</php>
+				<li <if condition="$type eq 'username'">class="layui-this"</if>>用户名注册</li>
+				<php>}</php>
+				<php>if(check_reg_type('email')){</php>
+				<li <if condition="$type eq 'email'">class="layui-this"</if>>邮箱注册</li>
+				<php>}</php>
+				<php>if(check_reg_type('mobile')){</php>
+				<li <if condition="$type eq 'mobile'">class="layui-this"</if>>手机注册</li>
+				<php>}</php>
+			</ul>
+			<div class="layui-tab-content" style="padding:0">
+
+				<volist name="regSwitch" id="regSwitch">
+						<switch name="regSwitch">
+							<case value="username">
+								<div class="layui-tab-item <if condition="$type eq 'username'">layui-show</if>">
+								<form method="post" id="form1" action="{:U('home/member/register',array('type'=>'username'))}" class="layui-form layui-form-pane">
+									<!--用户名注册-->
+									<if condition="$open_invite_register egt 1">
+										<div class="layui-from-item" style="background:#FF5722;color:white;padding:10px">
+											<eq name="open_invite_register" value="1">有邀请码的用户才能注册<else/>可用邀请码注册，也可以普通注册</eq>
+										</div>
+										<div class="layui-form-item" id="username_reg">
+								        	<label class="qn-user-login-icon layui-icon layui-icon-vercode" for="code"></label>
+								        	<input type="text" id="code" check-url="{:U('home/member/checkInviteCode')}"  placeholder="邀请码"  value="" name="code" required="" lay-verify="registercode" autocomplete="off" class="layui-input">
+								        </div>
+									</if>
+									<div class="layui-form-item" id="username_reg">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-username" for="username"></label>
+							        	<input type="text" id="username" check-url="{:U('home/member/checkAccount')}"  placeholder="用户名"  value="" name="username" required="" lay-verify="registerusername|required" autocomplete="off" class="layui-input">
+							        	<input type="hidden" id="username_type" name="reg_type" value="username" />
+							        </div>
+									<!--用户名注册end-->
+									<!--注册通用start-->
+									<div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-password" for="qn-user-login-usernamepassword"></label>
+							        	<input type="password" id="qn-user-login-usernamepassword" placeholder="密码" name="password" required="" lay-verify="registerpassword|required" autocomplete="off" class="layui-input" check-length="6,12">
+							        </div>
+							        <div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-username" for="qn-user-login-usernamenickname"></label>
+							        	<input type="text" id="qn-user-login-usernamenickname" name="nickname" required="" lay-verify="registernickname|required" placeholder="昵称" autocomplete="off" check-url="{:U('home/member/checkNickname')}" class="layui-input">
+							        </div>
+									
+									<if condition="check_verify_open('reg')">
+										<div class="layui-form-item">
+								          <div class="layui-row">
+								            <div class="layui-col-xs7">
+								              <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-usernamevercode"></label>
+								              <input type="text" id="user-login-usernamevercode" errormsg="请填写正确的验证码" name="verify" required="" lay-verify="registerverf|required" autocomplete="off" class="layui-input">
+								            </div>
+								            <div class="layui-col-xs5">
+								              <div style="margin-left: 10px;">
+								              	<img class="verifyimg reloadverify img-responsive" alt="点击切换" src="{:U('verify')}" style="border: 1px solid #ccc;height:38px;cursor:pointer;width:100%">
+								              </div>
+								            </div>
+								          </div>
+								        </div>
+									</if>
+									<div class="layui-form-item">
+							        	<input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+							        </div>
+									<div class="layui-form-item">
+										<button class="layui-btn layui-btn-fluid" style="width:100%" lay-filter="register_username" lay-submit>立即注册</button>
+									</div>
+									<div class="layui-form-item">
+										<a class="layui-btn layui-btn-primary" data-role="do_login" style="width:100%">已有账户， 登录</a>
+									</div>
+									<!--注册通用end-->
+								</form>
+								</div>
+							</case>
+							<case value="email">
+								<div class="layui-tab-item <if condition="$type eq 'email'">layui-show</if>">
+								<form method="post" id="form2" action="{:U('home/member/register',array('type'=>'email'))}" class="layui-form layui-form-pane">
+									<!--邮箱注册-->
+									<if condition="$open_invite_register egt 1">
+										<div class="layui-from-item" style="background:#FF5722;color:white;padding:10px">
+											<eq name="open_invite_register" value="1">有邀请码的用户才能注册<else/>可用邀请码注册，也可以普通注册</eq>
+										</div>
+										<div class="layui-form-item" id="username_reg">
+								        	<label class="qn-user-login-icon layui-icon layui-icon-vercode" for="code2"></label>
+								        	<input type="text" id="code2" check-url="{:U('home/member/checkInviteCode')}"  placeholder="邀请码"  value="" name="code" required="" lay-verify="registercode" autocomplete="off" class="layui-input">
+								        </div>
+									</if>
+									<div class="layui-form-item" id="email_reg">
+							          <label class="qn-user-login-icon layui-icon layui-icon-username" for="email2"></label>
+							          <input type="text" id="email2" check-url="{:U('home/member/checkAccount')}" placeholder="" value="" name="username" required="" lay-verify="registeremail" autocomplete="off" class="layui-input">
+							          <input type="hidden" id="email_type" name="reg_type" value="email">
+							        </div>
+									<php>if(modC('EMAIL_VERIFY_TYPE', 0, 'USERCONFIG') == 2){</php>
+									<div class="layui-form-item">
+							          <div class="layui-row">
+							            <div class="layui-col-xs7">
+							              <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-emailvercode"></label>
+							              <input type="text" name="reg_verify" id="user-login-emailvercode"  lay-verify="number" placeholder="验证码" class="layui-input">
+							            </div>
+							            <div class="layui-col-xs5">
+							              <div style="margin-left: 10px;">
+							                <button type="button" id="emailverify" class="layui-btn layui-btn-primary layui-btn-fluid" data-type="email" data-role="getVerify" id="">发送验证码</button>
+							              </div>
+							            </div>
+							          </div>
+							        </div>
+									<php>}</php>
+									<!--邮箱注册end-->
+									<!--注册通用start-->
+									<div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-password" for="qn-user-login-emailpassword"></label>
+							        	<input type="password" id="qn-user-login-emailpassword" placeholder="密码" name="password" required="" lay-verify="registerpassword" autocomplete="off" class="layui-input" check-length="6,12">
+							        </div>
+							        <div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-username" for="qn-user-login-emailnickname"></label>
+							        	<input type="text" id="qn-user-login-emailnickname" name="nickname" required="" lay-verify="registernickname" placeholder="昵称" autocomplete="off" check-url="{:U('home/member/checkNickname')}" class="layui-input">
+							        </div>
+									
+									<if condition="check_verify_open('reg')">
+										<div class="layui-form-item">
+								          <div class="layui-row">
+								            <div class="layui-col-xs7">
+								              <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-emailverify"></label>
+								              <input type="text" id="user-login-emailverify" errormsg="请填写正确的验证码" name="verify" required="" lay-verify="registerverf" autocomplete="off" class="layui-input">
+								            </div>
+								            <div class="layui-col-xs5">
+								              <div style="margin-left: 10px;">
+								              	<img class="verifyimg reloadverify img-responsive" alt="点击切换" src="{:U('verify')}" style="border: 1px solid #ccc;height:38px;cursor:pointer;width:100%">
+								              </div>
+								            </div>
+								          </div>
+								        </div>
+									</if>
+									<div class="layui-form-item">
+							        	<input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+							        </div>
+									<div class="layui-form-item">
+										<button class="layui-btn layui-btn-fluid" style="width:100%" lay-filter="register_email" lay-submit>立即注册</button>
+									</div>
+									<div class="layui-form-item">
+										<a class="layui-btn layui-btn-primary" data-role="do_login" style="width:100%">已有账户， 登录</a>
+									</div>
+									<!--注册通用end-->
+								</form>
+								</div>
+							</case>
+							<case value="mobile">
+								<div class="layui-tab-item <if condition="$type eq 'mobile'">layui-show</if>">
+								<form method="post" id="form3" action="{:U('home/member/register',array('type'=>'mobile'))}" class="layui-form layui-form-pane">
+									<!--手机注册-->
+									<if condition="$open_invite_register egt 1">
+										<div class="layui-from-item" style="background:#FF5722;color:white;padding:10px">
+											<eq name="open_invite_register" value="1">有邀请码的用户才能注册<else/>可用邀请码注册，也可以普通注册</eq>
+										</div>
+										<div class="layui-form-item" id="username_reg">
+								        	<label class="qn-user-login-icon layui-icon layui-icon-vercode" for="code3"></label>
+								        	<input type="text" id="code3" check-url="{:U('home/member/checkInviteCode')}"  placeholder="邀请码"  value="" name="code" required="" lay-verify="registercode" autocomplete="off" class="layui-input">
+								        </div>
+									</if>
+									<div class="layui-form-item" id="mobile_reg">
+							          <label class="qn-user-login-icon layui-icon layui-icon-cellphone" for="mobile"></label>
+							          <input type="text" id="mobile" check-url="{:U('home/member/checkAccount')}"  placeholder="" value="" name="username" required="" lay-verify="registermobile" autocomplete="off" class="layui-input">
+							          <input type="hidden" id="mobile_type" name="reg_type" value="mobile">
+							        </div>
+									<php>if(modC('MOBILE_VERIFY_TYPE', 0, 'USERCONFIG') == 1){</php>
+									<div class="layui-form-item" id="mobile_reg_verf">
+							          <div class="layui-row">
+							            <div class="layui-col-xs7">
+							              <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-mobilevercode"></label>
+							              <input type="text" name="reg_verify" lay-verify="number" id="user-login-mobilevercode" placeholder="验证码" class="layui-input">
+							            </div>
+							            <div class="layui-col-xs5">
+							              <div style="margin-left: 10px;">
+							                <button type="button" id="getmobileverify" class="layui-btn layui-btn-primary layui-btn-fluid" data-type="mobile" data-role="getVerify" id="">发送验证码</button>
+							              </div>
+							            </div>
+							          </div>
+							        </div>
+									<php>}</php>
+									<!--手机注册end-->
+									<!--注册通用start-->
+									<div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-password" for="qn-user-login-mobilepassword"></label>
+							        	<input type="password" id="qn-user-login-mobilepassword" placeholder="密码" name="password" required="" lay-verify="registerpassword" autocomplete="off" class="layui-input" check-length="6,12">
+							        </div>
+							        <div class="layui-form-item">
+							        	<label class="qn-user-login-icon layui-icon layui-icon-username" for="nickname"></label>
+							        	<input type="text" id="nickname" name="nickname" required="" lay-verify="registernickname" placeholder="昵称" autocomplete="off" check-url="{:U('home/member/checkNickname')}" class="layui-input">
+							        </div>
+									
+									<if condition="check_verify_open('reg')">
+										<div class="layui-form-item">
+								          <div class="layui-row">
+								            <div class="layui-col-xs7">
+								              <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-mobileverify"></label>
+								              <input type="text" id="user-login-mobileverify" errormsg="请填写正确的验证码" name="verify" required="" lay-verify="registerverf" autocomplete="off" class="layui-input">
+								            </div>
+								            <div class="layui-col-xs5">
+								              <div style="margin-left: 10px;">
+								              	<img class="verifyimg reloadverify img-responsive" alt="点击切换" src="{:U('verify')}" style="border: 1px solid #ccc;height:38px;cursor:pointer;width:100%">
+								              </div>
+								            </div>
+								          </div>
+								        </div>
+									</if>
+									<div class="layui-form-item">
+							        	<input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+							        </div>
+									<div class="layui-form-item">
+										<button class="layui-btn layui-btn-fluid" style="width:100%" lay-filter="register_mobile" lay-submit>立即注册</button>
+									</div>
+									<div class="layui-form-item">
+										<a class="layui-btn layui-btn-primary" data-role="do_login" style="width:100%">已有账户， 登录</a>
+									</div>
+									<!--注册通用end-->
+								</form>
+								</div>
+							</case>
+						</switch>
+					</volist>
+
+        <div class="layui-trans layui-form-item qn-user-login-other">
+          <label>社交账号注册</label>
+          {:hook('synclogin')}
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-trans qn-user-login-footer">
+    	<p>© 2018 <a href="" target="_blank">{:get_domain()}</a></p>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+	if (MID == 0) {
+		$(function () {
+			var verifyimg = $(".verifyimg").attr("src");
+			$(".reloadverify").click(function () {
+				if (verifyimg.indexOf('?') > 0) {
+					$(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+				} else {
+					$(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+				}
+			});
+
+			$("[data-role='getVerify']").click(function () {
+				var $this = $(this);
+				var account = $(this).parents(".layui-tab-item").find('[name="username"]').val();
+				console.log(account);
+				var type = $(this).attr('data-type');
+				if(type == 'mobile'){
+					if($(this).text() != '发送验证码'){
+						return false;
+					}
+				}else if(type == 'email'){
+					if($(this).text() != '发送验证码'){
+						return false;
+					}
+				}
+				$(this).attr('disabled',true);
+				$.post("{:U('home/verify/sendVerify')}", {account: account, type: type, action: 'member', todo: 'register'}, function (res) {
+					if (res.status) {
+						if(type == 'email'){
+							DecTime1.obj = $this;
+							DecTime1.time = "{:modC('SMS_RESEND','60','USERCONFIG')}";
+							$this.attr('disabled',true)
+							DecTime1.dec_time();
+						}else{
+							DecTime.obj = $this;
+							DecTime.time = "{:modC('SMS_RESEND','60','USERCONFIG')}";
+							$this.attr('disabled',true);
+							DecTime.dec_time();
+						}
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					}
+					else {
+						if(type == 'email'){
+							DecTime1.obj = $this;
+							DecTime1.time = "{:modC('SMS_RESEND','60','USERCONFIG')}";
+							$this.attr('disabled',true)
+							DecTime1.dec_time();
+						}else{
+							DecTime.obj = $this;
+							DecTime.time = "{:modC('SMS_RESEND','60','USERCONFIG')}";
+							$this.attr('disabled',true);
+							DecTime.dec_time();
+						}
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				})
+			})
+		});
+	}
+	
+	var DecTime = {
+		obj:0,
+		time:0,
+		dec_time : function(){
+			if(this.time > 0){
+				this.obj.text(this.time--+'S');
+				setTimeout("DecTime.dec_time()",1000);
+			}else{
+				this.obj.text('发送验证码');
+				this.obj.attr('disabled',false);
+			}
+
+		}
+	}
+	var DecTime1 = {
+		obj:0,
+		time:0,
+		dec_time : function(){
+			if(this.time > 0){
+				this.obj.text(this.time--+'S');
+				setTimeout("DecTime1.dec_time()",1000);
+			}else{
+				this.obj.text('发送验证码');
+				this.obj.attr('disabled',false);
+			}
+
+		}
+	}
+</script>

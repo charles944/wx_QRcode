@@ -1,0 +1,159 @@
+<extend name="public/base" />
+<block name="style">
+<style>
+/* 授权编辑页 */
+.checkmod {
+    margin-bottom: 20px;
+    border: 1px solid #ebebeb;
+}
+.checkmod dt {
+    padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    border-bottom: 1px solid #ebebeb;
+    background-color: #ECECEC;
+}
+.checkmod dd {
+    padding-left: 10px;
+    line-height: 30px;
+}
+.checkmod dd .checkbox {
+    margin: 0 10px 0 0;
+}
+.checkmod dd .divsion {
+    margin-right: 20px;
+}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>权限管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<div class="layui-input-inline">
+			<select name="group"  style="display:block;min-width:140px;margin-bottom:10px;border:1px solid #ddd;padding:10px;">
+				<volist name="auth_group" id="vo">
+					<option value="{:U('AuthManager/union',array('group_id'=>$vo['id'],'group_name'=>$vo['title']))}" <eq name="vo['id']" value="$this_group['id']">selected</eq> >{$vo.title}</option>
+				</volist>
+			</select>
+		</div>
+		<div class="widget-container fluid-height clearfix">
+			<div class="layui-tab">
+				<ul class="layui-tab-title">
+					<li onclick="javascript:location.href='{:U('AuthManager/access',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">管理后台授权</li>
+					<li onclick="javascript:location.href='{:U('AuthManager/accessUser',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">用户前台授权</li>
+					<li onclick="javascript:location.href='{:U('AuthManager/user',array('group_name'=>I('group_name') ,'group_id'=> I('group_id')))}';">成员授权</li>
+					<li class="layui-this">提成设置</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<form action="__SELF__" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal auth-form">
+						<php>$union_group = json_decode($this_group['union_rules'],true);</php>
+						<volist name="node_list" id="node" >
+							<if condition="$node['has_tage'] eq 1">
+							<dl class="checkmod">
+								<dt class="hd">
+									<label class="checkbox">{$node.alias}模块</label>
+								</dt>
+								<dd class="bd">
+								
+								<volist name="that_group" id="option">
+								<div class="layui-form-item">
+									<php>$kk = $key;</php>
+									<input type="hidden" value="{$option.title}" name="tage[{$node.name}][title][]" />
+									<input type="hidden" value="{$node.name}" name="tage[{$node.name}][module][]" />
+									<label class="layui-form-label">{$option.title}：</label>
+									<div class="layui-inline">
+									<div class="layui-form-item">
+										<label class="layui-form-label">一级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][1]" value="{$union_group[$node['name']][child][1]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">二级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][2]" value="{$union_group[$node['name']][child][2]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">三级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][3]" value="{$union_group[$node['name']][child][3]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">四级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][4]" value="{$union_group[$node['name']][child][4]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">五级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][5]" value="{$union_group[$node['name']][child][5]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">六级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][6]" value="{$union_group[$node['name']][child][6]}" placeholder=""></div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">七级提成(%)：</label>
+										<div class="layui-input-inline" style="min-width: 100px;"><input type="text" class="layui-input" name="tage[{$node.name}][child][7]" value="{$union_group[$node['name']][child][7]}" placeholder=""></div>
+									</div>
+									</div>
+								</div>
+								</volist>
+								</dd>
+							</dl>
+							</if>
+						</volist>
+
+						<input type="hidden" name="id" value="{$this_group.id}" />
+						<button type="submit" class="submit-btn ajax-post layui-btn" target-form="auth-form">确 定</button>
+						<button class="layui-btn btn-default-outline" onclick="javascript:history.back(-1);return false;">返 回</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+    +function($){
+        var rules = [{$this_group.union_rules}];
+        $('.auth_rules').each(function(){
+            if( $.inArray( parseInt(this.value,10),rules )>-1 ){
+                $(this).prop('checked',true);
+            }
+            if(this.value==''){
+                $(this).closest('span').remove();
+            }
+        });
+
+        //全选节点
+        $('.rules_all').on('change',function(){
+            //$(this).closest('dl').find('dd').find('input').prop('checked',this.checked);
+        	var set = $(this).closest('dl').find('dd').find('input');
+            var checked = $(this).is(":checked");
+            $(set).each(function() {
+                $(this).attr("checked", checked);
+            });
+            //$.uniform.update(set);
+        });
+        $('.rules_row').on('change',function(){
+            //$(this).closest('.rule_check').find('.child_row').find('input').prop('checked',this.checked);
+            var set = $(this).closest('.rule_check').find('.child_row').find('input');
+            var checked = $(this).is(":checked");
+            $(set).each(function() {
+                $(this).attr("checked", checked);
+            });
+            //$.uniform.update(set);
+        });
+
+        $('select[name=group]').change(function(){
+			location.href = this.value;
+        });
+    }(jQuery);
+</script>
+</block>

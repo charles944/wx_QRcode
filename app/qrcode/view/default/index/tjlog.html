@@ -1,0 +1,77 @@
+<extend name="base/common"/>
+<block name="header"></block>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite><notempty name="data">【ID：{$data.id}】【名称：{$data.title}】每日扫描记录<else/>所有活码每日扫描记录</notempty></cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<!-- <div class="" style="margin-bottom:10px"><a href="{:U('qrcode/index/dellog')}" class="layui-btn-sm layui-btn">批量删除所有</a></div> -->
+			<table class="layui-table" lay-skin="line" lay-even>
+				<thead>
+				  <tr>
+					<th>序号</th>
+					<th>扫描时间</th>
+					<th>总扫描数量</th>
+					<th>查看记录</th>
+				  </tr>
+				</thead>
+				<tbody>
+				<notempty name="list">
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$i}</td>
+						<td>{$vo.year}-{$vo.month}-{$vo.day}</td>
+						<td>{$vo.total}</td>
+						<php>$t = $vo['year'].'-'.$vo['month'].'-'.$vo['day'];</php>
+						<notempty name="id">
+							<td><a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/log',array('id'=>$vo['qr_id'],'t'=>$t))}" >查看总记录</a></td>
+						</notempty>
+						<notempty name="cid">
+							<td><a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/log',array('cid'=>$vo['qr_cid'],'t'=>$t))}" >查看总记录</a></td>
+						</notempty>
+					</tr>
+					<notempty name='vo.sub'>
+						<tr>
+							<td colspan="3">
+								<table class="layui-table" lay-skin="line" lay-even>
+									<thead>
+									  <tr>
+										<th>子二维码ID</th>
+										<th>扫描数量</th>
+										<th>查看</th>
+									  </tr> 
+									</thead>
+									<tbody>
+										<volist name="vo.sub" id="val">
+										<tr>
+											<td>{$val.qr_cid}</td>
+											<td>{$val.total}</td>
+											<td><a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/log',array('cid'=>$val['qr_cid'],'t'=>$t))}" >查看子记录</a></td>
+										</tr>
+										</volist>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</notempty>
+					</volist>
+				<else/>
+				<tr>
+					<td colspan="6">暂无数据</td>
+				</tr>
+				</notempty>
+				</tbody>
+			</table>
+			<div class='layui-table-page'>{:getPagination($totalCount,$r)}</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+</block>

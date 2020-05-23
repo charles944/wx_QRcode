@@ -1,0 +1,74 @@
+<extend name="base/common"/>
+<block name="style">
+</block>
+
+<block name="body">
+<div class="main_register main clear">
+    <div class="wrapper">
+        <div class="layui-form layui-form-pane register_success" style="">
+            <h4 style="">操作提示</h4>
+            <p style=""><img src="__PUBLIC__/images/icon_success.png" width="32" />&nbsp;&nbsp;亲爱的{$nickname}：您的帐号还未激活，请到“{$email}”邮箱进行激活。
+            </p>
+            <p>
+                <button href="javascript:" data-role="reSend" class="layui-btn" style="background:#ff2832;border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;">重新发送激活邮件</button>
+                &nbsp;&nbsp;或&nbsp;&nbsp;
+                <a href="javascript:" data-role="rechangeEmail">更换邮箱</a>
+            </p>
+        </div>
+
+        <!-- 模态框HTML -->
+        <div class="" style="display:none" id="changeEmail">
+            <div class="layui-form" style="padding:20px">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account" id="account" required  lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" data-role="changeEmail">立即提交</button>
+                    </div>
+                </div>
+            </div>
+
+           <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</block>
+
+<block name="script">
+    <script>
+        $(function () {
+            $('[data-role="reSend"]').click(function () {
+                button = $(this);
+                var res = layui.qn.json("{:U('home/member/reSend')}", {}, function (res) {} , {'obj': button});
+                if(res.status){
+                    layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000}, function(){layui.qn.normal_end(res, button);});
+                }else{
+                    layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000}, function(){layui.qn.normal_end(res, button);});
+                }
+            });
+
+            $('[data-role="rechangeEmail"]').click(function () {
+                layer.open({
+                  type: 1,
+                  shade: false,
+                  title: false, //不显示标题
+                  content: $('#changeEmail'),
+                  cancel: function(){
+                  }
+                })
+            });
+
+            $('[data-role="changeEmail"]').click(function () {
+                var email = $('#account').val();
+                $.post("{:U('home/member/changeEmail')}", {email:email}, function (res) {
+                    layui.qn.handleAjax(res)
+                })
+            })
+
+        })
+    </script>
+</block>

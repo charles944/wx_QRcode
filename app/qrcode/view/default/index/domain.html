@@ -1,0 +1,45 @@
+<extend name="base/common"/>
+<block name="style">
+<style>.layui-form-label{width:120px !important}</style>
+</block>
+<block name="header"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>域名管理</cite></a>
+	</div>
+</div>
+<!--20180719-->
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form form-container" action="__SELF__" method="post">
+				<input type="hidden" name="id" id="id" value="{$data.id}"/>
+				<input type="hidden" name="uid" value="{:get_uid()}"/>
+				<div class="layui-form-item">
+					<label class="layui-form-label">入口域名</label>
+					<div class="layui-input-inline" style="width:70%">
+                      	<textarea name="in_domain" class="layui-textarea" placeholder="请输入入口域名，一行一个，不可空行，创建活码时，会根据入口域名生成多个二维码">{$data.in_domain}</textarea>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">例如abc.com，不要加http://，域名要绑定解析到当前服务器上</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">落地域名</label>
+					<div class="layui-input-inline" style="width:70%">
+						<textarea name="out_domain" class="layui-textarea" placeholder="请输入落地域名，一行一个，不可空行，扫码时，随机跳转">{$data.out_domain}</textarea>
+					</div>
+					<div class="layui-form-mid layui-word-aux">注意：入口域名和落地域名的主域名一定不能相同！！！子域名要绑定解析到自己的服务器上</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn-sm layui-btn" lay-submit="" lay-filter="*">保存域名</button>
+						<a onclick="javascript:history.go(-1);" class="layui-btn-sm layui-btn layui-btn-primary" >返回上一页</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</block>

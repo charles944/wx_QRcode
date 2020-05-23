@@ -1,0 +1,210 @@
+<extend name="base/wapcommon"/>
+<block name="body">
+<body>
+<link rel="stylesheet" href="__Layer__/css/layui.css">
+<script src="__Layer__/layui.js"></script>
+<style>
+div{overflow:visible !important;}
+.layui-form-select{overflow: visible !important;}
+.layui-input-inline{overflow: visible !important;}
+</style>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$title}</h1>
+</header>
+<div class="page hui-wrap" id="">
+    <div class="page__bd page__bd_spacing">
+        <form style="" class="hui-form layui-form form1" action="__SELF__" id="form1" method="post">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+                <input type="hidden" name="pid" id="pid" value="<notempty name="data">{$data.qr_pid}<else/>{$pdata.id}</notempty>" />
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">子码标题</div>
+                <input type="text" class="hui-input hui-input-clear" name="title" placeholder="活码标题" value="{$data.title}"/>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">排序</div>
+                <input type="number" class="hui-input" placeholder="序号越大先显示" name="sort" value="{$data.sort}"/>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">已扫描次数</div>
+                <input type="number" class="hui-input" placeholder="默认0次" name="scan_count" value="{$data.scan_count}"/>
+            </div>
+            <switch name="pdata.type_mode">
+                <case value="1">
+                    <input type="hidden" name="qr_type" value="1" title="图片" />
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">群二维码</div>
+                        <div class="hui-form-textarea">
+                            <a id="qr_img_id" class="layui-btn layui-btn-sm" >上传图片</a>
+                            <input type="hidden" id="url" name="qr_img" value="{$data['qr_img']}"/>
+                            <div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;">
+                                <notempty name="data['qr_img']">
+                                    <p id=""><img style="width:50%;height:auto;" src="{$data['qr_img']|get_cover='path'}" id="upload_qr_img"/></p>
+                                <else/>
+                                    <p id=""><img src="" style="width:50%;height:auto;" id="upload_qr_img"/></p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                </case>
+                <case value="2">
+                    <input type="hidden" name="qr_type" value="1" title="图片" />
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">城市</div>
+                        <div class="hui-form-select">
+                            {:hook('j_china_city',array('province'=>$data["qr_province"],'city'=>$data["qr_city"],'district'=>$data["qr_district"]))}
+                        </div>
+                    </div>
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">二维码</div>
+                        <div class="hui-form-textarea">
+                            <a id="qr_img_id" class="layui-btn layui-btn-sm" >上传图片</a>
+                            <input type="hidden" id="url" name="qr_img" value="{$data['qr_img']}"/>
+                            <div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;max-width:60px;max-height:60px;">
+                                <notempty name="data['qr_img']">
+                                    <p id=""><img style="width:50%;height:auto;" src="{$data['qr_img']|get_cover='path'}" id="upload_qr_img"/></p>
+                                <else/>
+                                    <p id=""><img src="" style="width:50%;height:auto;" id="upload_qr_img"/></p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                </case>
+                <case value="3">
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">显示类型</div>
+
+                        <div class="hui-form-radios" style="line-height:38px;">
+                            <input type="radio" name="qr_type" value="1" id="gg1" title="图片" <eq name="data.qr_type" value="1">checked</eq>><label for="gg1">图片</label><br />
+
+                            <input type="radio" name="qr_type" value="2" id="gg2" title="链接" <eq name="data.qr_type" value="2">checked</eq>><label for="gg2">链接</label><br />
+
+                            <input type="radio" name="qr_type" value="3" id="gg3" title="文本" <eq name="data.qr_type" value="3">checked</eq>><label for="gg3">文本</label><br />
+                        </div>
+                    </div>
+
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">二维码</div>
+                        <div class="hui-form-textarea">
+                            <a id="qr_img_id" class="layui-btn layui-btn-sm" >上传图片</a>
+                            <input type="hidden" id="url" name="qr_img" value="{$data['qr_img']}"/>
+                            <div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;">
+                                <notempty name="data['qr_img']">
+                                    <p id=""><img src="{$data['qr_img']|get_cover='path'}" id="upload_qr_img" style="width:50%;height:auto;"/></p>
+                                <else/>
+                                    <p id=""><img src="" style="width:50%;height:auto;" id="upload_qr_img"/></p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">链接</div>
+                        <input type="text" class="hui-input hui-input-clear" name="qr_link" placeholder="填写带 http:// 链接" value="{$data.qr_link}"/>
+                    </div>
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">文本</div>
+                        <div class="hui-form-textarea">
+                            <textarea placeholder="..." name="qr_text">{$data.qr_text}</textarea>
+                        </div>
+                    </div>
+                </case>
+                <case value="4">
+                    <input type="hidden" name="qr_type" value="1" title="图片" />
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">二维码</div>
+                        <div class="hui-form-textarea">
+                            <a id="qr_img_id" class="layui-btn layui-btn-sm" >上传图片</a>
+                            <input type="hidden" id="url" name="qr_img" value="{$data['qr_img']}"/>
+                            <div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;">
+                                <notempty name="data['qr_img']">
+                                    <p id=""><img style="width:50%;height:auto;" src="{$data['qr_img']|get_cover='path'}" id="upload_qr_img"/></p>
+                                <else/>
+                                    <p id=""><img src="" style="width:50%;height:auto;" id="upload_qr_img"/></p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                </case>
+                <case value="5">
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">机型</div>
+
+                        <div class="hui-form-radios" style="line-height:38px;">
+                            <input type="radio" name="qr_mob_type" value="1" id="gg1" title="安卓" <eq name="data.qr_mob_type" value="1">checked</eq>><label for="gg1">安卓</label><br />
+
+                            <input type="radio" name="qr_mob_type" value="2" id="gg2" title="苹果" <eq name="data.qr_mob_type" value="2">checked</eq>><label for="gg2">苹果</label><br />
+                        </div>
+                    </div>
+                    <input type="hidden" name="qr_type" value="1" title="图片" />
+                    <div class="hui-form-items">
+                        <div class="hui-form-items-title">二维码</div>
+                        <div class="hui-form-textarea">
+                            <a id="qr_img_id" class="layui-btn layui-btn-sm" >上传图片</a>
+                            <input type="hidden" id="url" name="qr_img" value="{$data['qr_img']}"/>
+                            <div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;">
+                                <notempty name="data['qr_img']">
+                                    <p id=""><img style="width:50%;height:auto;" src="{$data['qr_img']|get_cover='path'}" id="upload_qr_img"/></p>
+                                <else/>
+                                    <p id=""><img src="" style="width:50%;height:auto;" id="upload_qr_img"/></p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                </case>
+            </switch>
+            <div style="padding:15px 8px;">
+                <button type="button" class="hui-button hui-button-large hui-primary" id="submitBtn">{$title}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="hui-fooer-line"></div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__PUBLIC__/wap/js/hui-form.js"></script>
+<script type="text/javascript">
+hui.formInit();
+hui('#submitBtn').click(function(){
+    var res = huiFormCheck('#form1');
+    if(res){
+        var data = hui.getFormData('#form1');
+        var url = '__SELF__';
+        $post(url, data, function(x) {
+            hui.toast(x.info);
+        }, function(x) {
+            hui.toast(x.info);
+            location.href = x.url;
+        });
+    }
+});
+</script>
+<script type="text/javascript">
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        upload.render({
+            url: '{:U("home/File/uploadPicture",array("session_id"=>session_id()))}'
+            ,elem: '#qr_img_id' //指定原始元素，默认直接查找class="layui-upload-file"
+            ,method: 'post' //上传接口的http类型
+            ,accept: 'images'
+            ,field: 'qr_img_id'
+            ,before: function(input){
+                //layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+                layer.load(2, {shade: false});
+            }
+            ,done: function(res, index, upload){
+                layer.closeAll('loading'); //关闭loading
+                upload_qr_img.src = res.data.qr_img_id.path;
+                $("[name='qr_img']").val(res.data.qr_img_id.id);
+            }
+            ,error: function(res, index, upload){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+            }
+        });
+    });
+</script>
+</body>
+</block>

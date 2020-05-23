@@ -1,0 +1,93 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">云市场应用自动升级</a>
+		<a href=""><cite>下载更新包</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+
+		<div class="with-padding">
+			<include file="_updatingGoods"/>
+			<h3><strong class="text-success">1.下载更新包，获取更新文件列表</strong>  &gt; 2.本地文件对比 &gt; 3.代码升级 &gt; 4.数据库升级 &gt; 升级完成</h3>
+			<div id="message" style="border: 1px solid #ccc;padding: 20px;height: 243px;overflow: auto">
+			</div>
+			
+			<h3>新版本的文件：</h3>
+			<div id="file" style="border: 1px solid #ccc;padding: 20px;height: 250px;overflow: auto">
+			</div>
+
+			<h3>下载的文件存放位置：</h3>
+			<p class="alert alert-warning">
+				原版文件存放位置：{$path}/old/
+			</p>
+			<p class="alert alert-warning">
+				更新文件存放位置：{$path}/new/
+			</p>
+			<a id="compare_btn" disabled="disabled" href="{:U('updating2')}" class="layui-btn layui-btn-sm">下载完成，比较文件</a>
+
+			<div style="margin-top: 10px">
+				<div class="progress progress-striped active hide" style="border-radius: 3px">
+					<div id="progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+						 aria-valuemin="0" aria-valuemax="100" style="width:0">
+					</div>
+				</div>
+			</div>
+
+		</div>
+</div>
+</div>
+</div>
+
+<script>
+	function writeFile($data) {
+		$('#file').append('<div><i class="icon-file"></i> '+$data+'</div>');
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	var progress = {
+		'show': function () {
+			$('#progress').parent().show();
+		},
+		'setValue': function ($value) {
+			$('#progress').css('width', $value);
+		},
+		'hide': function () {
+			$('#progress').parent().hide();
+		}
+	};
+	function enable(){
+		$('#compare_btn').removeAttr('disabled','');
+	}
+</script>
+</block>

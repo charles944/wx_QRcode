@@ -1,0 +1,69 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>清理数据</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-equalizer font-blue-hoki"></i>
+					<span class="caption-subject font-red-sunglo bold uppercase">清理数据</span>
+					<span class="caption-helper"></span>
+				</div>
+				<div class="actions"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="portlet-body form">
+				<form action="{:U()}" class="form-horizontal form-bordered form-row-stripped" method="post">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">数据表<span class="check-tips">（当前数据库的所有表）</span></label>
+							<div class="col-md-9">
+								<select name="table" class="form-control">
+									<volist name="tables" id="tb">
+										<option value="{$tb}">{$tb}</option>
+									</volist>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">清理时间（多久之前的数据）</label>
+							<div class="col-md-9">
+							<div class="input-group date form_datetime" data-date="">
+									<input type="text" size="16" class="form-control" name="create_time" value="" placeholder="请选择时间">
+									<span class="input-group-btn">
+									<button class="btn default date-reset" type="button"><i class="fa fa-times"></i></button>
+									<button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+									</span>
+							</div>
+							</div>
+						</div>
+						<!-- 按钮 -->
+						<div class="form-group">
+							<label class="control-label col-md-3"></label>
+							<div class="col-md-9 edit_sort_btn">
+								<input type="hidden" name="id" value="{$id}"/>
+								<button class="btn submit-btn green ajax-post no-refresh" type="submit" target-form="form-horizontal">清 理</button>
+								<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</block>
+<block name="jquery_script">
+</block>
+<block name="script">
+</block>
+

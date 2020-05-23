@@ -1,0 +1,89 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+h3,h4{padding:10px 0; line-height:25px; height:25px; clear:both}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>核心自动升级 - 比较本地文件</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+
+	<div class="portlet-title">
+		<div class="alert alert-info">
+			<p>当前需要升级的版本：<strong>{$nextVersion.name}</strong></p>
+
+			<p>当前的系统版本号：<strong>{$currentVersion.name}</strong></p>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="portlet-body">
+		<p class="alert alert-info"><strong class="text-success">1.下载更新包，获取更新文件列表  &gt;  2.本地文件对比</strong>  &gt;  3.代码升级  &gt;  4.数据库升级  &gt;  升级完成</p>
+		<p class="alert alert-warning">请确保所有涉及的文件状态为 <strong class="text-success">可写</strong> 。否则无法进入下一步。请在ftp上赋予这些未具备可写权限的文件写入权限后 <strong class="text-success">刷新</strong> 本页面。</p>
+		<p class="alert alert-info">如果未修改过文件，但却发现所有的文件都产生了冲突，那么请确保您上传文件的方式为2进制。</p>
+
+		<h4>本次更新涉及的文件：</h4>
+
+		<div class="table-scrollable">
+			<table class="layui-table" lay-skin="line" id="file">
+				<thead>
+				<tr><th>文件名</th><th>状态</th><th>权限</th></tr>
+				</thead>
+			</table>
+		</div>
+		<h4>备份文件存放位置：</h4>
+
+		<p class="alert alert-warning">
+			<span class="text-success">{$path}/backup</span>
+		</p>
+
+		<p class="alert alert-info">如果您进行了二次开发，并导致了文件差异，您可以在此找回这些被覆盖的文件</p>
+
+		<a id="compare_btn" href="{:U('cover')}" class="layui-btn layui-btn-sm" disabled="disabled"
+		   onclick="if(!confirm('确定覆盖文件升级？此操作可能会导致网站无法运行，请确认后升级。')){return false}">下一步，覆盖这些文件，丢失修改，并升级（可能会出错）</a>
+		   
+		<a href="{:U('updb')}" class="layui-btn layui-btn-sm layui-btn-primary" onclick="if(!confirm('确定跳过文件升级步骤？如果您不是开发人员，或者还未对代码进行合并操作，请不要跳过。')){return false}">我已经自行合并代码，跳过文件升级</a>
+	</div>
+</div>
+</div>
+</div>
+
+<script>
+	function writeFile($data) {
+		$('#file').append($data);
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	function enable() {
+		$('#compare_btn').removeAttr('disabled', '');
+	}
+</script>
+</block>

@@ -1,0 +1,250 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">插件配置[ {$data.title} ]</a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+		<form action="__SELF__" class="layui-form" method="post">
+			<div class="form-body">
+			<empty name="custom_config">
+			<foreach name="data['config']" item="form" key="o_key">
+				<div class="layui-form-item">
+						<label class="layui-form-label">
+							{$form.title|default=''}
+						</label>
+						<switch name="form.type">
+							<case value="text">
+								<div class="layui-input-block">
+									<input type="text" name="config[{$o_key}]" value="{$form.value}" autocomplete="off" class="layui-input">
+									<div class="layui-form-mid layui-word-aux">
+										<present name="form.tip">{$form.tip}</present>
+									</div>
+								</div>
+							</case>
+							<case value="password">
+								<div class="layui-input-block">
+									<input type="text" name="config[{$o_key}]" value="{$form.value}" autocomplete="off" class="layui-input">
+									<div class="layui-form-mid layui-word-aux">
+										<present name="form.tip">{$form.tip}</present>
+									</div>
+								</div>
+							</case>
+							<case value="hidden">
+							    <input class="layui-input" placeholder="" type="hidden" name="config[{$o_key}]" value="{$form.value}" />
+							</case>
+							<case value="radio">
+								<div class="layui-input-block">
+									<foreach name="form.options" item="opt" key="opt_k">
+										<php>
+											$checked = $form['value']==$opt_k ? 'checked' : '';
+											$inputId = $o_key."_id_$opt_k";
+										</php>
+										<input type="radio" name="config[{$o_key}]" value="{$opt_k}" title="{$opt}" {$checked}>
+									</foreach>
+								</div>
+								<div class="layui-form-mid layui-word-aux">
+									<present name="form.tip">{$form.tip}</present>
+								</div>
+							</case>
+							<case value="checkbox">
+								<div class="layui-input-block">
+									<foreach name="form.options" item="opt" key="opt_k">
+										<php>
+											is_null($form["value"]) && $form["value"] = array();
+										</php>
+										<input type="checkbox" name="config[{$o_key}][]" value="{$opt_k}" id="" title="{$opt}" data-field-name="{$opt}" <in name="opt_k" value="$form.value"> checked</in> >
+									</foreach>
+								</div>
+								<div class="layui-form-mid layui-word-aux"><present name="form.tip">{$form.tip}</present></div>
+							</case>
+							<case value="select">
+								<div class="layui-input-block">
+									<select class="" name="config[{$o_key}]">
+										<foreach name="form.options" item="opt" key="opt_k">
+											<option value="{$opt_k}" <eq name="form.value" value="$opt_k"> selected</eq>>{$opt}</option>
+										</foreach>
+									</select>
+								</div>
+								<div class="layui-form-mid layui-word-aux">
+									<present name="form.tip">{$form.tip}</present>
+								</div>
+							</case>
+							<case value="textarea">
+								<div class="layui-input-block">
+									<php>$f['config'] = "toolbars:[['source','|','bold','italic','underline','fontsize','forecolor','justifyleft','fontfamily','|','map','emotion','insertimage','insertcode']]";
+									</php>
+									{:W('Common/Ueditor/editor',array($o_key,$o_key,$form['value'],"100%","300px",''))}
+								
+									<div class="layui-form-mid layui-word-aux"><present name="form.tip">{$form.tip}</present></div>
+								</div>
+							</case>
+							<case value="picture_union">
+								<php>
+								$multiImage = 1;
+								$importmutifilename = $o_key;
+								</php>
+								<div class="layui-input-block multiImage controls">
+									<input type="file" name="{$o_key}_id" id="J_selectImage_{$o_key}" class="layui-upload-file" value="批量上传图片" />
+									<input type="button" id="selectImg_{$o_key}" class="selectImg" data-name="config[{$o_key}]" value="浏览服务器" />
+									
+									<input class="attach" type="hidden" name="config[{$o_key}]" value="{$form.value}"/>
+									
+									<div class="upload-img-box" style="margin-top:10px;">
+										<div class="upload-pre-items popup-gallery" id="J_imageView">
+										<notempty name="form['value']">
+										<php> $mulimages = explode(",", $form["value"]); </php>
+											<foreach name="mulimages" item="one">
+												<div class="each">
+													<a href="{$one|get_cover='path'}" title="点击查看大图">
+														<img src="{$one|get_cover='path'}">
+													</a>
+													<div class="text-center opacity del_btn" ></div>
+													<div onclick="admin_image.removeImage($(this),'{$one}')"  class="text-center del_btn">删除</div>
+												</div>
+											</foreach>
+										</notempty>
+										</div>
+									</div>
+								</div>
+								<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+							</case>
+							<case value="group">
+								<div class="layui-tab">
+									<ul class="layui-tab-title">
+										<volist name="form.options" id="li">
+											<li id="tab_1_{$i}" class="<if condition="$i eq 1">layui-this</if>">{$li.title}</li>
+										</volist>
+									</ul>
+									<div class="layui-tab-content">
+										<volist name="form.options" id="tab">
+											<div class="layui-tab-item <if condition="$i eq 1">layui-show</if>" id="tab_1_{$i}">
+												<foreach name="tab['options']" item="tab_form" key="o_tab_key">
+												<div class="layui-form-item">
+													<label class="layui-form-label">{$tab_form.title|default=''}</label>
+													<switch name="tab_form.type">
+														<case value="text">
+															<div class="layui-input-block">
+																<input type="text" name="config[{$o_tab_key}]" value="{$tab_form.value}" autocomplete="off" class="layui-input">
+															</div>
+															<div class="layui-form-mid layui-word-aux">
+																<present name="tab_form.tip">{$tab_form.tip}</present>
+															</div>
+														</case>
+														<case value="password">
+															<div class="layui-input-block">
+																<input type="text" name="config[{$o_tab_key}]" value="{$tab_form.value}" autocomplete="off" class="layui-input">
+															</div>
+															<div class="layui-form-mid layui-word-aux">
+																<present name="tab_form.tip">{$tab_form.tip}</present>
+															</div>
+														</case>
+														<case value="hidden">
+															<input type="hidden" name="config[{$o_tab_key}]" value="{$tab_form.value}" />
+														</case>
+														<case value="radio">
+															<div class="layui-input-block">
+															<foreach name="tab_form.options" item="opt" key="opt_k">
+																<input type="radio" name="config[{$o_tab_key}]" value="{$opt_k}" title="{$opt}" <eq name="tab_form.value" value="$opt_k">checked</eq> />
+															</foreach>
+															</div>
+															<present name="tab_form.tip">
+															<div class="layui-form-mid layui-word-aux">{$tab_form.tip}</div>
+															</present>
+														</case>
+														<case value="checkbox">
+															<div class="layui-input-block">
+															<foreach name="tab_form.options" item="opt" key="opt_k">
+																<php> is_null($tab_form["value"]) && $tab_form["value"] = array();</php>
+																<input type="checkbox" name="config[{$o_tab_key}][]" title="{$opt}" value="{$opt_k}" <in name="opt_k" value="$tab_form.value"> checked</in>>
+															</foreach>
+															</div>
+															<present name="tab_form.tip">
+															<div class="layui-form-mid layui-word-aux">{$tab_form.tip}</div>
+															</present>
+														</case>
+														<case value="select">
+															<div class="layui-input-block">
+															  <select name="config[{$o_tab_key}]" lay-verify="required">
+																<foreach name="tab_form.options" item="opt" key="opt_k">
+																	<option value="{$opt_k}" <eq name="tab_form.value" value="$opt_k"> selected</eq>>{$opt}</option>
+																</foreach>
+															  </select>
+															</div>
+															<present name="tab_form.tip">
+															<div class="layui-form-mid layui-word-aux">{$tab_form.tip}</div>
+															</present>
+														</case>
+														<case value="textarea">
+															<div class="layui-input-block">
+																<textarea name="config[{$o_tab_key}]" class="layui-textarea" rows="10" >{$tab_form.value}</textarea>
+															</div>
+															<present name="tab_form.tip">
+															<div class="layui-form-mid layui-word-aux">{$tab_form.tip}</div>
+															</present>
+														</case>
+														<case value="picture_union">
+															<div class="controls">
+															<input type="file" id="upload_picture_{$o_tab_key}">
+															<input type="hidden" name="config[{$o_tab_key}]" id="cover_id_{$o_tab_key}" value="{$tab_form.value}"/>
+															<div class="upload-img-box">
+																<notempty name="tab_form['value']">
+																<php> $mulimages = explode(",", $tab_form["value"]);</php>
+																<foreach name="mulimages" item="one">
+																	<div class="upload-pre-item" val="{$one}">
+																		<img src="{$one|get_cover='path'}"  ondblclick="removePicture{$o_tab_key}(this)"/>
+																	</div>
+																</foreach>
+																</notempty>
+															</div>
+															</div>
+														</case>
+													</switch>
+													</div>
+												</foreach>
+											</div>
+										</volist>
+								</div>
+							</case>
+						</switch>
+					</div>
+			</foreach>
+		<else />
+			<present name="custom_config">
+				{$custom_config}
+			</present>
+		</empty>
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<div class="layui-input-block">
+			<div class="layui-footer">
+				<button type="submit" class="layui-btn layui-btn-sm ajax-post" target-form="layui-form">确 定</button>
+				<button type="button" class="layui-btn layui-btn-sm layui-btn-primary btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				<input type="hidden" name="id" value="{:I('id')}" readonly>
+			</div>
+			</div>
+		</div>
+		</div>
+		</div>
+		</form>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+	if($('ul.nav-tabs').length){
+		//当有tab时，返回按钮不显示
+		$('.btn-return').hide();
+	}
+	
+</script>
+</block>

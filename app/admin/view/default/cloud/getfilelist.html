@@ -1,0 +1,71 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+h3,h4{padding:10px 0; line-height:25px; height:25px; clear:both}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>核心自动升级 - 下载更新包</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+	
+<div class="with-padding">
+	<div class="alert alert-info">
+		<p>当前需要升级的版本：<strong>{$nextVersion.name}</strong></p>
+		<p>当前的系统版本号：<strong>{$currentVersion.name}</strong></p>
+	</div>
+
+	<h3><strong class="text-success">1.下载更新包，获取更新文件列表</strong>  &gt;  2.本地文件对比  &gt;  3.代码升级  &gt;  4.数据库升级  &gt;  升级完成</h3>
+	<div id="message" style="border: 1px solid #ccc;padding: 20px;height: 243px;overflow: auto"></div>
+	<h4>本次更新涉及的本地文件：</h4>
+	<div id="file" style="border: 1px solid #ccc;padding: 20px;height: 250px;overflow: auto"></div>
+
+	<h4>下载的文件存放位置：</h4>
+	<p class="alert alert-warning">原版文件存放位置：{$path}/old.zip</p>
+	<p class="alert alert-warning">更新文件存放位置：{$path}/new.zip</p>
+
+	<a id="compare_btn" disabled="disabled" href="{:U('compare')}" class="layui-btn layui-btn-sm">下载完成，比较文件</a>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+	function writeFile($data) {
+		$('#file').append('<div><i class="icon-file"></i> '+$data+'</div>');
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	function enable(){
+		$('#compare_btn').removeAttr('disabled','');
+	}
+</script>
+</block>

@@ -1,0 +1,55 @@
+<extend name="base/wapcommon"/>
+<block name="body">
+<body>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>域名防封管理</h1>
+</header>
+<div class="page hui-wrap" id="">
+    <div class="page__bd page__bd_spacing">
+        <form style="" class="hui-form" action="__SELF__" id="form1" method="post">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+            <input type="hidden" name="uid" value="{$data.uid}"/>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">入口域名</div>
+                <div class="hui-form-textarea">
+                   <textarea placeholder="注意：输入入口域名，一行一个，不可空行，不带http://，输入多个入口时，在创建活码时会生成多个二维码." name="in_domain">{$data.in_domain}</textarea>
+                </div>
+            </div>
+            <div class="hui-form-items">
+                <div class="hui-form-items-title">落地域名</div>
+                <div class="hui-form-textarea">
+                    <textarea placeholder="注意：入口域名和落地域名的主域名一定不能相同，子域名绑定解析CNAME到..." name="out_domain">{$data.out_domain}</textarea>
+                </div>
+            </div>
+            <div style="padding:15px 8px;">
+                <button type="button" class="hui-button hui-button-large hui-primary" id="submitBtn">保存配置</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="hui-fooer-line"></div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__PUBLIC__/wap/js/hui-form.js"></script>
+<script type="text/javascript">
+hui.formInit();
+hui('#submitBtn').click(function(){
+    var res = huiFormCheck('#form1');
+    if(res){
+        var data = hui.getFormData('#form1');
+        var url = '__SELF__';
+        $post(url, data, function(x) {
+            hui.toast(x.info);
+        }, function(x) {
+            hui.toast(x.info);
+            location.href = location.reload();
+        });
+    }
+});
+</script>
+</body>
+</block>

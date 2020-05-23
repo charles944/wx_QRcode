@@ -1,0 +1,121 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的安全码</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<eq name="tabhash" value="change">
+			<div class="layui-form layui-form-pane mine-view" style="display: block;">
+				<form id="changeSafepassForm"  action="{:U('Ucenter/Config/dochangesafepass')}" method="post" class="layui-form">
+
+					<div class="layui-form-item">
+						<label for="inputNewPassword" class="layui-form-label">新安全码</label>
+						<div class="layui-input-inline">
+							<input type="password" id="inputNewPassword" name="new_password" required="" lay-verify="required" autocomplete="off" class="layui-input" placeholder="输入新安全码">
+						</div>
+						<div class="layui-form-mid layui-word-aux">6到16个字符</div>
+					</div>
+					<div class="layui-form-item">
+						<label for="inputConfirmPassword" class="layui-form-label">确认安全码</label>
+						<div class="layui-input-inline">
+							<input type="password" id="inputConfirmPassword" name="confirm_password" required="" lay-verify="required" autocomplete="off" class="layui-input" placeholder="输入确认安全码" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label for="verfy_code" class="layui-form-label">验证码</label>
+						<div class="layui-input-inline">
+							<input type="text" class="layui-input" name="verify" placeholder="输入邮箱验证码" style=""/>
+						</div>
+						<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+							<a style="" id="sendSms2" class="layui-btn layui-btn-sm layui-btn-danger" >发送邮箱验证码</a>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">确认修改</button>
+					</div>
+				</form>
+			</div>
+		</eq>
+		<eq name="tabhash" value="bind">
+			<div class="layui-form layui-form-pane mine-view" style="display: block;">
+				<form id="changeSafepassForm" action="{:U('Ucenter/Config/dobindsafepass')}" method="post" class="ajax-form ">
+					<div class="layui-form-item">
+						<label for="inputNewPassword" class="layui-form-label">待绑定安全码</label>
+						<div class="layui-input-inline">
+							<input type="password" id="inputNewPassword" name="old_password" required="" lay-verify="required" autocomplete="off" class="layui-input" placeholder="输入旧安全码">
+						</div>
+						<div class="layui-form-mid layui-word-aux">6到16个字符</div>
+					</div>
+					<div class="layui-form-item">
+						<label for="inputConfirmPassword" class="layui-form-label">确认安全码</label>
+						<div class="layui-input-inline">
+							<input type="password" id="inputConfirmPassword" name="confirm_password" required="" lay-verify="required" autocomplete="off" class="layui-input" placeholder="输入确认安全码" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">确认修改</button>
+					</div>
+				</form>
+			</div>
+		</eq>
+	</div>
+</div>
+</block>
+<block name="script">
+    <script>
+        //检查两次输入的密码是否一致
+        $(function(){
+            $('#changeSafepassForm').submit(function(e){
+                var newPassword = $('#inputNewPassword').val();
+                var confirmPassword = $('#inputConfirmPassword').val();
+                if(newPassword != confirmPassword) {
+					layer.msg('两次输入的密码不一致', {icon: 2, fixed: true, offset: '80%', time: 1000});
+                    e.stopPropagation();
+                    return false;
+                }
+            });
+
+			var $button2 = $('#sendSms2');
+			$button2.click(function(){
+				$button2.addClass('disabled',true);
+				var $this = $(this);
+				$.post("{:U('home/verify/sendVerify')}", {account: '<php>echo $email;</php>', type: 'email' ,action:'config', todo: 'email'}, function (res) {
+					if(res.status){
+						DecTime.obj = $this;
+						DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+						$this.attr('disabled',true);
+						DecTime.dec_time();
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					}
+					else{
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				});
+			});
+		});
+		var DecTime = {
+			obj:0,
+			time:0,
+			dec_time : function(){
+				if(this.time > 0){
+					this.obj.text(this.time--+'S');
+					setTimeout("DecTime.dec_time()",1000);
+				}else{
+					this.obj.text('发送邮箱验证码');
+					this.obj.attr('disabled',false);
+				}
+
+			}
+		}
+		
+    </script>
+</block>

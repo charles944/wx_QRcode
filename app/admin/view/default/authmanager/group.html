@@ -1,0 +1,52 @@
+<extend name="public/base" />
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>用户组授权</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<form action="{:U('addToGroup')}" id="form" class="layui-form" method="post" enctype="application/x-www-form-urlencoded">
+
+		<div class="form-body">
+			<div class="layui-form-item">
+				<label class="layui-form-label">{$nickname} 所属的用户组列表</label>
+				<div class="layui-input-block">
+					<volist name="auth_groups" id="vo">
+						<input type="checkbox" name="group_id[]" lay-skin="primary" value="{$vo.id}" class="auth_groups" title="{$vo.title}" />
+					</volist>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+			<input type="hidden" name="uid" value="{:I('uid')}">
+            <input type="hidden" name="batch" value="true">
+            <div class="layui-form-item">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-inline">
+					<button class="btn layui-btn ajax-post layui-btn-xs" type="submit" target-form="layui-form">确 定</button>
+					<button class="btn layui-btn layui-btn-xs" onclick="javascript:history.back(-1);return false;">返 回 </button>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+        </form>
+      </div>
+    </div>
+</div>
+</div>
+<block>
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        var group = [{$user_groups}];
+        $('.auth_groups').each(function(){
+            if( $.inArray( parseInt(this.value,10),group )>-1 ){
+                $(this).prop('checked',true);
+            }
+        });
+    });
+</script>
+</block>

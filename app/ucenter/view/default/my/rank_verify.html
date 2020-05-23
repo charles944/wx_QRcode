@@ -1,0 +1,71 @@
+<extend name="base/common"/>
+
+<block name="style">
+	<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>我的头衔</h2>
+</div>
+<div class="layui-tab">
+  <ul class="layui-tab-title">
+	<li onclick="javascript:location.href='{:U('Ucenter/My/rank')}'"<eq name="tabs" value="rank"> class="layui-this"</eq>>已拥有头衔</li>
+	<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerifyWait')}'"<eq name="tabs" value="rankVerifyWait"> class="layui-this"</eq>>待审核头衔</li>
+	<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerifyFailure')}'"<eq name="tabs" value="rankVerifyFailure"> class="layui-this"</eq>>申请失败头衔</li>
+	<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerify')}'"<eq name="tabs" value="rankVerify"> class="layui-this"</eq>>申请头衔</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+	<if condition="count($rankList) eq 0">
+	<div class="qn-msg" style="text-align: center; font-size: 18px;">
+		<br>暂无该类型头衔哦～<br>
+	</div>
+	<else/>
+	<form class="layui-form" role="form" action="{:U('Ucenter/My/verify')}" method="post">
+		<input type="hidden" name="rank_user_id" value="{$old_rank_user['id']}">
+		<div class="form-group">
+			<label class="col-xs-2 control-label">申请头衔</label>
+
+			<div class="col-xs-10">
+				<volist name="rankList" id="rank">
+					<div class="col-xs-4 text-center">
+						<label class="radio-inline">
+							<attr>
+							<p>
+								<empty name="rank.label_content">
+									<img style="width: 18px;" class="rank-icon" src="{$rank.logo_url}" title="{$rank.title}" alt="{$rank.title}"/>
+									<else/>
+									<span class="label label-badge rank-label" title="{$rank.title}" style="background: {$rank.label_bg} !important;color:{$rank.label_color} !important;">{$rank.label_content}</span>
+								</empty>
+							</p>
+							<p><input type="radio" name="rank_id" value="{$rank.id}" <if condition="$rank['id'] eq $old_rank_user['rank_id']">checked</if>>{$rank.title}</p>
+
+							</attr>
+						</label>
+					</div>
+				</volist>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="reason" class="col-xs-2 control-label">申请理由</label>
+
+			<div class="col-xs-10">
+				<textarea id="reason" name="reason" class="form-control" style="width: 100%; height: 6em;resize: none">{$old_rank_user['reason']}</textarea>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-xs-10">
+				<button type="submit" class="btn btn-primary">申请</button>
+			</div>
+		</div>
+	</form>
+	</if>
+	</div>
+  </div>
+</div>
+</div>
+</block>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <include file="public/head"/>
+    <style>
+	body,html {height:100%}
+	.layui-layout-body {overflow:auto}
+	#user-login,.qn-user-dispshow {display:block!important}
+	.qn-user-login {position:relative;left:0;top:0;padding:110px 0;min-height:100%;box-sizing:border-box}
+	.qn-user-login-main {width:375px;margin:0 auto;box-sizing:border-box}
+	.qn-user-login-box {padding:20px}
+	.qn-user-login-header {text-align:center}
+	.qn-user-login-header h2 {margin-bottom:10px;font-weight:300;font-size:30px;color:#000}
+	.qn-user-login-header p {font-weight:300;color:#999}
+	.qn-user-login-body .layui-form-item {position:relative}
+	.qn-user-login-icon {position:absolute;left:1px;top:1px;width:38px;line-height:36px;text-align:center;color:#d2d2d2}
+	.qn-user-login-body .layui-form-item .layui-input {padding-left:38px}
+	.qn-user-login-codeimg {max-height:38px;width:100%;cursor:pointer;box-sizing:border-box}
+	.qn-user-login-other {position:relative;font-size:0;line-height:38px;padding-top:20px}
+	.qn-user-login-other>* {display:inline-block;vertical-align:middle;margin-right:10px;font-size:14px}
+	.qn-user-login-other .layui-icon {position:relative;top:2px;font-size:26px}
+	.qn-user-login-other a:hover {opacity:.8}
+	.qn-user-jump-change {float:right}
+	.qn-user-login-footer {position:absolute;left:0;bottom:0;width:100%;line-height:30px;padding:20px;text-align:center;box-sizing:border-box;color:rgba(0,0,0,.5)}
+	.qn-user-login-footer span {padding:0 5px}
+	.qn-user-login-footer a {padding:0 5px;color:rgba(0,0,0,.5)}
+	.qn-user-login-footer a:hover {color:rgba(0,0,0,1)}
+	.qn-user-login-main[bgimg] {background-color:#fff;box-shadow:0 0 5px rgba(0,0,0,.05)}
+	.ladmin-user-login-theme {position:fixed;bottom:0;left:0;width:100%;text-align:center}
+	.ladmin-user-login-theme ul {display:inline-block;padding:5px;background-color:#fff}
+	.ladmin-user-login-theme ul li {display:inline-block;vertical-align:top;width:64px;height:43px;cursor:pointer;transition:all .3s;-webkit-transition:all .3s;background-color:#f2f2f2}
+	.ladmin-user-login-theme ul li:hover {opacity:.9}
+	@media screen and (max-width:768px) {.qn-user-login {padding-top:60px}
+	.qn-user-login-main {width:300px}
+	.qn-user-login-box {padding:10px}
+	}
+	</style>
+</head>
+<body>
+<div class="main main_login layui-clear" style="min-height:100px;width:100%;padding:20px 10px 0 10px;">
+    <div class="qn-user-login qn-user-display-show" id="user-login">
+    <div class="qn-user-login-main">
+      <div class="qn-user-login-box qn-user-login-header">
+        <h2>忘记密码找回</h2>
+        <p>请选择使用手机号码，或者邮箱号码任一一种找回</p>
+      </div>
+      <div class="qn-user-login-box qn-user-login-body layui-form">
+            <!-- <div class="layui-form-item">
+              <label class="qn-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+              <input type="password" name="password" id="qn-user-login-password" lay-verify="pass" placeholder="新密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <label class="qn-user-login-icon layui-icon layui-icon-password" for="qn-user-login-repass"></label>
+              <input type="password" name="repass" id="qn-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+              <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="qn-user-forget-resetpass">重置新密码</button>
+            </div> -->
+            <div class="layui-tab layui-tab-brief" style="margin-bottom:0">
+				<ul class="layui-tab-title">
+					<li class="layui-this">邮箱找回</li>
+					<li >手机找回</li>
+				</ul>
+				<div class="layui-tab-content" style="padding:0">
+					<div class="layui-tab-item layui-show">
+						<form class="layui-form layui-form-pane" id="J_findpwd_form1" action="{:U('member/mi')}" method="post">
+							<input type="hidden" name="do" value="email"/>
+							<div class="layui-form-item">
+				            	<label class="qn-user-login-icon layui-icon layui-icon-username" for="user-login-username"></label>
+				            	<input type="text" name="email" id="user-login-username" lay-verify="email" placeholder="请输入绑定的邮箱" class="layui-input">
+				            </div>
+				            <div class="layui-form-item">
+								<div class="layui-row">
+									<div class="layui-col-xs7">
+					                	<label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-vercode"></label>
+					                	<input type="text" name="verify" id="user-login-vercodeemail" required="" lay-verify="registerverf" placeholder="图形验证码" class="layui-input">
+					                </div>
+					                <div class="layui-col-xs5">
+					                	<div style="margin-left: 10px;">
+					                		<img class="verifyimg reloadverify img-responsive qn-user-login-codeimg" alt="点击切换" src="{:U('verify')}" id="user-get-vercodeemail">
+					                  </div>
+					                </div>
+								</div>
+				            </div>
+				            <div class="layui-form-item">
+				            	<button class="layui-btn layui-btn-fluid" lay-filter="*" lay-submit>找回密码</button>
+				            </div>
+				        </form>
+					</div>
+					<div class="layui-tab-item">
+						<form class="layui-form layui-form-pane" id="J_findpwd_form2" action="{:U('member/mi')}" method="post">
+							<input type="hidden" name="do" value="mobile"/>
+				            <div class="layui-form-item">
+				            	<label class="qn-user-login-icon layui-icon layui-icon-cellphone" for="user-login-cellphone"></label>
+				            	<input type="text" name="mobile" id="mobileaccount" lay-verify="phone" placeholder="请输入注册时的手机号" class="layui-input">
+				            </div>
+				            <div class="layui-form-item">
+				            	<div class="layui-row">
+				                <div class="layui-col-xs7">
+				                	<label class="qn-user-login-icon layui-icon layui-icon-vercode" for="qn-user-login-smscode"></label>
+				                	<input type="text" name="reg_verify" id="qn-user-login-smscode" lay-verify="required" placeholder="短信验证码" class="layui-input">
+				                </div>
+				                <div class="layui-col-xs5">
+									<div style="margin-left: 10px;">
+										<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="sendSms">获取验证码</button>
+									</div>
+				                </div>
+				            	</div>
+				            </div>
+				            <div class="layui-form-item">
+				              <div class="layui-row">
+				                <div class="layui-col-xs7">
+				                  <label class="qn-user-login-icon layui-icon layui-icon-vercode" for="user-login-vercode"></label>
+				                  <input type="text" name="verify" id="user-login-vercodemobile" required="" lay-verify="registerverf" placeholder="图形验证码" class="layui-input">
+				                </div>
+				                <div class="layui-col-xs5">
+				                  <div style="margin-left: 10px;">
+				                    <img class="verifyimg reloadverify img-responsive qn-user-login-codeimg" alt="点击切换" src="{:U('verify')}" id="user-get-vercodemobile">
+				                  </div>
+				                </div>
+				              </div>
+				            </div>
+				            <div class="layui-form-item">
+				            	<button class="layui-btn layui-btn-fluid" lay-filter="*" lay-submit>找回密码</button>
+				            </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+      </div>
+    </div>
+    
+    <div class="layui-trans qn-user-login-footer">
+    	<p>© 2018 <a href="" target="_blank">{:get_domain()}</a></p>
+    </div>
+
+  </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("form").submit(function () {
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+
+            function success(data) {
+                layui.qn.handleAjax(data);
+            }
+        });
+
+
+        var verifyimg = $(".verifyimg").attr("src");
+        $(".reloadverify").click(function () {
+            if (verifyimg.indexOf('?') > 0) {
+                $(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+            } else {
+                $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+            }
+        });
+
+		var DecTime = {
+			obj:0,
+			time:0,
+			dec_time : function(){
+				if(this.time > 0){
+					this.obj.text(this.time--+'S')
+					setTimeout("DecTime.dec_time()",1000)
+				}else{
+					this.obj.text('获取验证码')
+					this.obj.attr('disabled',false)
+				}
+
+			}
+		}
+		
+        var $button = $('#sendSms');
+        $button.click(function(){
+            $button.addClass('disabled',true);
+			var $this = $(this);
+			var account = $('#mobileaccount').val();
+			$.post("{:U('home/verify/sendVerify')}", {account: account, type: 'mobile' ,action:'member', todo: 'forgetpassword'}, function (res) {
+				if(res.status){
+					DecTime.obj = $this
+					DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+					$this.attr('disabled',true)
+					DecTime.dec_time();
+					layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+				}
+				else{
+					layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+				}
+			});
+        });
+    });
+</script>
+<script src="__Layer__/layui.js"></script>
+<include file="public/js"/>
+</body>
+</html>

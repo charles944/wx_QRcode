@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- Le styles -->
+<link rel="stylesheet" href="__Layer__/css/layui.css">
+<script src="__Layer__/layui.js"></script>
+<title>抱歉,出错啦!</title>
+<style>
+* {word-wrap: break-word;}
+*,:before,:after {box-sizing:border-box;}
+html{overflow-x: hidden; overflow-y: auto; background-color:#fff; }
+html body{margin-top: 0;}
+html, body, div, p, ol, ul, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, input, select, button, textarea, iframe, th, td {margin: 0;padding: 0;list-style-type: none;}
+th, td {border: 1px solid #ddd;}
+body {margin: 0;padding: 0;color: #666;}
+body,input,button,select,optgroup,option,textarea,pre {font-family:Montserrat,-apple-system,BlinkMacSystemFont,"PingFangSC-Regular",'PingFang SC',"Hiragino Sans GB","Microsoft YaHei",Helvetica,Arial,"WenQuanYi Micro Hei",SimSun,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body,input,button,select,textarea {font-size:12px;line-height:1.5;}
+body input, body textarea{box-shadow:none;}
+.page-404 .number{
+	top:0;
+}
+.details{
+	word-break;:break-all;
+}
+body{box-sizing: border-box;}
+.container{text-align:center;}
+.container .logo {min-width:80%;padding:30px;text-align:center;position:absolute;left:0;
+top: 0;bottom: 0;right: 0;margin: auto;}
+
+.container .logo h1{letter-spacing: 0.05em;font-size: 24px;text-transform: uppercase;margin:20px 0;}
+.container .logo .details p{margin-bottom:20px;font-size:16px;}
+</style>
+</head>
+<body class="page-404-full-page">
+<div class="container">
+	<div class="logo">
+		<h1 class="h1">
+			 ERROR
+		</h1>
+		<div class="details">
+			<p>抱歉,出错啦!</p>
+			<p><?php echo($error_message); ?></p>
+			<p><b id="wait"><?php echo($waitSecond); ?></b> 秒后页面将自动跳转</p>
+			<p>
+			    <a id="href" class="layui-btn layui-btn-sm layui-btn-normal" href="<?php echo($jumpUrl); ?>">立即跳转</a> 
+			    <a href="javascript:void(0);" id="btn-stop" class="layui-btn layui-btn-sm layui-btn-danger" type="button" onclick="stop()">停止跳转</button> 
+			    <a id="href" id="btn-now" class="layui-btn layui-btn-sm" href="<?php echo(U('public/logout')); ?>">重新登录</a> 
+			</p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+(function(){
+ var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+ var interval = setInterval(function(){
+     	var time = --wait.innerHTML;
+     	if(time <= 0) {
+     		location.href = href;
+     		clearInterval(interval);
+     	};
+     }, 1000);
+  window.stop = function (){
+         console.log(111);
+            clearInterval(interval);
+ }
+ })();
+</script>
+</body>
+</html>

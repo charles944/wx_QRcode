@@ -1,0 +1,91 @@
+<block name="style">
+<link href="__APP__/news/static/css/news.css" rel="stylesheet">
+</block>
+<div class="wrap home_wrap">
+<div class="zone-title">
+	<div class="headline clearfix fj">
+		<a href="" class="name">{:modC('BLOG_SHOW_TITLE','','news')}</a>
+		<div class="blog-tab blog-tab">
+		<div class="blog-tab-item on" data-id="0" onclick="$(this).addClass('on').siblings().removeClass('on');$('.blog-main').hide();$('#blog-'+$(this).attr('data-id')).show();$('.blog-sider').hide();$('#blog-sider-'+$(this).attr('data-id')).show();">最新文章</div>
+		<volist name="blog_lists" id="vo">
+			<div class="blog-tab-item" data-id="{$vo.id}" onclick="$(this).addClass('on').siblings().removeClass('on');$('.blog-main').hide();$('#blog-'+$(this).attr('data-id')).show();$('.blog-sider').hide();$('#blog-sider-'+$(this).attr('data-id')).show();">{$vo.title|text}</div>
+		</volist>
+		</div>
+		<a href="{:U('news/index/index')}" target="_self" class="link-more">
+		更多
+		</a>
+	</div>
+</div>
+<div class="main blog-main" id="blog-0">
+<notempty name="last_news_lists">
+	<volist name="last_news_lists" id="data">
+		<div class="block">
+			<div class="viewimg">
+				<a href="{:U('news/index/detail',array('id'=>$data['id']))}" title="{$data.title|text}" target="_self" class="ipic">
+					<img src="{$data.cover|getThumbImageById=200,146}" alt="{$data.title|text}" class="thumbnail" />
+					<span class="shine" style="background-position: 160px 50%;"></span>
+				</a>
+			</div>
+			<h2>
+				<span class="category"><a href="" rel="category tag" >{$data.category_arr.title}</a></span>
+				<a href="{:U('news/index/detail',array('id'=>$data['id']))}"  target="_self" >{$data.title|text}</a>
+			</h2>
+			<div class="clear"></div>
+			<div class="preview"> {$data.description}... </div>
+			<div class="preem">
+				<span>{$data.create_time|date='Y-m-d H:i',###} </span>
+				<span><i class="layui-icon">&#xe63a;</i> <a href="" class="ds-thread-count" data-thread-key="">暂无评论</a></span>
+				<span><i class="layui-icon">&#xe600;</i> {$data.view}</span>
+				<span class="more"><a href="{:U('news/index/detail',array('id'=>$data['id']))}" title="{$data.title|text}">阅读详情</a></span>
+			</div>
+		</div>
+	</volist>
+	<div class='pagination'><a href="">点击查看更多</a></div>
+<else/>
+		<div style="text-align: center">暂无资讯~</div>
+</notempty>
+</div>
+<div class="sider blog-sider" id="blog-sider-0">
+	<div class="right">
+		{:W('news/position/lists',array('position'=>'1'))}
+		{:W('news/hot/lists')}
+	</div>
+</div>
+<volist name="news_lists" id="vo">
+<div class="main blog-main" id="blog-{$vo.id}" style="display:None">
+	<notempty name="vo.child">
+		<volist name="vo.child" id="data">
+		<div class="block">
+			<div class="viewimg">
+				<a href="{:U('news/index/detail',array('id'=>$data['id']))}" title="{$data.title|text}" target="_self" class="ipic">
+					<img src="{$data.cover|getThumbImageById=200,146}" alt="{$data.title|text}" class="thumbnail" />
+					<span class="shine" style="background-position: 160px 50%;"></span>
+				</a>
+			</div>
+			<h2>
+				<span class="category"><a href="" rel="category tag" >{$vo.title}</a></span>
+				<a href="{:U('news/index/detail',array('id'=>$data['id']))}"  target="_self" >{$data.title|text}</a>
+			</h2>
+			<div class="clear"></div>
+			<div class="preview"> {$data.description}... </div>
+			<div class="preem">
+				<span>{$data.create_time|date='Y-m-d H:i',###} </span>
+				<span><i class="layui-icon">&#xe63a;</i> <a href="" class="ds-thread-count" data-thread-key="">暂无评论</a></span>
+				<span><i class="layui-icon">&#xe600;</i> {$data.view}</span>
+				<span class="more"><a href="{:U('news/index/detail',array('id'=>$data['id']))}" title="{$data.title|text}">阅读详情</a></span>
+			</div>
+		</div>
+		</volist>
+		<div class='pagination'><a href="">点击查看更多</a></div>
+	<else/>
+		<div style="text-align: center">该分类暂无资讯~</div>
+	</notempty>
+</div>
+<div class="sider blog-sider" id="blog-sider-{$vo.id}" style="display:None">
+	<div class="right">
+		{:W('news/position/lists',array('position'=>'4','category'=>$vo['id']))}
+		{:W('news/hot/lists',array('category'=>$vo['id']))}
+	</div>
+</div>
+</volist>
+</div>

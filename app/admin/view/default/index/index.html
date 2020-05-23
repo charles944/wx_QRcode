@@ -1,0 +1,76 @@
+<extend name="public/base"/>
+<block name="style"></block>
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>欢迎页</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-sm12">
+            <div class="layui-card">
+              <div class="layui-card-header">用户相关统计</div>
+              <div class="layui-card-body">
+                <div class="layui-row layui-col-space15">
+                  <div class="layui-col-sm6">
+                    <div class="backlog">
+						<ul class="layui-row layui-col-space10">
+							<li class="layui-col-xs3">
+								<a class="backlog-body">
+								  <h3>今日新增</h3>
+								  <p><cite>{$_user_today_new}</cite></p>
+								</a>
+							</li>
+							<li class="layui-col-xs3">
+								<a class="backlog-body">
+								  <h3>昨日新增</h3>
+								  <p><cite>{$_user_yest_new}</cite></p>
+								</a>
+							</li>
+							<li class="layui-col-xs3">
+								<a class="backlog-body">
+								  <h3>本月新增</h3>
+								  <p><cite>{$_user_month_new}</cite></p>
+								</a>
+							</li>
+							<li class="layui-col-xs3">
+								<a lay-href="" class="backlog-body">
+								  <h3>会员总数</h3>
+								  <p><cite>{$_user_total}</cite></p>
+								</a>
+							</li>
+						</ul>
+						<div>&#22823;&#37327;&#28304;&#30721;&#65292;&#25345;&#32493;&#26356;&#26032;&#65306;&#119;&#119;&#119;&#46;&#108;&#97;&#110;&#114;&#101;&#110;&#122;&#104;&#105;&#106;&#105;&#97;&#46;&#99;&#111;&#109;</div>
+					</div>
+					<div class="layui-carousel qn-carousel qn-dataview" data-anim="fade" lay-filter="TJ_index_member">
+				      <div carousel-item id="TJ_index_member">
+				        <div><i class="layui-icon layui-icon-loading1 qn-loading"></i></div>
+				      </div>
+				    </div>
+                  </div>
+                  <div class="layui-col-sm6">
+                  	<div class="layui-carousel qn-carousel qn-dataview" data-anim="fade" lay-filter="TJ_index_member_earth">
+                      <div carousel-item id="TJ_index_member_earth">
+                        <div><i class="layui-icon layui-icon-loading1 qn-loading"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+		<!-- 插件块 -->
+		{:hook('adminindex')}
+		<!-- 插件块 -->
+	</div>
+</div>
+</block>
+
+<block name="script">
+<script>
+</script>
+</block>

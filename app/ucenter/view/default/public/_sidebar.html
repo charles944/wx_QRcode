@@ -1,0 +1,119 @@
+<div id="sidebar">
+	<style>
+.ac-userinfo {border:1px solid #ddd;position:relative;border-radius:3px;box-shadow:1px 1px 1px rgba(218,218,218,.1);background:#fff;}
+.user-head {padding:5px;background:#fff;}
+.cf {zoom:1;}
+.userinfo-tx {font-size:12px;color:#999;padding:8px 0;text-align:center;}
+.user-name {font-size:14px;color:#333;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.user-own {padding:10px 5px 10px 10px;font-size:12px;background:#fff;}
+.user-own dl {padding:4px 0;clear:both;}
+.user-own dt {width:65px;float:left;color:#999;}
+.user-own dd {display:block;float:left;width:146px;}
+.space-line {background:url(__IMG__/acc-bg.png) 0 0;height:5px;vertical-align:top;}
+.side-menu {margin:10px 0 10px 0;font-size:12px;}
+.side-menu p {text-align:center;font-size:14px;display:block;padding:3px;color:#444;font-weight:bold;margin-bottom:5px;margin-top:10px;}
+.side-menu a {text-align:center;display:block;padding:3px;color:#666;margin-left:15px;margin-right:15px;margin-bottom:5px;}
+.side-menu a.current,.side-menu a.current:hover,.side-menu a:hover {background:#fff;border:1px solid #ccc;padding:2px;text-decoration:none;border-radius:15px;color:#333;}
+.side-menu a span {padding-left:0;}
+	</style>
+    <div class="ac-userinfo" id="user-pane" pane="user" >
+		<div id="menu" class="side-menu">
+			<p>我的消息12313</p>
+			<a href="{:U('ucenter/message/message')}" <eq name="tab" value="msg">class="current"</eq>>
+				<span>站内信</span>
+			</a>
+			<p>我的资料</p>
+			<a href="{:U('Ucenter/config/index')}" title="资料设置" <eq name="tab" value="info">class="current"</eq>>
+				<span>资料设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/avatar')}" title="头像修改" <eq name="tab" value="avatar">class="current"</eq>>
+				<span>头像设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/score')}" title="我的积分" <eq name="tab" value="score">class="current"</eq>>
+				<span>我的积分</span>
+			</a>
+			<a href="{:U('Ucenter/config/password')}" title="密码修改" <eq name="tab" value="password">class="current"</eq>>
+				<span>密码设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/safepass')}" title="安全码修改" <eq name="tab" value="safepass">class="current"</eq>>
+				<span>安全码设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/email')}" title="邮箱设置" <eq name="tab" value="emailset">class="current"</eq>>
+				<span>邮箱设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/mobile')}" title="手机设置" <eq name="tab" value="mobileset">class="current"</eq>>
+				<span>手机设置</span>
+			</a>
+			<a href="{:U('Ucenter/config/role')}" title="身份设置" <eq name="tab" value="role">class="current"</eq>>
+				<span>身份切换</span>
+			</a>
+			<a href="{:U('Ucenter/config/other')}" title="其他登录" <eq name="tab" value="other">class="current"</eq>>
+				<span>第三方登录</span>
+			</a>
+			<a href="{:U('Ucenter/my/rank')}" title="" <eq name="tab" value="rank">class="current"</eq>>
+				<span>我的头衔</span>
+			</a>
+			<p>资金管理</p>
+			<php>
+			$cashon = modC('CASH_ON','','PAY');
+			$chargeon = modC('CHARGE_ON','','PAY');
+			</php>
+			<if condition="$cashon eq 1">
+			<a href="{:U('Ucenter/cash/index')}" title="申请提现" >
+				<span>申请提现</span>
+			</a>
+			<a href="{:U('Ucenter/cash/detail')}" title="提现记录">
+				<span>提现记录</span>
+			</a>
+			<a href="{:U('Ucenter/cash/type')}" title="提现方式">
+				<span>提现方式</span>
+			</a>
+			</if>
+			<if condition="$chargeon eq 1">
+			<a href="{:U('Ucenter/pay/index')}" title="我要充值">
+				<span>我要充值</span>
+			</a>
+			<a href="{:U('Ucenter/pay/detail')}" title="充值记录">
+				<span>充值记录</span>
+			</a>
+			</if>
+			<a href="{:U('ucenter/system/index')}" title="安全设置" <eq name="tab" value="safe">class="current"</eq>>
+				<span>安全设置</span>
+			</a>
+			<a href="{:U('ucenter/my/detail')}" title="积分明细" <eq name="tab" value="account">class="current"</eq>>
+				<span>积分明细</span>
+			</a>
+
+			<think:usernav name="usernav">
+				<eq name="usernav.pid" value="0">
+					<php>
+						$children=D('UserChannel')->where(array('pid'=>$usernav['id']))->order('sort asc')->select();
+						if($children){
+					</php>
+					<p style="color:{$usernav.color}">
+						{$usernav.title}
+						<neq name="usernav.band_text" value="" >
+						<span class="badge" style="background: {$usernav.band_color}">{$usernav.band_text}</span>
+						</neq>
+					</p>
+					<volist name="children" id="subnav">
+						<a style="color:{$subnav.color}" href="{$subnav.url|get_nav_url}" target="<eq name='subnav.target' value='1'>_blank<else/>_self</eq>">{$subnav.title}
+							<neq name="subnav.band_text" value="" >
+							<span class="badge" style="background: {$subnav.band_color}">{$subnav.band_text}</span>
+							</neq>
+						</a>
+					</volist>
+					<php>}else{</php>
+					<a href="{$usernav.url|get_nav_url}" target="<eq name='usernav.target' value='1'>_blank<else/>_self</eq>" style="color:{$usernav.color}">
+						{$usernav.title}
+						<neq name="usernav.band_text" value="" >
+						<span class="badge" style="background: {$usernav.band_color}">{$usernav.band_text}</span>
+						</neq>
+					</a>
+					<php>}</php>
+				</eq>
+			</think:usernav>
+		</div>
+	</div>
+
+</div>

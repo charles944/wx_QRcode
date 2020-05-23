@@ -1,0 +1,121 @@
+<extend name="public/base"/>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>消息管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+<div class="row inbox">
+				<div class="col-md-2">
+					<ul class="inbox-nav margin-bottom-10">
+						<li class="compose-btn">
+							<a href="javascript:;" data-title="Compose" class="btn green">
+							<i class="fa fa-edit"></i> 新建 </a>
+						</li>
+						<li class="inbox active">
+							<a href="javascript:;" class="btn" data-title="Inbox">
+							收件箱({$_inboxcount}) </a>
+							<b></b>
+						</li>
+						<li class="sent">
+							<a class="btn" href="javascript:;" data-title="Sent">
+							发件箱 </a>
+							<b></b>
+						</li>
+						<li class="draft">
+							<a class="btn" href="javascript:;" data-title="Draft">
+							草稿箱 </a>
+							<b></b>
+						</li>
+						<li class="trash">
+							<a class="btn" href="javascript:;" data-title="Trash">
+							回收箱 </a>
+							<b></b>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-10">
+					<div class="inbox-content">
+<div class="portlet">
+	<div class="portlet-title">
+		<div class="caption">
+		</div>
+		<div class="actions" style="margin-right:263px">
+			<div class="layui-btn-group">
+				
+            </div>
+		</div>
+		<div class="tools">
+			<a href="javascript:;" class="reload"></a>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="portlet-body">
+		<table class="table table-striped table-bordered table-hover" id="sample_2">
+			<thead>
+			<tr>
+			<th width="2%">
+				<input type="checkbox" class="group-checkable">
+			</th>
+            <th>UID</th>
+            <th>标题</th>
+            <th>内容</th>
+            <th>最后登录时间</th>
+            <th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+				<volist name="_list" id="vo">
+	                    <tr>
+		                    <td class="check ">
+	                        <label><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}"/><span></span></label>
+	                      	</td>
+	                        <td>{$vo.from_uid}</td>
+	                        <td><a href="" >{$vo.title|op_t}</a></td>
+	                        <td>{$vo.content}</td>
+	                        <td>{$vo.create_time|time_format}</td>
+	                        <td>
+	                            <eq name="vo.status" value="1">
+	                                <a href="{:U('User/changeStatus?method=forbidUser&id='.$vo['id'])}"
+	                                   class="ajax-get">禁用</a>
+	                                <else/>
+	                                <a href="{:U('User/changeStatus?method=resumeUser&id='.$vo['id'])}"
+	                                   class="ajax-get">启用</a>
+	                            </eq>
+	                            <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['id'])}"
+	                               class="confirm ajax-get">删除</a>
+	                        </td>
+	
+	                    </tr>
+	                </volist>
+			</tbody>
+			</table>
+	</div>
+</div>
+					</div>
+				</div>
+			</div>
+</div>
+</div>
+</div>
+</block>
+<block name="script">
+</block>
+<block name="jquery_script">
+var table;
+ // handle group checkboxes check/uncheck
+$('.group-checkable', table).change(function() {
+    var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
+    var checked = $(this).is(":checked");
+    $(set).each(function() {
+        $(this).attr("checked", checked);
+    });
+    //$.uniform.update(set);
+});
+</block>

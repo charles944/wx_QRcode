@@ -1,0 +1,201 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>申请提现</h2>
+    <div class="operation">
+    </div>
+</div>
+
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+
+    <div class="usercenter">
+        <div class="uc">
+<div class="uc_content clearfix">
+<div class="col-xs-12 col-sm-12">
+<div class="account-info fn-clear" style="padding: 20px">
+
+<p>亲，&nbsp;<b style="color:red;font-size:16px">{$self.nickname}</b>，您目前拥有资产：</p>
+<volist name="scores" id="vo">
+    <p><b>{$vo.title}</b>：<b style="color:red;font-size:16px">{$vo.value|number_format=2}</b> {$vo.unit}</p>
+	<eq name="vo.cash" value="1">
+	<p class="fn-clear" style="text-indent:2em"><b>当前兑换比例为</b>：<b style="color:red;font-size:16px">{$vo.exchange}</b> {$vo.title} =  <b style="color:red;font-size:16px">1</b> 元 </p>
+	<php>$str = $self[$vo['mark']]/$vo['exchange'];
+	$str = explode('.',$str);
+	</php>
+	<p class="fn-clear" style="text-indent:2em"><b>当前可兑换金额</b>：<b style="color:red;font-size:16px">{$str[0]}</b> 元 </p>
+	</eq>
+</volist>
+
+</div>
+<div class="mytable col-md-12 content">
+<div class="cont">
+                        <ul class="prompt">
+                            {:modC('CASH_INFO','','PAY')}
+                        </ul>
+                        <div class="methods clearfix">
+							<volist name="scores" id="vo">
+								<eq name="vo.cash" value="1">
+									<span class="" id="two{$vo.id}" onclick="setTab('two', {$vo.id})">{$vo.title}提现<i class="ico"></i></span>
+								</eq>
+							</volist>
+                        </div>
+						
+						
+                        <form id="form1" action="__SELF__" method="post" class="layui-form">
+                        <input type="hidden" name="tp" value="1" />
+						<input type="hidden" name="vt" value="" id="vt"/>
+						<input type="hidden" name="uid" value="{:is_login()}">
+						<input type="hidden" name="type" value="<eq name="cash_take_sms_on" value="0">mobile<else/>email</eq>">
+						<div class="input_k clearfix" style="display: block;">
+							<div class="layui-form-item">
+                                <label class="layui-form-label">支付方式</label>
+                                <div class="layui-input-inline">
+                                    <select class="layui-input" id="bank" name="purseid">
+                                    	<volist name="purse_list" id="v">
+                                        <option value="{$v.pid}|{$v.pursename}|{$v.pursecardno}|{$v.id}|{$v.name}">{$v.pursename} - {$v.name} - {$v.pursecardno}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i>请选择支付方式 </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">提现金额</label>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" lay-verify="required|number" name="money" id="money" type="text" value="" AUTOCOMPLETE="OFF">
+								</div>
+                                <div class="layui-form-mid layui-word-aux">
+								<volist name="scores" id="vo">
+    								<eq name="vo.cash" value="1">
+    									<php>$str1 = $self[$vo['mark']]/$vo['exchange'];
+    									$str1 = explode('.',$str1);
+    									</php>
+    									<span class="zs con_two" id="con_two_{$vo.id}" style="display:none"><i>*&nbsp;</i>元，
+    								当前可提现：{$str1[0]} 元，最低提现额度：{$vo.minimum} 元</span>
+    								</eq>
+    								</volist>
+                                </div>
+                            </div>
+							<eq name="cash_verify" value="1">
+							<php>$verf = modC('SMS_SENDVERIF_TYPE',0,'USERCONFIG');</php>
+                            <eq name="cash_take_sms_on" value="0">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手机号码</label>
+                                <div class="layui-input-inline">
+                                    <font style="line-height:32px">{$self.mobile|default='未设置'|substr_replace=###,'****',3,4}
+									</font>
+                                    <if condition="$self['mobile'] neq '' or $self['mobile'] neq null">
+                                    <input name="mobile" value="{$self.mobile}" type="hidden" />
+                                    </if>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i> 不可修改 </div>
+                            </div>
+                            <else/>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">邮箱</label>
+                                <div class="layui-input-inline">
+                                    <font style="line-height:32px">{$self.email|default='未设置'|substr_replace=###,'****',3,4}
+									</font>
+                                    <if condition="$self['email'] neq '' or $self['email'] neq null">
+                                    <input name="email" value="{$self.email}" type="hidden" />
+                                    </if>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i> 不可修改</div>
+                            </div>
+                            </eq>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">验证码</label>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" size="6" name="verify" id="Memsecond_code" type="text">
+                                    <input id="btnSendVCode" type="button" data-role="getVerify" class="btn btn-success" value="<eq name="cash_take_sms_on" value="0"><eq name="verf" value="1">获取语音验证码<else/>获取短信验证码</eq><else/>发送邮箱验证码</eq>" style="border:none; margin-left:10px">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i> 请输入验证码 </div>
+                            </div>
+							</eq>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">交易安全码</label>
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" check-type="Text" name="safecode" id="safecode" type="password" AUTOCOMPLETE="OFF">
+                                </div>
+								<div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i>请输入交易安全码，如输入错误三次将冻结半小时无法提现</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                            	<button class="layui-btn layui-btn-sm layui-btn-danger" lay-submit lay-filter="*">下一步</button>
+                                </div>
+                            </div>
+                        </div>
+						</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="clear"></div>
+
+</div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+//tab切换
+function setTab(name, cursel) {
+		$('div.methods').children().attr('class', '');
+		$('.con_two').css('display', 'none');
+        var menu = document.getElementById(name + cursel);
+		var vt = document.getElementById("vt");
+        var con = document.getElementById("con_" + name + "_" + cursel);
+		vt.value = cursel;
+        menu.className =  "hover";
+        con.style.display = "block";
+}
+$(function () {
+        $("[data-role='getVerify']").click(function () {
+		
+            var account = "<eq name="cash_take_sms_on" value="0">{$self.mobile}<else/>{$self.email}</eq>";
+            var type = $('[name="type"]').val();
+			var $this = $(this);
+            $("[data-role='getVerify']").attr("disabled","disabled");
+            $("[data-role='getVerify']").val('正在发送中...');
+            $.post("{:U('home/verify/sendVerify')}", {account: account, type: type,action:'config', todo: 'cash'}, function (res) {
+                if(res.status){
+					DecTime.obj = $this;
+					DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+					DecTime.dec_time();
+					layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+                }
+                else{
+					DecTime.obj = $this;
+					DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+					DecTime.dec_time();
+					layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+            }
+        });
+    });
+});
+
+var DecTime = {
+	obj:0,
+	time:0,
+	dec_time : function(){
+		if(this.time > 0){
+			this.obj.val(this.time--+'S');
+			setTimeout("DecTime.dec_time()",1000);
+		}else{
+			this.obj.val('发送验证码');
+			this.obj.attr('disabled',false);
+		}
+	}
+}
+	
+</script>
+</block>

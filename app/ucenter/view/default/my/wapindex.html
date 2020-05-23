@@ -1,0 +1,137 @@
+<extend name="base/wapcommon"/>
+<block name="style">
+    <style>
+    body{background:#f8f8f8 !important;}
+    .page{background:transparent !important;}
+    .box-shadow{box-shadow: 0 4px 8px -8px rgba(0,0,0,0.4);}
+    .page.user_list .hui-list li{border-bottom:1px solid #e4e3e675 !important;}
+    .hui-speed-dial li{width:25% !important;}
+    .iconcolor {
+       width: 1.5em; height: 1.5em;
+       fill: currentColor;
+       overflow: hidden;
+    }
+    .iconcolor {
+       width: 3em; height: 3em;
+       fill: currentColor;
+       overflow: hidden;
+    }
+    </style>
+
+</block>
+<block name="body">
+<body>
+<!-- <header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>我的</h1>
+    <div id="hui-header-menu"></div>
+</header> -->
+<div class="page hui-wrap user_list" id="user_list">
+    <div id="refreshContainer" class="hui-refresh">
+        <div class="hui-refresh-icon"></div>
+        <div class="hui-refresh-content">
+            <div id="user-list">
+
+                <div class="page__hd pd0" style="background:#167afa">
+                    <div class="hui-flex pd15">
+                        <div class="hui-flex__item">
+                            <h1 class="page__title text_al_c"><font class="nickname white_span fh1">{$self.nickname}</font></h1>
+                            <p class="page__desc white_span mt10 text_al_c">{:get_login_group_name()}</p>
+                            <php>
+                                $g_e_time = get_login_group_endtime();
+                                if($g_e_time > 0){
+                            </php>
+                            <p>到期时间：{:get_login_group_endtime()}</p>
+                            <php>}</php>
+                        </div>
+                    </div>
+
+                    <div class="hui-flex__item">
+                        <div class="hui-flex list__item no_bg mt20 pd_t0 mb20">
+                            <div class="hui-flex__item">
+                                <span class="dp_block fh3 white_span text_al_c" style="margin-bottom: .5rem;"><php>echo $count = D('Qrcode/Qrcode')->where('uid='.$self['uid'])->count();</php></span>
+                                <span class="dp_block white_span text_al_c">活码数量</span>
+                            </div>
+                            <div class="hui-flex__item">
+                                <span class="dp_block fh3 white_span text_al_c" style="margin-bottom: .5rem;"><php>echo $count2 = D('Qrcode/Qrcode')->where('uid='.$self['uid'])->sum('scan_count');</php></span>
+                                <span class="dp_block white_span text_al_c">累计扫描</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page__bd" style="margin-top:15px;">
+                    <div class="hui-list pd_lr10 bg_white mb10">
+                        <ul>
+                            <li>
+                                <a href="javascript:hui.open('{:U('ucenter/config/password')}');">
+                                    <div class="hui-list-text ml0">
+                                        修改密码
+                                        <div class="hui-list-info">
+                                            <span class="hui-icons hui-icons-right"></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:hui.open('{:U('qrcode/index/domain')}');">
+                                    <div class="hui-list-text ml0">
+                                        域名设置
+                                        <div class="hui-list-info">
+                                            <span class="hui-icons hui-icons-right"></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:hui.open('{:U('qrcode/index/index')}');">
+                                    <div class="hui-list-text ml0">
+                                        我的活码
+                                        <div class="hui-list-info">
+                                            <span class="hui-icons hui-icons-right"></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background:#FFFFFF; margin-top:15px;">
+                    <button type="button" class="hui-button hui-button-large bg_white" id="logout">
+                        <span class="hui-icons hui-icons-logoff"></span>退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hui-fooer-line"></div>
+<div id="hui-footer">
+    <a href="javascript:hui.open('{:U('home/index/index')}');" id="nav-home">
+        <div class="hui-footer-icons iconfont icon-51"></div>
+        <div class="hui-footer-text">首页</div>
+    </a>
+    <a href="javascript:hui.open('{:U('qrcode/index/index')}');" id="nav-hm" >
+        <div class="hui-footer-icons iconfont icon-baoxiang"></div>
+        <div class="hui-footer-text">活码</div>
+    </a>
+    <a href="javascript:hui.open('{:U('ucenter/my/index')}');" id="nav-my" class="hui-footer-active">
+        <div class="hui-footer-icons iconfont icon-wodexuanzhong"></div>
+        <div class="hui-footer-text">我的</div>
+    </a>
+</div>
+
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    hui("#logout").click(function() {
+        $get('/home/member/logout','', function(o) {
+            localStorage.clear(), location.reload();
+        })
+     })
+</script>
+</body>
+</block>

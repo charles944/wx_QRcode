@@ -1,0 +1,859 @@
+<div class="layui-form-item">
+			<label class="layui-form-label">{$field.title|htmlspecialchars}</label>
+			<if condition="$field['name'] == 'action'">
+				<div class="layui-input-inline"><p style="color: #f00;">开发人员注意：你使用了一个名称为action的字段，由于这个字段名称会与form[action]冲突，导致无法提交表单，请换用另外一个名字。</p>
+				</div>
+			</if>
+			<switch name="field.type">
+					<case value="text">
+					<div class="layui-input-inline">
+						<input type="text" name="{$field.name}" value="{$field.value}" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+					</case>
+					<case value="color">
+					<div class="layui-input-inline">
+						<input type="text" name="{$field.name}" value="{$field.value}" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+					</case>
+					<case value="tage">
+					<div class="layui-inline">
+						<php>
+						if(!empty($field['value'])){
+							$field['value'] = json_decode($field['value'],true);
+						}
+						</php>
+						<volist name="field.opt" id="option">
+						<php>
+						$union_rules = D('Admin/AuthGroup')->where(array('status'=>1,'type' => AuthGroupModel::TYPE_ADMIN, 'id'=> $key))->getField('union_rules');
+						if(!empty($union_rules) && $union_rules != '""'){
+						$union_rule = json_decode($union_rules, true);
+						</php>
+						<div class="layui-form-item">
+						<php>$kk = $key;</php>
+						<input type="hidden" value="{$option.title}" name="tage[{$kk}][title][]" />
+						<label class="layui-form-label" style="width: 100px;">{$option.title}：</label>
+						<div class="layui-inline">
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">一级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_1 = $union_rule[strtolower($option['modulename'])][child][1];
+							}else{
+								$union_tage_1 = $field['value'][$kk][child][1];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][1]" value="{$union_tage_1}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">二级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_2 = $union_rule[strtolower($option['modulename'])][child][2];
+							}else{
+								$union_tage_2 = $field['value'][$kk][child][2];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][2]" value="{$union_tage_2}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">三级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_3 = $union_rule[strtolower($option['modulename'])][child][3];
+							}else{
+								$union_tage_3 = $field['value'][$kk][child][3];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][3]" value="{$union_tage_3}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">四级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_4 = $union_rule[strtolower($option['modulename'])][child][4];
+							}else{
+								$union_tage_4 = $field['value'][$kk][child][4];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][4]" value="{$union_tage_4}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">五级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_5 = $union_rule[strtolower($option['modulename'])][child][5];
+							}else{
+								$union_tage_5 = $field['value'][$kk][child][5];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][5]" value="{$union_tage_5}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">六级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_6 = $union_rule[strtolower($option['modulename'])][child][6];
+							}else{
+								$union_tage_6 = $field['value'][$kk][child][6];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][6]" value="{$union_tage_6}" placeholder="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">七级提成(%)：</label>
+							<div class="layui-input-inline" style="min-width: 100px;">
+							<php>
+							if(empty($field['value'])){
+								$union_tage_7 = $union_rule[strtolower($option['modulename'])][child][7];
+							}else{
+								$union_tage_7 = $field['value'][$kk][child][7];
+							}
+							</php>
+							<input type="text" class="layui-input" name="tage[{$kk}][child][7]" value="{$union_tage_7}" placeholder="">
+							</div>
+						</div>
+						</div>
+						</div>
+						<php>}</php>
+						</volist>
+					</div>
+					</case>
+					<case value="hidden">
+						<input type="hidden" name="{$field.name}" value="{$field.value}" class="" />
+					</case>
+					<case value="readonly">
+					<div class="layui-input-inline">
+						<input type="text" name="{$field.name}" value="{$field.value}" autocomplete="off" class="layui-input" readonly style="border:None">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+					</case>
+					<case value="integer">
+					<div class="layui-input-inline">
+						<input type="number" name="{$field.name}" value="{$field.value}" lay-verify="number" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+					</case>
+					<case value="uid">
+					<div class="layui-input-inline">
+						<input type="text" name="{$field.name}" value="{$field.value}" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+					</case>
+       				<case value="select">
+					<div class="layui-input-inline">
+       					<select class="" name="{$field.name}">
+							<volist name="field.opt" id="option">
+							<php> 
+							$selected = $field['value']==$key ? 'selected' : ''; 
+							</php>
+				            <option value="{$key}" {$selected}>{$option|htmlspecialchars}</option>
+				            </volist>
+						</select>
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+       				    <notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+					</div>
+                    </case>
+                    <case value="radio">
+						<div class="layui-input-block">
+							<volist name="field.opt" id="option">
+								<php>
+									$checked = $field['value']==$key ? 'checked' : '';
+									$inputId = "id_$field[name]_$key";
+								</php>
+								<input type="radio" name="{$field.name}" value="{$key}" title="{$option|htmlspecialchars}" {$checked}>
+							</volist>
+						</div>
+						<div class="layui-form-mid layui-word-aux">
+							<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+						</div>
+                    </case>
+                    <case value="icon">
+				        <!-- 图标选择器 -->
+				    </case>
+				    <case value="singleImage">
+						<div class="layui-input-block">
+							<input type="button" id="image_{$field.name}" class="layui-upload-button singleimage" value="上传图片" />
+							<input type="button" class="layui-box layui-upload-button selectImg" style="padding:0 15px" id="selectImg_{$field.name}" data-name="{$field.name}" value="浏览服务器" data-type="0" />
+							
+							<input type="hidden" id="url" name="{$field.name}" value="{$field['value']}"/>
+							<div class="upload_picture" style="margin-top:10px;display:block;overflow:hidden;">
+							<notempty name="field.value">
+								<a href="{$field.value|get_cover='path'}" target="_blank" title="点击查看大图" style="display:block;float:left;margin-right:10px;">
+									<img src="{$field.value|get_cover='path'}" id="upload_{$field.name}" style="width:100px;height:100px"/>
+								</a>
+							<else/>
+								<a href="{$field.value|get_cover='path'}" target="_blank" title="点击查看大图" style="display:block;float:left;margin-right:10px;">
+									<img src="{$field.value|get_cover='path'}" id="upload_{$field.name}" style="width:100px;height:100px"/>
+								</a>
+				            </notempty>
+							</div>
+							<div class="layui-form-mid layui-word-aux">
+								<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+							</div>
+						</div>
+						<script type="text/javascript">
+							layui.use('upload', function(){
+								var upload = layui.upload;
+								upload.render({
+									url: '{:U("File/uploadPicture",array("session_id"=>session_id()))}'
+									,elem: '#image_{$field.name}' //指定原始元素，默认直接查找class="layui-upload-file"
+									,method: 'post' //上传接口的http类型
+									,accept: 'images'
+									,field: '{$field.name}_id'
+									,before: function(input){
+										//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+										layer.load(2, {shade: false});
+									}
+									,done: function(res, index, upload){
+										layer.closeAll('loading'); //关闭loading
+										upload_{$field.name}.src = res.url.{$field.name}_id.path;
+										$("[name='{$field.name}']").val(res.url.{$field.name}_id.id);
+									}
+									,error: function(res, index, upload){
+										layer.closeAll('loading'); //关闭loading
+										layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+									}
+								});
+							});
+						</script>
+				    </case>
+                    
+				    <case value="multiImage">
+				        <div class="layui-input-block multiImage controls">
+							<input type="button" id="J_selectImage_{$field.name}" class="layui-upload-button multiimage" value="批量上传图片" />
+				        	<input type="button" id="selectImg_{$field.name}" class="layui-box layui-upload-button selectImg" style="padding:0 15px" data-name="{$field.name}" value="浏览服务器" data-type="1"/>
+							
+				            <input class="attach" type="hidden" name="{$field.name}" value="{$field['value']}"/>
+				            
+				            <div class="upload-img-box" style="margin-top:10px;overflow:hidden">
+				                <div class="upload-pre-items popup-gallery" id="imageview_{$field.name}">
+				                    <notempty name="field.value">
+				                        <php>$aIds = explode(',',$field['value']);</php>
+				                        <volist name="aIds" id="aId">
+				                            <div class="each">
+				                                <a href="{$aId|get_cover='path'}" title="点击查看大图">
+				                                    <img src="{$aId|get_cover='path'}">
+				                                </a>
+				                                <div class="text-center opacity del_btn" ></div>
+                                        		<div onclick="admin_image.removeImage($(this),'{$aId}')"  class="text-center del_btn">删除</div>
+				                            </div>
+				                        </volist>
+									<else/>
+										<div class="each">
+											<a href="{$aId|get_cover='path'}" title="点击查看大图">
+												<img src="{$aId|get_cover='path'}">
+											</a>
+											<div class="text-center opacity del_btn" ></div>
+											<div onclick="admin_image.removeImage($(this),'{$aId}')"  class="text-center del_btn">删除</div>
+										</div>
+				                    </notempty>
+				                </div>
+				            </div>
+							<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+				        </div>
+						
+						<script type="text/javascript">
+						layui.use('upload', function(){
+							var upload = layui.upload;
+							upload.render({
+								url: '{:U("File/uploadPicture",array("session_id"=>session_id()))}'
+								,elem: '#J_selectImage_{$field.name}' //指定原始元素，默认直接查找class="layui-upload-file"
+								,method: 'post' //上传接口的http类型
+								,accept: 'images'
+								,field: '{$field.name}_id'
+								,before: function(input){
+									//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+									layer.load(2, {shade: false});
+								}
+								,done: function(res, index, upload){
+									//console.log(res);
+									layer.closeAll('loading'); //关闭loading
+									var div = $('#imageview_{$field.name}');
+									admin_image.upAttachVal('add',res.url.{$field.name}_id.id, $("[name='{$field.name}_id']"));
+									div.append('<div class="each"><a href="'+ res.url.{$field.name}_id.path +'" title="点击查看大图"><img src="'+ res.url.{$field.name}_id.path +'"></a><div class="text-center opacity del_btn" ></div><div onclick="admin_image.removeImage($(this),'+res.url.{$field.name}_id.id +')"  class="text-center del_btn">删除</div></div>');
+								}
+								,error: function(res, index, upload){
+									layer.closeAll('loading'); //关闭loading
+									layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+								}
+							});
+						});
+						</script>
+				    </case>
+                    <case value="checkbox">
+						<div class="layui-input-block">
+							<php>
+								$field['value_array'] = explode(',', $field['value']);
+							</php>
+
+							<volist name="field.opt" id="option">
+							<php>
+								$checked = in_array($key,$field['value_array']) ? 'checked' : '';
+								$inputId = "id_$field[name]_$key";
+							</php>
+							<input type="checkbox" name="{$field.name}" value="{$key}" id="{$inputId}" title="{$option|htmlspecialchars}" data-field-name="{$field.name}" lay-skin="primary" {$checked}>
+							</volist>
+						</div>
+						<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+                    </case>
+                    <case value="editor">
+						<div class="layui-input-block">
+							{:W('Common/Ueditor/editor',array($field['name'],$field['name'],$field['value'],$field['style']['width'],$field['style']['height'],$field['config']))}
+							<!-- 
+							<textarea class="layui-textarea qn-editor" name="{$field.name}" lay-verify="content" id="LAY_demo_editor">{$field['value']}</textarea> -->
+							<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+						</div>
+				    </case>
+				    <case value="textarea">
+						<div class="layui-input-block">
+							<textarea name="{$field.name}" class="layui-textarea">{$field.value|htmlspecialchars}</textarea>
+							<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+						</div>
+				    </case>
+                    <case value="time">
+                        <php>
+                            if(!$field['value']){
+                                $field['value'] = time();
+                            }
+                        </php>
+                        <div class="layui-input-inline">
+							<input type="text" id="time_{$field.name}" name="{$field.name}" value="{$field.value|time_format}" placeholder="请选择时间" autocomplete="off" class="layui-input time_layui_element" />
+						</div>
+						<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+                    </case>
+                    <case value="date">
+				        <php>
+				            if(!$field['value']){
+								$field['value'] = time();
+				            }
+				        </php>
+						<div class="layui-input-inline">
+							<input type="text" id="date_{$field.name}" name="{$field.name}" value="{$field.value|time_format='Y-m-d'}" placeholder="请选择时间" autocomplete="off" class="layui-input date_layui_element" />
+						</div>
+						<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+				    </case>
+				    <case value="datetime">
+				        <php>
+				            if(!$field['value']){
+								$field['value'] = time();
+				            }
+				        </php>
+						<div class="layui-input-inline">
+							<input type="text" id="datetime_{$field.name}" name="{$field.name}" value="{$field.value|time_format='Y-m-d H:i:s'}" placeholder="请选择时间" autocomplete="off" class="layui-input datetime_layui_element"/>
+						</div>
+						<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+				    </case>
+				
+				    <!--添加城市选择（需安装城市联动插件,css样式不好处理排版有点怪）-->
+				    <case value="city">
+						<style type="text/css">
+							.layui-input {display:inline-block;width: 120px;}
+						</style>
+						<!--修正在编辑信息时无法正常显示已经保存的地区信息-->
+						{:hook('j_china_city',array('province'=>$field['value']['0'],'city'=>$field['value']['1'],'district'=>$field['value']['2'],'community'=>$field['value']['3']))}
+				    </case>
+				    
+				    <case value="singleFile">
+						<div class="layui-input-block">
+							<input type="button" id="file_{$field.name}" class="layui-upload-button" value="上传文件" />
+							<input type="hidden" id="url" name="{$field.name}" value="{$field['value']}"/>
+							<div class="upload_file" style="margin-top:10px;display:block;overflow:hidden;">
+								<notempty name="field.value">
+									<p id="upload_{$field.name}">{$field.value|text}</p>
+								<else/>
+									<p id="upload_{$field.name}">{$field.value|text}</p>
+								</notempty>
+							</div>
+							<div class="layui-form-mid layui-word-aux">
+								<notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty>
+							</div>
+						</div>
+						<script type="text/javascript">
+						layui.use('upload', function(){
+							var upload = layui.upload;
+							upload.render({
+								url: '{:U("File/uploadFile",array("session_id"=>session_id()))}'
+								,elem: '#file_{$field.name}' //指定原始元素，默认直接查找class="layui-upload-file"
+								,method: 'post' //上传接口的http类型
+								,accept: 'file'
+								,field: '{$field.name}_id'
+								,before: function(input){
+									//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+									layer.load(2, {shade: false});
+								}
+								,done: function(res, index, upload){
+									layer.closeAll('loading'); //关闭loading
+									$("#upload_{$field.name}").html(res.url.{$field.name}_id.name);
+									$("[name='{$field.name}']").val(res.url.{$field.name}_id.id);
+								}
+								,error: function(index, upload){
+									layer.closeAll('loading'); //关闭loading
+									layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+								}
+							});
+						});
+						</script>
+				    </case>
+				    <case value="multiFile">
+				        {:W('Common/UploadMultiFile/render',array(array('name'=>$field['name'],'limit'=>9,'value'=>$field['value'])))}
+				    </case>
+				
+				    <!--弹出窗口选择并返回值（目前只支持返回ID）开始-->
+				    <case value="dataselect">
+				        <input type="text" name="{$field.name}" id="{$field.name}" value="{$field.value|htmlspecialchars}" class="text input-large layui-input" style="width: 400px;display:inline-block;"/>
+						<input class="btn" style="margin-left:10px" type="button" value="选择" onclick="openwin('{$field.opt}','600','500')">
+						<script type="text/javascript">
+						//弹出窗口
+						function openwin(url,width,height){
+							var l=window.screen.width ;
+							var w= window.screen.height;
+							var al=(l-width)/2;
+							var aw=(w-height)/2;
+							var OpenWindow=window.open(url,"弹出窗口","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width="+width+",height="+height+",top="+aw+",left="+al+"");
+							OpenWindow.focus();
+							if(OpenWindow!=null){ //弹出窗口关闭事件
+								//if(window.attachEvent) OpenWindow.attachEvent("onbeforeunload",   quickOut);
+								if(window.attachEvent) OpenWindow.attachEvent("onunload",   quickOut);
+							}
+						}
+						//关闭触发方法
+						function quickOut()
+						{
+							alert("窗口已关闭");
+						}
+						</script>
+				    </case>
+					<!--弹出窗口选择并返回值（目前只支持返回ID）结束-->
+
+				    <case value="kanban">
+					<div class="layui-input-inline">
+						<link rel="stylesheet" type="text/css" href="__JS__/kanban/jquery.nestable.css"/>
+				        <input type="hidden" name="{$field.name}" value='{:json_encode($field["value"])}'/>
+				        <div class="kanbans" id="{$field.name}">
+				            <php>$pb = 0;
+				            foreach($field['value'] as $key =>$kanban){
+				            $pb = $pb + 1;</php>
+				            <div class="portlet box grey-cascade" data-id="{$kanban['data-id']}" data-title="{$kanban['title']}">
+								<div class="portlet-title">
+									<div class="caption">
+										{$kanban['title']}
+									</div>
+									<div class="clear"></div>
+								</div>
+								<div class="portlet-body">
+									<div class="dd" id="nestable_list_{$pb}">
+										<notempty name="kanban['items']">
+										<ol class="dd-list">
+											<volist name="kanban.items" id="vo">
+												<li class="dd-item" data-id="{$vo.data-id}" data-title="{$vo.title}">
+													<div class="dd-handle">{$vo.title}</div>
+												</li>
+											</volist>
+										</ol>
+										<else/>
+										<div class="dd-empty"></div>
+										</notempty>
+									</div>
+								</div>
+				            </div>
+				            <php>}</php>
+				        </div>
+						<script>var flag = "{$field.name}";</script>
+						<script src="__JS__/kanban/jquery.nestable.js"></script>
+						<script>
+						$(document).ready(function()
+						{
+							$('#nestable_list_1').nestable({
+								group: 1
+							}).on('change', updateTotput);
+
+							$('#nestable_list_2').nestable({
+								group: 1
+							}).on('change', updateTotput);
+
+							function updateTotput(){
+								var kanban =new Array();
+								$('.kanbans .box').each(function (index, element) {
+									if ($(element).data('id')) {
+										kanban[index] =  new Object();
+										kanban[index]['data-id'] =  $(element).data('id');
+										kanban[index]['title'] =  $(element).data('title');
+										kanban[index]['items'] =  new Array();
+										var obj = $(element).find('.dd-item');
+										for (var i = 0; i < obj.length; i++) {
+											kanban[index]['items'][i] = new Object();
+											kanban[index]['items'][i]['data-id'] = $(obj[i]).data('id');
+											kanban[index]['items'][i]['title'] = $(obj[i]).data('title');
+										};
+									}
+								});
+								var kanban_str = JSON.stringify(kanban);
+								$('[name="'+flag+'"]').val(kanban_str);
+							};
+						
+						});
+						</script>
+					</div>
+				    </case>
+					<case value="chosen">
+						<div class="layui-input-inline">
+							<select name="{$field.name}[]" class="" multiple="multiple">
+								<php>
+									if( key($field['opt']) === 0){
+								</php>
+								<volist name="field['opt']" id="option">
+									<php>
+										$selected = in_array(reset($option),$field['value'])? 'selected' : '';
+									</php>
+									<option value="{:reset($option)}" {$selected}>{$option|end|htmlspecialchars}</option>
+								</volist>
+								<php>
+									}else{
+									foreach($field['opt'] as $optgroupkey =>$optgroup){
+								</php>
+								<optgroup label="{$optgroupkey}">
+									<volist name="optgroup" id="option">
+										<php>
+											$selected = in_array(reset($option),$field['value'])? 'selected' : '';
+										</php>
+										<option value="{:reset($option)}" {$selected}>{$option|end|htmlspecialchars}</option>
+									</volist>
+								</optgroup>
+								<php>
+									}
+									}
+								</php>
+							</select>
+						</div>
+					</case>
+
+				    <case value="multiInput">
+				        <div class="layui-input-block" >
+				        <php>
+				            $field['name'] = is_array($field['name'])?$field['name']:explode('|',$field['name']);
+				            foreach($field['name'] as $key=>$val){
+				        </php>
+						<div class="layui-input-inline">
+				        <switch name="field['config'][$key]['type']">
+				            <case value="text">
+				                <input type="text" name="{$val}" value="{$field['value'][$key]|htmlspecialchars}"
+				                       class="layui-input" style="{$field['config'][$key]['style']}" placeholder="{$field['config'][$key]['placeholder']}"/>
+				            </case>
+				            <case value="select">
+				                <select name="{$val}" class="pull-left layui-input" style="{$field['config'][$key]['style']}" >
+				                    <php>foreach($field['config'][$key]['opt'] as $key_opt =>$option){</php>
+				                    <php>
+				                        $selected = $field['value'][$key]==$key_opt ? 'selected' : '';
+				                    </php>
+				                    <option value="{$key_opt}"{$selected}>{$option|htmlspecialchars}</option>
+				                    <php>}</php>
+				                </select>
+				            </case>
+				        </switch>
+						</div>
+				        <php>
+				            }
+				        </php>
+				        </div>
+				    </case>
+                    <case value="multijson">
+						<div class="layui-input-block">
+							<a href="javascript:" data-role="add_multi_json" class="layui-btn layui-btn-sm">新增</a>
+							<php>
+							if(empty($field['value'])){
+							</php>
+							<div class="multi_json_rule">暂无</div>
+							<php>}else{
+							$field['value'] =   unserialize( $field['value'] );
+							</php>
+							
+							<table class="layui-table">
+							  <tbody>
+								<php>
+									$j = 0;
+									foreach($field['value'] as $key=>$opt2){
+								</php>
+								<tr>
+								<php>
+									 foreach($opt2 as $key2=>$opt1){
+								  </php>
+								   <td>{$opt1['title']}<input class="layui-input" type="text" name="{$field['name']}[{$j}][value][]" value="{$opt1.value}" title="{$opt1.title}" />
+								   <input class="layui-input" type="hidden" name="{$field['name']}[{$j}][key][]" value="{$opt1.key}"/>
+								   <input class="layui-input" type="hidden" name="{$field['name']}[{$j}][title][]" value="{$opt1.title}"/>
+								   </td>
+								<php>}</php>
+									<td><a href="javascript:" class="del_multi_json" data-role="del_multi_json">删除规则</a></td>
+							   </tr>
+							  <php>$j++;
+							  }</php>
+							  </tbody>
+							</table>
+							<div class="multi_json_rule"></div>
+							<php>}</php>
+							<div class="layui-form-mid layui-word-aux"><notempty name="field.subtitle">{$field.subtitle|htmlspecialchars}</notempty></div>
+						</div>
+						
+						<script>
+							$(function(){
+								rebind_multi_json();
+							})
+
+							var rebind_multi_json = function(){
+								add_multi_json();
+								del_multi_json();
+							}
+							var add_multi_json = function(){
+								var id=$(".del_multi_json").length+1;
+								var html = '<div id="multi_json_rule_list">';
+									html += '<table class="layui-table">';
+									html += '<tbody>';
+							  <php>
+								foreach($field['opt'] as $key=>$opt2){
+							  </php>
+									html += '<tr>';
+							  <php>
+								 foreach($opt2 as $key2=>$opt1){
+							  </php>
+									html += '<td>{$opt1['title']}<input class="layui-input" type="text" name="{$field['name']}['+id+'][value][]" value="{$opt1.value}" title="{$opt1.title}" />';
+									html += '<input class="layui-input" type="hidden" name="{$field['name']}['+id+'][key][]" value="{$opt1.key}"/>';
+									html += '<input class="layui-input" type="hidden" name="{$field['name']}['+id+'][title][]" value="{$opt1.title}"/>';
+									html += '</td>';
+								<php>}</php>
+									html += '<td><a href="javascript:" class="del_multi_json" data-role="del_multi_json">删除规则</a></td>';
+									html += '</tr>';
+							  <php>}</php>
+									html += '</tbody>';
+									html += '</table>';
+									html += '</div>';
+								$('[data-role="add_multi_json"]').unbind('click');
+								$('[data-role="add_multi_json"]').click(function(){
+									$('.multi_json_rule').append(html);
+									rebind_multi_json();
+								})
+
+							}
+
+							var del_multi_json = function(){
+								$('[data-role="del_multi_json"]').unbind('click');
+								$('[data-role="del_multi_json"]').click(function(){
+									$(this).closest('tr').remove();
+									rebind_multi_json();
+								})
+							}
+
+						</script>
+					</case>
+                    <case value="level_gold_grow">
+                       <table border="0" cellpadding="0" cellspacing="0" class="layui-table level_gold_grow">
+                       <thead>
+                       <tr>
+						   <th colspan="2" style="text-align:center">提示</th>
+						   <th colspan="2" style="text-align:center">级别</th>
+						   <th colspan="2" style="text-align:center">金币奖励</th>
+						   <th colspan="2" style="text-align:center">成长值奖励</th>
+						   <th style="text-align:center">操作</th>
+                       </tr>
+					   </thead>
+					   <tbody>
+                       <php>
+                        if(!$field['value']){
+                        </php>
+                        <tr style="height:40px; line-height:40px;">
+                            <td style="text-align:right" width="68">提示1：</td>
+						    <td style="text-align:left;" width="188">
+						    <input name="level_prompt[]" type="text" id="level_prompt1" size="20" value="" maxlength="40" class="layui-input"></td>
+							<td style="text-align:right" width="68">Lv1：</td>
+						    <td style="text-align:left;" width="98">
+						    <input name="l[]" type="text" id="l1" size="12" value="" maxlength="12" class="layui-input"></td>
+							<td style="text-align:right" width="73">Glod1：</td>
+							<td style="text-align:left;" width="98">
+							<input name="glod[]" type="text" id="Glod1" size="12" maxlength="12" value="0" class="layui-input"></td>
+							<td style="text-align:right" width="75">Grow1：</td>
+							<td style="text-align:left;" width="98">
+							<input name="grow[]" type="text" id="Grow1" size="12" maxlength="12" value="0" class="layui-input"></td>
+							<td>
+							<input onclick="add_tr($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px">
+							<input onclick="del_tr($(this))" type="button" value="删除" id="del_lgg_btn" class="layui-btn layui-btn-xs del_lgg_btn" style="margin-bottom:0;margin-right:0px">
+							</td>
+						</tr>
+                        <php>
+                        }else{
+							$lsgs=json_decode($field['value'],true);
+						    // var_dump($field['value']);
+							foreach($lsgs as $k=>$v){
+						    $j=$k+1;
+						echo '
+						<tr style="height:40px; line-height:40px;">
+						            <td style="text-align:right" width="68">提示'.$j.'：</td>
+						            <td style="text-align:left;" width="188">
+						            <input name="level_prompt[]" type="text" id="level_prompt'.$j.'" size="20" value="'.$v['level_prompt'].'" maxlength="40" class="layui-input"></td>
+									<td style="text-align:right" width="68">Lv'.$j.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="l[]" type="text" id="l'.$j.'" size="12" value="'.$v['level'].'" maxlength="12" class="layui-input"></td>
+									<td style="text-align:right" width="73">Glod'.$j.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="glod[]" type="text" id="Glod'.$j.'" size="12" value="'.$v['glod'].'" maxlength="12" class="layui-input"></td>
+									<td style="text-align:right" width="75">Grow'.$j.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="grow[]" type="text" id="Grow'.$j.'" size="12" value="'.$v['grow'].'" maxlength="12" class="layui-input"></td>
+									<td>
+									<input onclick="add_tr($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px">
+									<input onclick="del_tr($(this))" type="button" value="删除" id="del_lgg_btn" class="layui-btn layui-btn-xs del_lgg_btn" style="margin-bottom:0;margin-right:0px">
+									</td>
+								</tr>';
+							}
+						}
+						</php>
+						</tbody>
+						</table>
+						<script type="text/javascript">
+						function add_tr($obj){
+							$id=$(".del_lgg_btn").length+1;
+							$tr_html='<tr style="height:40px; line-height:40px;"><td style="text-align:right" width="68">提示';
+							$tr_html =$tr_html+$id+'：</td><td style="text-align:left;" width="188"><input name="level_prompt[]" type="text" id="level_prompt';
+							$tr_html =$tr_html+$id+'" size="20" value="" maxlength="40" class="layui-input"></td><td width="68" style="text-align:right">Lv';
+							$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" maxlength="12" value="0" size="12" id="L';
+							$tr_html =$tr_html+$id+'" name="l[]" class="layui-input"></td><td width="73" style="text-align:right">Glod';
+							$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" value="0" size="12" maxlength="12" id="Glod';
+							$tr_html =$tr_html+$id+'" name="glod[]" class="layui-input"></td><td width="75" style="text-align:right">Grow';
+							$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" value="0" size="12" maxlength="12" id="Grow';
+							$tr_html =$tr_html+$id+'" name="grow[]" class="layui-input"></td><td><input onclick="add_tr($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px"><input onclick="del_tr($(this))" type="button" value="删除" id="del_lgg_btn" class="layui-btn layui-btn-xs del_lgg_btn" style="margin-bottom:0;margin-right:0px"></td></tr>';
+							$obj.parents('table:eq(0)').append($tr_html);
+							}
+						function del_tr($obj){
+							if($('.del_lgg_btn').length>1){
+								$obj.parents('table:eq(0)').find("tr:last").remove();
+							}else{
+								alert("最后一个了，真的不能再删除了！！！");
+								}
+							}
+						</script>
+                    </case>
+                    <case value="match_level_gold">
+                       <table border="0" cellpadding="0" cellspacing="0" class="match_level_gold layui-table">
+                       <thead>
+                       <tr>
+						   <th colspan="2" style="text-align:center">名次</th>
+						   <th colspan="2" style="text-align:center">等级</th>
+						   <th colspan="2" style="text-align:center">金币奖励</th>
+						   <th colspan="2" style="text-align:center">角色名</th>
+						   <th colspan="2" style="text-align:center">领取时间</th>
+						   <th style="text-align:center">操作</th>
+                       </tr>
+					   </thead>
+					   <tbody>
+                       <php>
+                        if(!$field['value']){
+                        </php>
+                        <tr style="height:40px; line-height:40px;">
+                            <td style="text-align:right" width="68">名次1：</td>
+						    <td style="text-align:left;" width="188">
+						    <input name="matchranking[]" type="text" id="matchranking1" size="20" value="0" maxlength="12" class="layui-input"></td>
+							<td style="text-align:right" width="68">等级1：</td>
+						    <td style="text-align:left;" width="98">
+						    <input name="matchl[]" type="text" id="matchl1" size="12" value="0" maxlength="12" class="layui-input"></td>
+							<td style="text-align:right" width="73">奖励1：</td>
+							<td style="text-align:left;" width="98">
+							<input name="matchglod[]" type="text" id="matchglod1" size="12" maxlength="12" value="0" class="layui-input"></td>
+							<td style="text-align:right" width="75">角色名1：</td>
+							<td style="text-align:left;" width="98">
+							<input name="matchrole[]" type="text" id="matchrole1" size="12" maxlength="40" value="" class="layui-input"></td>
+							<td style="text-align:right" width="75">时间1：</td>
+							<td style="text-align:left;" width="98">
+							<input name="matchtime[]" type="text" id="matchtime1" size="12" maxlength="12" value="" class="layui-input"></td>
+							<td>
+							<input onclick="add_tr_match($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px">
+							<input onclick="del_tr_match($(this))" type="button" value="删除" id="del_mgg_btn" class="layui-btn layui-btn-xs del_mgg_btn" style="margin-bottom:0;margin-right:0px">
+							</td>
+						</tr>
+                        <php>
+                        }else{
+							$mgs=json_decode($field['value'],true);
+						    // var_dump($field['value']);
+							foreach($mgs as $k=>$v){
+						    $m=$k+1;
+						echo '
+								<tr style="height:40px; line-height:40px;">
+						            <td style="text-align:right" width="68">名次'.$m.'：</td>
+						            <td style="text-align:left;" width="188">
+						            <input name="matchranking[]" type="text" id="matchranking'.$m.'" size="20" value="'.$v['matchranking'].'" maxlength="12" class="layui-input"></td>
+									<td style="text-align:right" width="68">等级'.$m.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="matchl[]" type="text" id="matchl'.$m.'" size="12" value="'.$v['matchlevel'].'" maxlength="12" class="layui-input"></td>
+									<td style="text-align:right" width="73">奖励'.$m.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="matchglod[]" type="text" id="matchglod'.$m.'" size="12" value="'.$v['matchglod'].'" maxlength="12" class="layui-input"></td>
+									<td style="text-align:right" width="75">角色名'.$m.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="matchrole[]" type="text" id="matchrole'.$m.'" size="12" value="'.$v['matchrole'].'" maxlength="40" class="layui-input"></td>
+									<td style="text-align:right" width="75">时间'.$m.'：</td>
+									<td style="text-align:left;" width="98">
+									<input name="matchtime[]" type="text" id="matchtime'.$m.'" size="12" value="'.$v['matchtime'].'" maxlength="12" class="layui-input"></td>
+									<td>
+									<input onclick="add_tr_match($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px">
+									<input onclick="del_tr_match($(this))" type="button" value="删除" id="del_mgg_btn" class="layui-btn layui-btn-xs del_mgg_btn" style="margin-bottom:0;margin-right:0px"></td>
+								</tr>';
+							}
+						}
+						</php>
+						</tbody>
+						</table>
+						<script type="text/javascript">
+							function add_tr_match($obj){
+								$id=$(".del_mgg_btn").length+1;
+								$tr_html='<tr style="height:40px; line-height:40px;"><td style="text-align:right" width="68">名次';
+								$tr_html =$tr_html+$id+'：</td><td style="text-align:left;" width="188"><input name="matchranking[]" type="text" id="matchranking';
+								$tr_html =$tr_html+$id+'" size="20" value="0" maxlength="12" class="layui-input"></td><td width="68" style="text-align:right">等级';
+								$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" maxlength="12" value="0" size="12" id="matchl';
+								$tr_html =$tr_html+$id+'" name="matchl[]" class="layui-input"></td><td width="73" style="text-align:right">奖励';
+								$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" value="0" size="12" maxlength="12" id="matchglod';
+								$tr_html =$tr_html+$id+'" name="matchglod[]" class="layui-input"></td><td width="75" style="text-align:right">角色名';
+								$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" value="" size="12" maxlength="40" id="matchrole';
+								$tr_html =$tr_html+$id+'" name="matchrole[]" class="layui-input"></td><td width="75" style="text-align:right">时间';
+								$tr_html =$tr_html+$id+'：</td><td width="98" style="text-align:left;"><input type="text" value="" size="12" maxlength="12" id="matchtime';
+								$tr_html =$tr_html+$id+'" name="matchtime[]" class="layui-input"></td><td><input onclick="add_tr_match($(this))" type="button" value="添加" class="layui-btn layui-btn-xs" style="margin-bottom:0;margin-right:0px"><input onclick="del_tr_match($(this))" type="button" value="删除" id="del_mgg_btn" class="layui-btn layui-btn-xs del_mgg_btn" style="margin-bottom:0;margin-right:0px"></td></tr>';
+								$obj.parents('table:eq(0)').append($tr_html);
+								}
+							
+							function del_tr_match($obj){
+								if($('.del_mgg_btn').length>1){
+									$obj.parents('table:eq(0)').find("tr:last").remove();
+								}else{
+									alert("最后一个了，真的不能再删除了！！！");
+								}
+							}
+						</script>
+                    </case>
+                    <case value="userDefined">
+				        {$field.definedHtml}
+				    </case>
+                    <default/>
+                    <span style="color: #f00;">错误：未知字段类型 {$field.type}</span>
+                    <input type="hidden" name="{$field.name}" value="{$field.value|htmlspecialchars}"/>
+                </switch>
+</div>

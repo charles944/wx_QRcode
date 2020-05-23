@@ -1,0 +1,52 @@
+<extend name="base/common"/>
+
+<block name="style">
+	<link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page" style="padding-top:20px;padding-bottom:20px;">
+	<div class="ucenter-module-hd">
+		<h2>我的头衔</h2>
+	</div>
+	<div class="layui-tab">
+		<ul class="layui-tab-title">
+			<li onclick="javascript:location.href='{:U('Ucenter/My/rank')}'"<eq name="tabs" value="rank"> class="layui-this"</eq>>已拥有头衔</li>
+			<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerifyWait')}'"<eq name="tabs" value="rankVerifyWait"> class="layui-this"</eq>>待审核头衔</li>
+			<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerifyFailure')}'"<eq name="tabs" value="rankVerifyFailure"> class="layui-this"</eq>>申请失败头衔</li>
+			<li onclick="javascript:location.href='{:U('Ucenter/My/rankVerify')}'"<eq name="tabs" value="rankVerify"> class="layui-this"</eq>>申请头衔</li>
+		</ul>
+		<div class="layui-tab-content">
+			<div class="layui-tab-item layui-show">
+			<if condition="count($rankList) eq 0">
+			<div class="qn-msg" style="text-align: center; font-size: 18px;">
+				<br>暂无该类型头衔哦～<br>
+			</div>
+			<else/>
+			<volist name="rankList" id="rank">
+			<div class="qn-msg" style="border-bottom: 1px solid #dedede;padding-bottom: 20px;padding-top:20px;margin-left: 0;margin-right: 0">
+			<div class="" style="margin-top: 30px;text-align: center;width:20%;float:left">
+			<empty name="rank.label_content">
+			<img style="width: 18px;" class="rank-icon" src="{$rank.logo_url}" title="{$rank.title}" alt="{$rank.title}"/>
+			<else/>
+			<span class="" title="{$rank.title}" style="width:auto; background: {$rank.label_bg} !important;color:{$rank.label_color} !important;">{$rank.label_content}</span>
+			</empty>
+			</div>
+			<div class="" style="width:40%;float:left">
+			<div>头衔名称：{$rank.title}</div>
+			<div style="margin-top: 10px;">理由：{$rank.reason}</div>
+			<div style="margin-top: 10px;">申请时间：{$rank.create_time|friendlyDate}</div>
+			</div>
+			<div class="" style="width:20%;float:left">
+			<eq name="tab" value="rankVerifyWait"> <a class="layui-btn layui-btn-sm" href="{:U('Ucenter/My/rankVerifyCancel',array('rank_id'=>$rank['rank_id']))}">取消申请</a> </eq>
+			<eq name="tab" value="rankVerifyFailure"> <a class="layui-btn layui-btn-sm" href="{:U('Ucenter/My/rankVerify',array('rank_user_id'=>$rank['id']))}">重新申请</a> </eq>
+			</div>
+			</div>
+			</volist>
+			</if>
+			</div>
+		</div>
+	</div>
+</div>
+</block>

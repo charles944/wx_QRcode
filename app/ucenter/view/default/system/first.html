@@ -1,0 +1,102 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+    <style>
+#processor {padding:15px 10px;position:relative}
+.processorBox{display: -webkit-flex;display:flex;flex-direction: row;justify-content:space-around}
+.processorBox li {flex:1;}
+.step_inner {color:#fff;text-align:center;width:100px;margin:0 auto}
+.step_line {width:100%;background-color:#e8e8e8;height:6px;position:absolute;top:50%;left:0;margin:-15px auto auto auto;z-index:1}
+.processorBox li .icon_step {width:36px;height:36px;line-height:36px;display:inline-block;border-radius:50%;-webkit-border-radius:50%;-moz-border-radius:50%;color:#fff;font-size:18px;text-align:center;background-color:#e8e8e8;position:relative;z-index:2}
+.processorBox li.current .icon_step {background-color:#64bd2e}
+.processorBox h4 {color:#bbb;margin-top:5px}
+.processorBox li.current h4 {color:#64bd2e}
+.oh {
+    overflow: hidden;
+}
+  </style>
+</block>
+
+<block name="body">
+<div class="wrap">
+  <div class="processor" id="processor">
+    <ol class="processorBox oh">
+      <li class="current">
+        <div class="step_inner fl">
+        <span class="icon_step"></span>
+        <h4>完善个人资料</h4>
+        </div>
+      </li>
+      <eq name="cash_sms_on" value="1">
+      <li>
+        <div class="step_inner">
+        <span class="icon_step">2</span>
+        <h4>绑定手机号</h4>
+        </div>
+      </li>
+      </eq>
+      <eq name="cash_email_on" value="1">
+      <li>
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>绑定邮箱</h4>
+        </div>
+      </li>
+      </eq>
+      <li>
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>设置交易密码</h4>
+        </div>
+      </li>
+      <li>
+        <div class="step_inner fr">
+        <span class="icon_step"></span>
+        <h4>绑定支付方式</h4>
+        </div>
+      </li>
+    </ol>
+    <div class="step_line"></div>
+  </div>
+  <div class="">
+  <div id="step1" class="">
+    <ul class="prompt">
+       <li>如果你需要<i class="red">申请提现</i>或<i class="red">兑换奖品服务</i>，以下内容作为兑换凭证信息，需要填写您的姓名和联络方式，以便客服确保您的奖品能够及时准确地送到您的手上。</li>
+       <li>该信息也作为<i class="red">找回密码</i>的个人凭证之一，请仔细填写。</li>
+    </ul>
+    <form action="__SELF__" method="post" id="step1_frm" class="layui-form">
+      <input type="hidden" name="step" id="step" value="1" >
+      <div class="layui-form-item">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-inline">
+          <input type="text" name="name" <notempty name="self['name']">value="{$self.name}" disabled="disabled"</notempty> class="layui-input">
+          <notempty name="self['name']"><input type="hidden" name="name" value="{$self.name}" /></notempty>
+        </div>
+        <div class="layui-form-mid layui-word-aux">请务必填写您的真实姓名</div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">QQ号码</label>
+        <div class="layui-input-inline">
+          <input type="text" name="qq" <notempty name="self['qq']">value="{$self.qq}" disabled="disabled"</notempty> class="layui-input">
+          <notempty name="self['qq']"><input type="hidden" name="qq" value="{$self.qq}" /></notempty>
+        </div>
+        <div class="layui-form-mid layui-word-aux">请务必填写正确的QQ号码,能体验更好的客服服务</div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <if condition="$self['qq'] neq '' and $self['name'] neq ''">
+            <a class="layui-btn layui-btn-sm layui-btn-primary" href="{:U('second')}" style="width:220px">已设置，继续下一步</a>
+            <else/>
+            <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">确认，继续下一步</button>
+          </if>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+</block>
+
+<block name="script">
+</block>

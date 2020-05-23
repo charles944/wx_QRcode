@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+<meta content="{$data.title}" name="keywords" />
+<meta content="{$data.title}" name="description" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script>
+var $_GET = (function(){
+    var url = window.document.location.href.toString();
+    var u = url.split("?");
+    if(typeof(u[1]) == "string"){
+        u = u[1].split("&");
+        var get = {};
+        for(var i in u){
+            if(typeof(u[i]) == "string"){
+                var j = u[i].split("=");
+                get[j[0]] = j[1];
+            }
+        }
+        return get;
+    } else {
+        return {};
+    }
+})();
+var timeOutEvent=0;
+function longPress(){
+    var _self = this;
+    var host =  "http://"+window.location.host+"/";
+    console.log(host);
+    console.log($_GET['id']);
+    var cid = $("#imgbox_img").attr('data-cid');
+    var pid = $("#imgbox_img").attr('data-id');
+    $.ajax({
+        url:host + "qrcode/index/upanalysis",
+        type: "POST",
+        dataType:"jsonp",
+        data:{
+            cid: cid,
+            pid: pid,
+        },
+        timeout:2e3,
+        success:function(res) {},
+        complete:function(res) {},
+    });
+}
+$(function(){
+    $("#imgbox_img").on({
+        touchstart: function(e){
+            timeOutEvent = setTimeout("longPress()",500);
+            //e.preventDefault();
+        },
+        touchmove: function(){
+            clearTimeout(timeOutEvent);
+            timeOutEvent = 0;
+        },
+        touchend: function(){
+            clearTimeout(timeOutEvent);
+            if(timeOutEvent!=0){
+                //alert('');
+            }
+            return false;
+        }
+    })
+});
+</script>
+<title>{$data.title}</title>
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+div {
+    font-size: 1rem;
+    font-family: 'Microsoft YaHei';
+	margin:auto;
+}
+img { max-width:30%}
+#remark{padding:1rem;line-height:1.6rem;width:50%;text-align:left;}
+@media screen and (max-width: 768px) {
+	img {width:100%; max-width:100%;}
+	#remark{width:90%}
+}
+</style>
+</head>
+<body>
+<php>
+if(empty($data)){
+if($pdata['type_mode'] == 2){
+</php>
+<script type="text/javascript" src="https://apis.map.qq.com/tools/geolocation/min?key=RNCBZ-QFMA3-64L32-YTPUQ-UHOWZ-LNBWF&referer=myapp"></script>
+<script>
+var geolocation = new qq.maps.Geolocation();
+var options = {timeout: 9000};
+var positionNum = 0;
+var host = "http://"+window.location.host+"/";
+geolocation.getLocation(showPosition, showErr, options);
+function showPosition(position) {
+    //positionNum ++;
+    var result = JSON.stringify(position, null, 4);
+    //document.write(result);
+    //document.write(JSON.parse(result).adcode);
+    var province_id = JSON.parse(result).adcode;
+    $.ajax({
+        url:host + "qrcode/index/getqrbypro",
+        type: "POST",
+        dataType:"jsonp",
+        data:{
+            province_id: province_id,
+            pid: {$pdata.id},
+            city: JSON.parse(result).city,
+            province: JSON.parse(result).province,
+            district: JSON.parse(result).district,
+            addr: JSON.parse(result).addr
+        },
+        timeout:2e3,
+        success:function(res) {},
+        complete:function(res) {
+            if(res.responseJSON.state == 0){
+                $("#imgbox").html(res.responseJSON.info);
+            }else{
+                $('#imgbox_img').attr('src',res.responseJSON.result.qr_img_path);
+                $('#imgbox_img').attr('data-cid',res.responseJSON.result.qr_cid);
+                $('#imgbox_img').attr('data-id',res.responseJSON.result.qr_id);
+            }
+        },
+    });
+};
+function showErr() {
+    $.ajax({
+        url:host + "qrcode/index/getqrbypro",
+        type: "POST",
+        dataType:"jsonp",
+        data:{
+            province_id: 0,
+            pid: {$pdata.id},
+            city: 0,
+            province: 0,
+            district: 0,
+            addr: 0
+        },
+        timeout:2e3,
+        success:function(res) {},
+        complete:function(res) {
+            if(res.responseJSON.state == 0){
+                $("#imgbox").html(res.responseJSON.info);
+            }else{
+                $('#imgbox_img').attr('src',res.responseJSON.result.qr_img_path);
+                $('#imgbox_img').attr('data-cid',res.responseJSON.result.qr_cid);
+                $('#imgbox_img').attr('data-id',res.responseJSON.result.qr_id);
+            }
+        },
+    });
+};
+</script>
+<div class="safe" style="color:green;font-size:12px;background:#000;height:30px;line-height:30px"><img style="margin-top:5px;margin-right:5px;width:15px;height:18px;float:left;margin-left:15px;" src="__PUBLIC__/images/safe.png"/>此二维码已通过安全验证，可以放心扫码</div>
+<div id="imgbox" style="text-align:center;"><img alt="" title="" src=""  id="imgbox_img" /></div>
+<div id="remark" style="">{:modC('TUO_TEXT','','QRCODE')}</div>
+<php>
+}
+  }else{
+</php>
+<switch name="data.qr_type">
+<case value="1">
+<div class="safe" style="color:green;font-size:12px;background:#000;height:30px;line-height:30px"><img style="margin-top:5px;margin-right:5px;width:15px;height:18px;float:left;margin-left:15px;" src="__PUBLIC__/images/safe.png"/>此二维码已通过安全验证，可以放心扫码</div>
+<div id="imgbox" style="text-align:center;"><if condition="is_numeric($data['qr_img'])"><img alt="" title="" src="{$data.qr_img|get_cover='path'}"  id="imgbox_img" data-cid="{$data.id}" data-id="{$data.qr_pid}"/><else/><img alt="" title="" src="{$data.qr_img|str_replace='./','/',###}"  id="imgbox_img" data-cid="{$data.id}" data-id="{$data.qr_pid}"/></if></div>
+<div id="remark" style="">{:modC('TUO_TEXT','','QRCODE')}
+<!--     <p style="white-space: normal; text-align: center; line-height: 2em;"><span style="color: rgb(255, 0, 0); background-color: rgb(255, 255, 0); font-size: 36px;"><strong>长按识别上方二维码</strong></span></p><p style="white-space: normal; text-align: center; line-height: 3em;"><span style="color: rgb(255, 0, 0); background-color: rgb(255, 255, 0); font-size: 36px;"><strong><span style="font-size: 20px;"><span style="font-size: 36px;">添加客服人员</span></span></strong></span></p><p><br></p> -->
+</div>
+</case>
+<case value="2">
+<php>redirect($data['qr_link']);</php>
+</case>
+<case value="3">
+<div id="remark" style="">{$data.qr_text}</div>
+</case>
+</switch>
+<php>}</php>
+<script>
+~void function( sysinfo, $ ) {
+	if ( /Mobile/.test(sysinfo) ) {
+		var imgbox = $.getElementById('imgbox');
+		imgbox.children[ 0 ].style.cssText = 'width:100%;';
+		$.getElementById('remark').style.width = '90%';
+	}
+}('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36', document );
+</script>
+</body>
+</html>

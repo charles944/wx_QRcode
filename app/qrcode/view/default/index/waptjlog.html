@@ -1,0 +1,256 @@
+<extend name="base/wapcommon"/>
+<block name="style">
+<style>
+body{background: #efeff4 !important;}
+.page{background: transparent !important;}
+.box-shadow{box-shadow: 0 4px 8px -8px rgba(0,0,0,0.4);}
+.b-img{width:5rem;height:5rem;margin:0 10px;}
+#title {
+    color: #fff;
+    text-align: center;
+    background: #ff711c;
+    border:none !important;
+}
+.border_top{ border-top:1px dashed #dedede; background-size: 100% 1px;background-repeat: no-repeat;height:1px; width:100%;}
+.border_bottom{background-image:-webkit-linear-gradient(bottom,#b2b2b2 33.3%,transparent 66.7%);background-size: 100% 1px;background-repeat: no-repeat;background-position:bottom;  height:1px; width:100%;}
+
+.orderlist{ overflow:hidden; position:relative; background:#fff; margin-bottom:14px;}
+.orderlist_title{ width:96%; height:40px; line-height:40px; color:#191919; padding-left:4%;box-sizing:border-box;}
+.orderlist_title span.order_name{ float:left; color:#5d5d5d; font-size:15px;} 
+.orderlist_title span.order_time{ float:right; font-size:14px; color:#848484;}
+.orderlist_title span.order_time a{color:#ff711c; font-size:15px; padding-left:10px;}
+.orderlist_text{ width:92%; margin-left:4%; position:relative; padding-top:5px; box-sizing:border-box;}
+.orderlist_text td{ padding:15px 5px 0px; }
+.orderlist_text .pro-dta td{ width:33.33333%; text-align:center; }
+.orderlist_text .pro-dta span{ display:block; line-height:25px; font-size:14px; color:#848484;}
+.orderlist_text .pro-dta strong{ display:block; line-height:25px; font-size:16px;}
+.orderlist_text .pro-dta strong img{}
+.cancel_order{ background:#fff8f4; display:block; overflow:hidden; margin-top:20px;padding:10px 0;}
+.cancel{ width:65px; height:25px; border:1px solid #ccc; text-align:center; line-height:25px; border-radius:3px; float:right; margin-top:10px; margin-bottom:10px; margin-right:4%; color:#65646b;}
+
+ul.ab_list li{display:-webkit-box; background:#fff;padding:10px 10px 10px 18px; margin-bottom:10px;}
+ul.ab_list li:last-child{border-bottom:none;}
+ul.ab_list li .ab_l{width:56px;margin-right:23px;}
+ul.ab_list li .ab_r { -webkit-box-flex:1;}
+ul.ab_list li .ab_r h3{margin-bottom:3px;color:#4b4b4b;font-size:16px; padding-top:3px;}
+ul.ab_list li .ab_l i{width:56px;height:56px;vertical-align:middle;}
+ul.ab_list li .ab_l i.pj{background-position:0 -61px}
+ul.ab_list li .ab_l i.za{background-position:-69px -62px}
+ul.ab_list li .ab_l i.yc{background-position:-135px -62px}
+.f12{ font-size:14px;} .gray3 { color: #989898;}
+
+.clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+.am-icon-img{width:56px; height:56px;display:block;}
+.am-icon-img img{width:100%;height:100%;}
+</style>
+</block>
+<block name="body">
+<body>
+<header id="title"  class="hui-header">
+    <div id="hui-back"></div>
+    <h1 class="white_span">每日访问量统计</h1>
+</header>
+<div class="page hui-wrap" id="">
+    <div class="page__bd">
+        <ul class="ab_list" id="qrcode_id">
+            <li>
+                <div class="ab_l"><span class="am-icon-img" style=""><img id="qrcode_img" src=""></span></div>
+                <div class="ab_r">
+                    <p id="qrcode_title"></p>
+                    <p id="qrcode_scan"></p>
+                </div>
+            </li>
+        </ul>
+        <div id="refreshContainer" class="hui-refresh">
+            <div class="hui-refresh-icon"></div>
+            <div class="hui-refresh-content">
+                <div class="hui-accordion" id="list2">
+                </div>
+            </div>
+        </div>
+        <template id="code-list-template">
+            <div class="bg_white hui-list-text" onclick="hui.open('{:U('qrcode/index/log')}?id={id}&t={time}');" style="padding-left:12px;margin-left:0">
+                {time}
+                <div class="hui-list-info">
+                   {num} <span class="hui-icons hui-icons-right"></span>
+                </div>
+            </div>
+            <div class="hui-accordion-content hui-list" {dis}>
+                <ul>{sub}</ul>
+            </div>
+        </template>
+        <template id="code-sub-list-template">
+            <li onclick="hui.open('{:U('qrcode/index/log')}?cid={subcid}&t={time}');">
+                <div class="hui-list-text" style="padding-right:10px">活码ID：{subid} - 子码ID：{subcid}<font class="fr">{subnum}</font></div>
+            </li>
+        </template>
+        <div id="load-more"></div>
+    </div>
+</div>
+<div class="hui-fooer-line"></div>
+<div id="hui-footer">
+    <a href="javascript:hui.open('{:U('home/index/index')}');" id="nav-home">
+        <div class="hui-footer-icons iconfont icon-51"></div>
+        <div class="hui-footer-text">首页</div>
+    </a>
+    <a href="javascript:hui.open('{:U('qrcode/index/index')}');" id="nav-hm" class="hui-footer-active">
+        <div class="hui-footer-icons iconfont icon-baoxiang"></div>
+        <div class="hui-footer-text">活码</div>
+    </a>
+    <a href="javascript:hui.open('{:U('ucenter/my/index')}');" id="nav-my" >
+        <div class="hui-footer-icons iconfont icon-wodexuanzhong"></div>
+        <div class="hui-footer-text">我的</div>
+    </a>
+</div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__PUBLIC__/wap/js/hui-refresh-load-more.js"></script>
+<script type="text/javascript">
+var page = 1, limit = 20, url = '';
+
+var id = $_GET['id'];
+var cid = $_GET['cid'];
+
+hui.refresh('#refreshContainer', refresh);
+hui.loadMore('#load-more', getMore);
+
+//下拉刷新
+function refresh(){
+    if(isEmpty(id)){
+        if(isEmpty(cid)){
+            url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?id="+id;
+        }else{
+            url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?cid="+cid;
+        }
+    }else{
+        url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?id="+id;
+    }
+
+    var o = {
+        limit: limit
+    };
+    o.offset = 0;
+    Loading();
+    hui('#list2').html('');
+    hui.postJSON(
+        url,
+        o,
+        function(res){
+            closeLoading();
+            var data = res.result;
+            var qrcode_data = res.data;
+            var html = '', htmly = '';
+            if(isEmpty(qrcode_data)){
+                hui("#qrcode_id").hide();
+            }else{
+                hui("#qrcode_id").show();
+                hui("#qrcode_title").html(qrcode_data.title);
+                hui("#qrcode_img").attr('src','/uploads/picture/QRcode/'+qrcode_data.id+'.png');
+                hui("#qrcode_scan").html('总扫描次数：'+qrcode_data.scan_count);
+            }
+            if(data.length == 0){
+                html = '<div class="orderlist"><div class="orderlist_title">暂无数据</div></div>';
+            }else{
+                for(var i = 0; i < data.length; i++){
+                    var t = data[i],
+                        s = hui("#code-list-template").html();
+                        s = s.replace(/{id}/g, t.qr_id), s = s.replace(/{time}/g, t.year+'-'+t.month+'-'+t.day), s = s.replace(/{num}/g, t.total);
+                        if(!isEmpty(t.sub)){
+                            s = s.replace(/{dis}/g, 'style="display:block"');
+                            for(var j = 0; j < t.sub.length; j++){
+                                var jd = t.sub[j];
+                                var y = hui("#code-sub-list-template").html();
+                                y = y.replace(/{subid}/g, jd.qr_id),y = y.replace(/{subcid}/g, jd.qr_cid), y = y.replace(/{subnum}/g, jd.total), y = y.replace(/{time}/g, t.year+'-'+t.month+'-'+t.day);
+                                htmly += y;
+                            }
+                            console.log(htmly);
+                            s = s.replace(/{sub}/g, htmly);
+                        }else{
+                            s = s.replace(/{dis}/g, '');
+                        }
+                    html += s;
+                }
+            }
+            page = 2;
+            hui('#list2').html(html);
+            hui.lazyLoadNow();
+            //结束刷新
+            hui.endRefresh();
+            //重置加载更多状态
+            hui.resetLoadMore("#load-more");
+        },
+        function(){
+            closeLoading();
+            hui.upToast('连接服务器失败！');
+            hui.endRefresh();
+        }
+    );
+}
+//加载更多
+function getMore(){
+    if(isEmpty(id)){
+        if(isEmpty(cid)){
+            url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?id="+id;
+        }else{
+            url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?cid="+cid;
+        }
+    }else{
+        url = "http://"+window.location.host+"/qrcode/ajax/gettjlog?id="+id;
+    }
+    var o = {
+        limit: limit
+    };
+    o.offset = (page - 1) * limit;
+    hui.postJSON(
+        url,
+        o,
+        function(res){
+            var data = res.result;
+            //判断加载完毕
+            if(data.length == 0){
+                hui.endLoadMore("#load-more", true, '已经到头了...');
+                return false;
+            }else{
+                var html = '', htmly = '';
+                for(var i = 0; i < data.length; i++){
+                    var t = data[i],
+                        s = hui("#code-list-template").html();
+                        s = s.replace(/{id}/g, t.qr_id), s = s.replace(/{time}/g, t.year+'-'+t.month+'-'+t.day), s = s.replace(/{num}/g, t.total);
+                        if(!isEmpty(t.sub)){
+                            s = s.replace(/{dis}/g, 'style="display:block"');
+                            for(var j = 0; j < t.sub.length; j++){
+                                var jd = t.sub[j];
+                                var y = hui("#code-sub-list-template").html();
+                                y = y.replace(/{subid}/g, jd.qr_id),y = y.replace(/{subcid}/g, jd.qr_cid), y = y.replace(/{subnum}/g, jd.total), y = y.replace(/{time}/g, t.year+'-'+t.month+'-'+t.day);
+                                 htmly += y;
+                            }
+                            s = s.replace(/{sub}/g, htmly);
+                        }else{
+                            s = s.replace(/{dis}/g, '');
+                        }
+                    html += s;
+
+                    var div = document.createElement('div');
+                    div.innerHTML = s;
+                    hui(div).appendTo('#list2');
+                }
+                page++;
+                hui.endLoadMore("#load-more");
+            }
+        },
+        function(){
+            hui.closeLoading();
+            hui.upToast('连接服务器失败！');
+            hui.endRefresh();
+        }
+    );
+}
+
+</script>
+</body>
+</block>

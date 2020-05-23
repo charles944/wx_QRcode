@@ -1,0 +1,92 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+h3,h4{padding:10px 0; line-height:25px; height:25px; clear:both}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>核心自动升级 - 完成</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+
+<div class="portlet">
+	<div class="alert alert-info">
+		<p>当前的系统版本号：<strong>{$currentVersion.name}</strong></p>
+	</div>
+	<div class="portlet-body">
+	<h3><strong class="text-success">1.下载更新包，获取更新文件列表&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;2.本地文件对比&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;3.代码升级&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;4.数据库升级&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;升级完成</strong></h3>
+	<h4>
+		恭喜，升级成功，目前版本为 {$currentVersion.name}
+	</h4>
+
+	<p class="alert alert-info">如果发现升级之后出现问题，请找回备份文件，同时还原备份的数据库。</p>
+	<p class="alert alert-warning">
+		{$path}/backup
+	</p>
+
+	<a id="compare_btn" class="layui-btn layui-btn-sm" href="{:U('update')}">返回自动升级首页</a>
+
+	</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+	function updateDB(obj) {
+		if (!confirm('确定导入？强烈建议在导入之前进行数据库备份。')) {
+			return false;
+		} else {
+			$(obj).attr('disabled', 'disabled');
+			$(obj).text('正在升级数据库，请耐心等待……');
+			$.post('__SELF__', function (msg) {
+				if (msg.status) {
+					$(obj).removeAttr('disabled');
+					layer.msg('数据库升级成功', {icon: 1, fixed: true, offset: '80%', time:1000});
+					$(obj).text('升级数据库成功，进入下一步');
+					$(obj).attr('href',"{:U('finish')}");
+
+				} else {
+					layer.msg('升级失败，请检测后再试', {icon: 2, fixed: true, offset: '80%', time:1000})
+				}
+			})
+		}
+	}
+	function writeFile($data) {
+		$('#file').append('<div><i class="icon-file"></i> ' + $data + '</div>');
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	function enable() {
+		$('#compare_btn').removeAttr('disabled', '');
+	}
+</script>
+</block>

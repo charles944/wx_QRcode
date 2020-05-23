@@ -1,0 +1,111 @@
+<div class="this290">
+      <div class="slide">
+        <ul>
+          <li><a href="javascript:;" class="this rankNav" rel="today">{$mday}打码排行榜</a></li>
+          <li><a href="javascript:;" class="rankNav" rel="yesterday">{$yestmday}打码排行榜</a></li>
+        </ul>
+      </div>
+      <div class="rankingTable todayRankTable">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tbody><tr>
+            <th width="58" align="left">&nbsp;排名</th>
+            <th width="70" align="left">&nbsp;昵称</th>
+            <th width="90">打码收入</th>
+            <th width="70" align="center">奖励/{$dday}</th>
+          </tr>
+          <notempty name="dama_charts_today">
+               <volist name="dama_charts_today" id="vo">
+               <php>$m = $m + 1;</php>
+               <tr class="rank_today topThree">
+	             <td><i>{$m}</i></td>
+	             <td><em>{$vo.nickname}</em></td>
+	             <td align="right"><span class="number">{$vo.sumgold|number_format=2}</span></td>
+	             <td align="center"><b><u>￥</u>{$vo['award']/$dama_code_score_type_exchange}</b></td>
+	           </tr>
+               </volist>
+               <else/>
+               <tr class="rank_today topThree">
+                 <td colspan="4">暂无数据</td>
+               </tr>
+          </notempty>
+        </tbody>
+        </table>
+      </div>
+
+      <div class="rankingTable yesterdayRankTable" style="display:none;">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+          <tr>
+            <th width="58" align="left">&nbsp;排名</th>
+            <th width="70" align="left">&nbsp;昵称</th>
+            <th width="90">打码收入</th>
+            <th width="70" align="center">周奖励</th>
+          </tr>
+          <notempty name="dama_charts_yestoday">
+               <volist name="dama_charts_yestoday" id="vo">
+               <php>$m = $m + 1;</php>
+               <tr class="rank_yesterday topThree">
+	             <td><i>{$m}</i></td>
+	             <td><em>{$vo.nickname}</em></td>
+	             <td align="right"><span class="number">{$vo.sumgold|number_format=2}</span></td>
+	             <td align="center"><b><u>￥</u>{$vo['award']/$dama_code_score_type_exchange}</b></td>
+	           </tr>
+               </volist>
+               <else/>
+               <tr class="rank_today topThree">
+                 <td colspan="4">暂无数据</td>
+               </tr>
+          </notempty>
+        </tbody></table>
+      </div>
+
+      <div class="nextPage"><a href="javascript:;" rel="prev">上一页</a>&nbsp;<a href="javascript:;" rel="next">下一页</a></div>
+      <div class="time todayTime"><span></span></div>
+      <div class="time yesterdayTime" style="display:none;"><span></span></div>
+      <div class="mine ">
+        <dl>
+        
+          <dt class="todayRankMine">
+            <p>我{$mday}打码收入： <span class="number bg_gray">{$mydamachart_today}</span></p>
+            <p>我{$mday}打码排名： <span>未上榜</span></p>
+          </dt>
+
+          <dt class="yesterdayRankMine" style="display:none;">
+            <p>我{$yestmday}打码收入： <span class="number bg_gray">{$mydamachart_yestoday}</span></p>
+            <p>我{$yestmday}打码排名： <span>未上榜</span></p>
+          </dt>
+          <dd>
+            <span></span>
+            <!-- 
+            <a href="#" class="color2">领取奖励</a>
+            -->
+          </dd>
+        </dl>
+      </div>
+        <script>
+        var type = 'today';
+        $('.rankNav').click(function(){
+        	$('.rankNav').removeClass('this');
+        	$(this).addClass('this');
+        	type = $(this).attr('rel');
+        	$('.rankingTable').hide();
+        	$('.'+type+'RankTable').show();
+        	if(type == 'today'){
+            	$('.yesterdayRankMine,.yesterdayTime').hide();
+            	$('.todayRankMine,.todayTime').show();
+            	
+        	} else {
+        		$('.yesterdayRankMine,.yesterdayTime').show();
+            	$('.todayRankMine,.todayTime').hide();
+        	}
+        });
+        $('.nextPage a').click(function(){
+        	var p = $(this).attr('rel');
+        	if(p == 'prev'){
+            	$('.rank_'+type).hide().slice(0, 10).show();	
+        	} else {
+        		$('.rank_'+type).hide().slice(10, 20).show();
+        	}
+        });
+      </script>
+</div>

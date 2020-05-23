@@ -1,0 +1,142 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的邮箱</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<php>
+			$emails = substr_replace($email,'****',3,4);
+		</php>
+		<div class="layui-form layui-form-pane mine-view" <if condition="$tabhash == 'bind'">style="display:block"<else/>style="display:none"</if> >
+			<form action="{:U('Ucenter/Config/dobindemail')}" method="post" class="layui-form form-without-legend ajax-form" role="form">
+				<input type="hidden" class="form-control" name="type" value="email">
+				<input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+				<div class="layui-form-item">
+					<label class="layui-form-label">待绑定邮箱号码</label>
+					<div class="layui-input-inline">
+						<input type="text" name="email" required="" lay-verify="required" id="inputemail" class="layui-input" placeholder="输入邮箱号码"/>
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a style="" id="sendSms" class="layui-btn layui-btn-sm layui-btn-danger" >发送邮箱验证码</a>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">验证码</label>
+					<div class="layui-input-inline">
+						<input type="text" name="verify" required="" lay-verify="required" class="layui-input" placeholder="输入邮箱验证码" />
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">绑定邮箱</button>
+				</div>
+			</form>
+		</div>
+		
+
+		<div class="layui-form layui-form-pane mine-view" <if condition="$tabhash == 'unbind'">style="display:block"<else/>style="display:none"</if> >
+			<form action="{:U('Ucenter/Config/dounbindemail')}" method="post" class="layui-form form-without-legend ajax-form" role="form">
+				<input type="hidden" class="" name="type" value="email" />
+				<input type="hidden" class="" name="uid" value="{:is_login()}" />
+				<div class="layui-form-item">
+					<label class="layui-form-label">已绑定邮箱号码</label>
+					<div class="layui-input-inline">
+						<input type="text" value="{$emails}" disabled name="email" id="inputemail" class="layui-input" placeholder="{$emails}"/>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label class="layui-form-label">验证码</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" required="" lay-verify="required" name="verify" placeholder="输入邮箱验证码" />
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a style="" id="sendSms2" class="layui-btn layui-btn-sm layui-btn-danger" >发送邮箱验证码</a>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label class="layui-form-label">安全码</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" required="" lay-verify="required" name="safecode" placeholder="输入安全码" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">解绑邮箱</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+    <script>
+        //点击发送验证码
+        $(function(){
+            var $button = $('#sendSms');
+            $button.click(function(){
+                $button.addClass('disabled',true);
+				var $this = $(this);
+				//toast.showLoading();
+				var account = $('#inputemail').val();
+				$.post("{:U('home/verify/sendVerify')}", {account: account, type: 'email' ,action:'config', todo: 'email'}, function (res) {
+					if(res.status){
+						DecTime.obj = $this
+						DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+						$this.attr('disabled',true)
+						DecTime.dec_time();
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					}
+					else{
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				});
+            });
+
+            var $button2 = $('#sendSms2');
+            $button2.click(function(){
+				$button2.addClass('disabled',true);
+				var $this = $(this);
+				$.post("{:U('home/verify/sendVerify')}", {account: '<php>echo $email;</php>', type: 'email' ,action:'config', todo: 'email'}, function (res) {
+					if(res.status){
+						DecTime.obj = $this
+						DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+						$this.attr('disabled',true)
+						DecTime.dec_time();
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					}
+					else{
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				});
+            });
+		});
+			var DecTime = {
+				obj:0,
+				time:0,
+				dec_time : function(){
+					if(this.time > 0){
+						this.obj.text(this.time--+'S')
+						setTimeout("DecTime.dec_time()",1000)
+					}else{
+						this.obj.text('发送邮箱验证码')
+						this.obj.attr('disabled',false)
+					}
+
+				}
+			}
+			
+        
+    </script>
+</block>

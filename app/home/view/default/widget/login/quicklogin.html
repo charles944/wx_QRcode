@@ -1,0 +1,67 @@
+<div class="layui-form-div">
+<form method="post" action="__SELF__" class="layui-form">
+	<div class="layui-form-item">
+		<h3 style="font-size:16px;">欢迎回来，立即登陆吧！</h3>
+	</div>
+	<div class="layui-form-item">
+		<!-- <label for="L_email" class="layui-form-label">用户名</label>
+		<div class="layui-input-block"> -->
+			<input type="text" id="inputEmail" class="layui-input" lay-verify="required" placeholder="请输入{$ph}" ajaxurl="/member/checkUserNameUnique.html" errormsg="请填写4-32位用户名" nullmsg="请输入{$ph}" datatype="*4-32" value="" name="username" autocomplete="off">
+		<!-- </div> -->
+	</div>
+	<div class="layui-form-item">
+		<!-- <label for="L_pass" class="layui-form-label">密码</label>
+		<div class="layui-input-block"> -->
+			<input type="password" id="inputPassword" lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入密码" errormsg="密码为6-30位" nullmsg="请填写密码" datatype="*6-30" name="password">
+		<!-- </div> -->
+	</div>
+	<if condition="check_verify_open('login')">
+	<div class="layui-form-item">
+		<label for="L_vercode" class="layui-form-label">验证码</label>
+		<div class="layui-input-inline">
+			<input type="text" id="verifyCode" class="form-control" required="" lay-verify="required" autocomplete="off" class="layui-input" placeholder="验证码" errormsg="请填写验证码" nullmsg="请填写验证码" datatype="*5-5" name="verify">
+		</div>
+		<div class="layui-form-mid">
+			<img class="verifyimg reloadverify  " alt="点击切换" src="{:U('verify')}" style="cursor:pointer;max-width: 100%">
+		</div>
+	</div>
+	</if>
+	<div class="layui-form-item">
+		<div class="layui-inline">
+			<input type="checkbox" name="remember" lay-skin="primary" title="保存密码" checked value="1">
+			<a onclick="parent.layer.closeAll();parent.location.href='{:U('home/Member/mi')}';" style="float:right;line-height:31px;">忘记密码？</a>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<input name="from" type="hidden" value="<php>echo $_SERVER['HTTP_REFERER']</php>">
+		<php>
+			session('login_http_referer',$_SERVER['HTTP_REFERER']);
+		</php>
+		<button class="layui-btn" lay-filter="login" lay-submit style="width:100%">立即登录</button>
+		<a class="layui-btn layui-btn-primary" onclick="parent.layer.closeAll();parent.$('[data-role=do_register]').click();" style="width:100%;margin-left:0;margin-top:10px;">还没有账号？立即注册</a>
+	</div>
+	<div class="cut-off">
+		<div class="chose-other">
+			或使用以下方式登录
+		</div>
+	</div>
+	<div class="layui-form-item fly-form-app">
+		{:hook('synclogin')}
+	</div>
+</form>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    var quickLogin = "{$login_type}";
+    $(function () {
+        
+        var verifyimg = $(".verifyimg").attr("src");
+        $(".reloadverify").click(function () {
+            if (verifyimg.indexOf('?') > 0) {
+                $(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+            } else {
+                $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+            }
+        });
+    });
+</script>

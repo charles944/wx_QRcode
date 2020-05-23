@@ -1,0 +1,17 @@
+<div class="col-xs-6">
+    <div class="common_block_border">
+    	<div class="common_block_title">我的投稿</div>
+        <div style="padding:0 20px">
+                <notempty name="news_list">
+                    <volist name="news_list" id="data">
+                        <include file="./app/news/view/default/public/_my_list.html"/>
+                    </volist>
+                    <else/>
+                    <div style="font-size:3em;padding:2em 0;color: #ccc;text-align: center">没有可显示资讯吆~</div>
+                </notempty>
+            <div class="text-right">
+                {:getPagination($totalCount,10)}
+            </div>
+        </div>
+    </div>
+</div>

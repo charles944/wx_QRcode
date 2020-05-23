@@ -1,0 +1,239 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite><if condition="ACTION_NAME eq 'addaction'">新增<else/>编辑</if>行为</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+  
+        <form id="form" action="{:U('saveAction')}" method="post" class="layui-form">
+        <div class="form-body">
+			<div class="layui-form-item">
+			  <label class="layui-form-label">分类</label>
+			  <div class="layui-input-inline">
+				<input class="layui-input" name="class_type" value="{$data.class_type}" placeholder="输入分类名称" type="text" />
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">分类名称不需要后台设定,需要分类到一起的用户行为只需要分类名称一致,前台即会显示到一起</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">行为标识</label>
+			  <div class="layui-input-inline">
+				<input class="layui-input" name="name" value="{$data.name}" placeholder="输入行为标识 英文字母" type="text" />
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">输入行为标识, 必须为英文字母</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">行为名称</label>
+			  <div class="layui-input-inline">
+				<input class="layui-input" name="title" value="{$data.title}" placeholder="输入行为名称" type="text" />
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">输入行为中文名称</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">行为类型</label>
+			  <div class="layui-input-inline">
+				<select class="form-control" name="type">
+            		<volist name=":get_action_type(null,true)" id="vo">
+						<option value="{$key}" <if condition="$data['type'] eq $key">selected</if>>{$vo}</option>
+					</volist>
+				</select>
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">选择行为类型，系统：为程序内部调用,前台不显示，用户：为前台显示成长任务调用</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">所属模块</label>
+			  <div class="layui-input-inline">
+				<select name="module" class=" form-control form-select-size">
+					<option value="all">全站</option>
+					<volist name="module" id="vo">
+						<option value="{$vo.name}" <php> if($vo['name'] == $data['module']){</php>selected<php>}</php> >{$vo.alias}</option>
+					</volist>
+				</select>
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">选择模块</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">行为描述Or行为标题</label>
+			  <div class="layui-input-inline">
+				 <textarea class="layui-textarea" rows="5" name="remark">{$data.remark}</textarea>
+			  </div>
+			  <div class="layui-form-mid layui-word-aux">输入行为描述或者行为标题或者站内信标题或者明细标题</div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">行为规则</label>
+			  <div class="layui-input-block">
+				 <a href="javascript:" data-role="add_rule" class="layui-btn layui-btn-sm">新增规则</a>
+				 <php>
+                 $score = D('User/Score')->getTypeList(array('status'=>1));
+                 $data['rule'] =   unserialize( $data['rule']);
+				</php>
+				<php>if(empty($data['rule'])){</php>
+					<div>暂无规则</div>
+				<php>}</php>
+				<volist name="data['rule']" id="rule">
+					<table class="layui-table">
+					  <thead>
+						<tr>
+						  <th>表格</th>
+						  <th>执行货币</th>
+						  <th>货币加减</th>
+						  <th>间隔时间</th>
+						  <th>可奖励次数</th>
+						  <th>指定用户组</th>
+						  <th>操作</th>
+						</tr> 
+					  </thead>
+					  <tbody>
+						<tr>
+						  <td><input class="layui-input" name="action_rule[table][]" value="{$rule.table}" title="所执行的表，默认是member" /></td>
+						  <td>
+							<select name="action_rule[field][]" title="执行的积分">
+								<option value="0">请选择</option>
+								<volist name="score" id="s">
+									 <option value="{$s.id}" <if condition="$s['id'] eq $rule['field']">selected</if>>{$s.title}</option>
+								 </volist>
+							</select>
+						  </td>
+						  <td><input type="text"  name="action_rule[rule][]" title="积分的操作，负数表示减积分。" value="{$rule.rule}" class="layui-input"/></td>
+						  <td>
+							<input class="layui-input" name="action_rule[cycle][]" title="时间" value="{$rule.cycle}"/>
+							  <select name="action_rule[time_unit][]" class="layui-input" style="">
+								<option value="second" <if condition="$rule['time_unit'] eq 'second'">selected</if>>秒</option>
+								<option value="minute"  <if condition="$rule['time_unit'] eq 'minute'">selected</if>>分</option>
+								<option value="hour"  <if condition="$rule['time_unit'] eq 'hour'">selected</if>>小时</option>
+								<option value="day"  <if condition="$rule['time_unit'] eq 'day'">selected</if>>天</option>
+								<option value="week"  <if condition="$rule['time_unit'] eq 'week'">selected</if>>周</option>
+								<option value="month"  <if condition="$rule['time_unit'] eq 'month'">selected</if>>月</option>
+								<option value="year"  <if condition="$rule['time_unit'] eq 'year'">selected</if>>年</option>
+							  </select>
+						  </td>
+						  <td><input class="layui-input"  name="action_rule[max][]"  title="最大限制" value="{$rule.max}" /></td>
+						  <td>
+						    <select name="action_rule[usergroups][]" class="layui-input">
+								<volist name="usergroups" id="vo">
+									<option value="{$vo.id}" <php> if($vo['id'] == $rule['usergroups']){</php>selected<php>}</php> >{$vo.title}</option>
+								</volist>
+							</select>
+						  </td>
+						  <td><a href="javascript:" data-role="del_rule">删除规则</a></td>
+						</tr>
+					  </tbody>
+					</table>
+				 </volist>
+				 <div class="action_rule"></div>
+				 <div class="layui-form-mid layui-word-aux">输入行为规则，不写则只记录日志；时间间隔+时间单位：比如 1秒，1小时等；可奖励次数：完成可奖励次数之后等时间间隔到才可以再次获得奖励</div>
+			  </div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label">日志规则</label>
+			  <div class="layui-input-block">
+				 <textarea class="layui-textarea" rows="3" name="log">{$data.log}</textarea>
+				 <div class="layui-form-mid layui-word-aux">（记录日志备注时按此规则来生成，支持[变量|函数]。）目前变量有：[user]：用户ID，[time]：时间，[model]：模型名，[record]：记录ID，jifenbao，score，money，gold_coin，money_ticket，[data.user|data.time|data.model|data.record]</div>
+			  </div>
+			</div>
+			<div class="layui-form-item">
+			  <label class="layui-form-label"></label>
+			  <div class="layui-input-inline">
+			    <div class="layui-footer">
+				    <input type="hidden" name="id" value="{$data.id}"/>
+					<button class="layui-btn layui-btn-sm ajax-post" type="submit" target-form="layui-form">确 定</button>
+					<button class="layui-btn layui-btn-sm layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回 </button>
+				</div>
+			  </div>
+			</div>
+         </div>
+        </form>
+      </div>
+    </div>
+</div>
+    <div id="rule_list" style="display: none">
+		<table class="layui-table" lay-even lay-skin="line">
+		  <thead>
+			<tr>
+			  <th>表格</th>
+			  <th>执行货币</th>
+			  <th>货币加减</th>
+			  <th>间隔时间</th>
+			  <th>可奖励次数</th>
+			  <th>指定用户组</th>
+			  <th>操作</th>
+			</tr> 
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td><input class="layui-input"  name="action_rule[table][]" value="member" title="所执行的表，默认是member" /></td>
+			  <td>
+				<select name="action_rule[field][]" class="layui-input" title="执行的货币" style="display:block;width:107px;">
+					<option value="0">请选择</option>
+					<volist name="score" id="s">
+						<option value="{$s.id}">{$s.title}</option>
+					</volist>
+				</select>
+			  </td>
+			  <td><input type="text"  name="action_rule[rule][]" title="积分的操作，负数表示减积分。" value="0" class="layui-input"/></td>
+			  <td>
+				<input class="layui-input"  name="action_rule[cycle][]" title="周期" value="24" style="display:block" />
+				  <select name="action_rule[time_unit][]" class="layui-input" style="display:block">
+					<option value="second" selected="">秒</option>
+					<option value="minute">分</option>
+					<option value="hour">小时</option>
+					<option value="day">天</option>
+					<option value="week">周</option>
+					<option value="month">月</option>
+					<option value="year">年</option>
+				  </select>
+			  </td>
+			  <td><input class="layui-input"  name="action_rule[max][]"  title="可奖励次数" value="1" /></td>
+			  <td>
+				<select name="action_rule[usergroups][]" class="layui-input" style="display:block;width:108px;">
+					<volist name="usergroups" id="vo">
+						<option value="{$vo.id}">{$vo.title}</option>
+					</volist>
+				</select>
+			  </td>
+			  <td><a href="javascript:" data-role="del_rule">删除规则</a></td>
+			</tr>
+		  </tbody>
+		</table>
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+	//Think.setValue('type',{$type|default=1});
+</script>
+<script>
+    $(function(){
+        rebind();
+    })
+
+    var rebind = function(){
+        add_rule();
+        del_rule();
+    }
+    var add_rule = function(){
+
+        $('[data-role="add_rule"]').unbind('click');
+        $('[data-role="add_rule"]').click(function(){
+            $('.action_rule').append($('#rule_list').html())
+            rebind();
+        })
+
+    }
+
+    var del_rule = function(){
+        $('[data-role="del_rule"]').unbind('click');
+        $('[data-role="del_rule"]').click(function(){
+            $(this).closest('table').remove();
+            rebind();
+        })
+    }
+
+</script>
+</block>

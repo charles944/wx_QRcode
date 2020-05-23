@@ -1,0 +1,209 @@
+<extend name="base/wapcommon"/>
+<block name="style">
+<style>
+body{background: #efeff4 !important;}
+.page{background: transparent !important;}
+.box-shadow{box-shadow: 0 4px 8px -8px rgba(0,0,0,0.4);}
+.b-img{width:5rem;height:5rem;margin:0 10px;}
+#title {
+    color: #fff;
+    text-align: center;
+    background: #ff711c;
+    border:none !important;
+}
+.border_top{ border-top:1px dashed #dedede; background-size: 100% 1px;background-repeat: no-repeat;height:1px; width:100%;}
+.border_bottom{background-image:-webkit-linear-gradient(bottom,#b2b2b2 33.3%,transparent 66.7%);background-size: 100% 1px;background-repeat: no-repeat;background-position:bottom;  height:1px; width:100%;}
+
+.orderlist{ overflow:hidden; position:relative; background:#fff; margin-bottom:14px;}
+.orderlist_title{ width:96%; height:40px; line-height:40px; color:#191919; padding-left:4%;box-sizing:border-box;}
+.orderlist_title span.order_name{ float:left; color:#5d5d5d; font-size:15px;} 
+.orderlist_title span.order_time{ float:right; font-size:14px; color:#848484;}
+.orderlist_title span.order_time a{color:#ff711c; font-size:15px; padding-left:10px;}
+.orderlist_text{ width:92%; margin-left:4%; position:relative; padding-top:5px; box-sizing:border-box;}
+.orderlist_text td{ padding:15px 5px 0px; }
+.orderlist_text .pro-dta td{ width:33.33333%; text-align:center; }
+.orderlist_text .pro-dta span{ display:block; line-height:25px; font-size:14px; color:#848484;}
+.orderlist_text .pro-dta strong{ display:block; line-height:25px; font-size:16px;}
+.orderlist_text .pro-dta strong img{}
+.cancel_order{ background:#fff8f4; display:block; overflow:hidden; margin-top:20px;padding:10px 0;}
+.cancel{ width:65px; height:25px; border:1px solid #ccc; text-align:center; line-height:25px; border-radius:3px; float:right; margin-top:10px; margin-bottom:10px; margin-right:4%; color:#65646b;}
+</style>
+</block>
+<block name="body">
+<body>
+<header id="title"  class="hui-header">
+    <h1 class="white_span">我的活码</h1>
+</header>
+<div class="page hui-wrap" id="">
+    <div class="page__bd">
+        <div style="height:auto; text-align:center;margin:10px 0;margin-buttom:20px">
+            <a href="javascript:hui.open('{:U('qrcode/index/edit')}');" class="hui-button hui-primary" id="createbtn" style="max-width:100px;margin:0 auto;">创建活码</a>
+        </div>
+        <div id="refreshContainer" class="hui-refresh">
+            <div class="hui-refresh-icon"></div>
+            <div class="hui-refresh-content">
+                <div class="movelist_box" id="list2" style="">
+                </div>
+            </div>
+        </div>
+        <template id="code-list-template">
+            <div class="orderlist">
+                <div class="orderlist_title">
+                    <a href="{elink}">
+                        <span class="order_name"><b>{title}</b></span>
+                    </a>
+                    <span class="order_time">创建于 {time}  </span>
+                </div>
+                <div class="orderlist_text">
+                    <div class="border_top"></div>
+                    <table width="100%">
+                    <tbody>
+                        <tr class="pro-dta">
+                        <td>
+                            <a href="{:U('qrcode/index/qr')}?id={id}"><img src="/uploads/picture/QRcode/{id}_{qr_domain}.png?t={times}" width="80" height="80" class="codepic"> </a>
+                            <br>
+                            <a href="{:U('qrcode/index/qr')}?id={id}">下载活码大图</a>
+                        </td>
+                      <td><strong>子码：{qr_num}张</strong> <span>阀值：{maxscan}次</span><span>{mod}</span></td>
+                      <td><a href="javascript:hui.open('{:U('qrcode/index/tjlog')}?id={id}');"><strong style="color:#ff711c;">扫描：{scannum}次</strong></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+                <div class="cancel_order" style="text-align:right">
+                    <a onclick="delitem(hui(this));" data-href="{:U('qrcode/ajax/del')}?id={id}" style="margin:0 10px;" id="{id}" class="delitem hui-button-small hui-button hui-danger hui-fr">删除</a>
+                    <a href="javascript:hui.open('{:U('qrcode/index/edit')}?id={id}');" style="margin-left:10px;" class="hui-button hui-button-small hui-primary hui-fr">编辑</a>
+                    <a href="javascript:hui.open('{:U('qrcode/index/child')}?id={id}');" style="margin-left:10px;" class="hui-button hui-button-small hui-primary hui-fr">子码管理</a>
+                </div>
+            </div>
+        </template>
+        <div id="load-more"></div>
+    </div>
+</div>
+<div class="hui-fooer-line"></div>
+<div id="hui-footer">
+    <a href="javascript:hui.open('{:U('home/index/index')}');" id="nav-home">
+        <div class="hui-footer-icons iconfont icon-51"></div>
+        <div class="hui-footer-text">首页</div>
+    </a>
+    <a href="javascript:hui.open('{:U('qrcode/index/index')}');" id="nav-hm" class="hui-footer-active">
+        <div class="hui-footer-icons iconfont icon-baoxiang"></div>
+        <div class="hui-footer-text">活码</div>
+    </a>
+    <a href="javascript:hui.open('{:U('ucenter/my/index')}');" id="nav-my" >
+        <div class="hui-footer-icons iconfont icon-wodexuanzhong"></div>
+        <div class="hui-footer-text">我的</div>
+    </a>
+</div>
+
+<script src="__PUBLIC__/wap/js/hui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__PUBLIC__/wap/js/core.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="__PUBLIC__/wap/js/hui-refresh-load-more.js"></script>
+<script type="text/javascript">
+var page = 1, limit = 20, url = '';
+
+hui.refresh('#refreshContainer', refresh);
+hui.loadMore('#load-more', getMore);
+
+function delitem(obj){
+    var url = obj.attr('data-href');
+    hui.confirm('您确认要这样做吗？', ['取消','确定'], function(){
+        hui.postJSON(url,'',function(res){
+            if(res.status){
+                hui.toast(res.info);
+                hui.refresh('#refreshContainer', refresh);
+            }
+        },function(res){
+            hui.closeLoading();
+            hui.toast('连接服务器失败！');
+            hui.endRefresh();
+        });
+    },function(){
+
+    });
+}
+
+//下拉刷新
+function refresh(){
+    url = "http://"+window.location.host+"/qrcode/ajax/gethmlist";
+    var o = {
+        limit: limit
+    };
+    o.offset = 0;
+    Loading();
+    hui('#list2').html('');
+    hui.postJSON(
+        url,
+        o,
+        function(res){
+            closeLoading();
+            var data = res.result;
+            var html = '';
+            if(data.length == 0){
+                html = '暂无数据';
+            }else{
+                for(var i = 0; i < data.length; i++){
+                    var t = data[i],
+                        s = hui("#code-list-template").html();
+                        s = s.replace(/{id}/g, t.id), s = s.replace(/{times}/g, t.times),s = s.replace(/{qr_domain}/g, t.qr_domain), s = s.replace(/{title}/g, t.title), s = s.replace(/{qr_num}/g, t.qrcode_child), s = s.replace(/{maxscan}/g, t.max_scan), s = s.replace(/{time}/g, t.time), s = s.replace(/{scannum}/g, t.scan_count), s = s.replace(/{mod}/g, t.mod);
+                    html += s;
+                }
+            }
+            page = 2;
+            hui('#list2').html(html);
+            hui.lazyLoadNow();
+            //结束刷新
+            hui.endRefresh();
+            //重置加载更多状态
+            hui.resetLoadMore("#load-more");
+        },
+        function(){
+            closeLoading();
+            hui.upToast('连接服务器失败！');
+            hui.endRefresh();
+        }
+    );
+}
+//加载更多
+function getMore(){
+    url = "http://"+window.location.host+"/qrcode/ajax/gethmlist";
+    var o = {
+        limit: limit
+    };
+    o.offset = (page - 1) * limit;
+    hui.postJSON(
+        url,
+        o,
+        function(res){
+            var data = res.result;
+            //判断加载完毕
+            if(data.length == 0){
+                hui.endLoadMore("#load-more", true, '已经到头了...');
+                return false;
+            }else{
+                var html = '';
+                for(var i = 0; i < data.length; i++){
+                    var t = data[i],
+                        s = hui("#code-list-template").html();
+                        s = s.replace(/{id}/g, t.id), s = s.replace(/{title}/g, t.title), s = s.replace(/{qr_num}/g, t.qrcode_child), s = s.replace(/{maxscan}/g, t.max_scan), s = s.replace(/{time}/g, t.time), s = s.replace(/{scannum}/g, t.scan_count), s = s.replace(/{mod}/g, t.mod);
+                    html += s;
+
+                    var div = document.createElement('div');
+                    div.innerHTML = s;
+                    hui(div).appendTo('#list2');
+                }
+                page++;
+                hui.endLoadMore("#load-more");
+            }
+        },
+        function(){
+            hui.closeLoading();
+            hui.upToast('连接服务器失败！');
+            hui.endRefresh();
+        }
+    );
+}
+
+</script>
+</body>
+</block>

@@ -1,0 +1,34 @@
+<extend name="public/base"/>
+<block name="body">
+    <iframe id="market" src="__CLOUD__/index.php?s=appstore&spm=mana" name="main" width="100%" height="100%" frameborder="0" scrolling="yes" style="overflow: visible;position:relative; min-height:1200px;"></iframe>
+
+    <form id="install_form" action="{:U('Admin/Cloud/install')}" method="post">
+        <input id="install_token" type="hidden" name="token" />
+        <input id="install_cookie" type="hidden" name="cookie" />
+		<input id="install_md5" type="hidden" name="md5" />
+		<input id="install_oid" type="hidden" name="oid" />
+    </form>
+    <script>
+
+        var website_title = "{:modC('WEB_SITE_NAME','','config')}";
+        window.addEventListener('message', function (event, domain) {
+            if (event.data.type == 'getWebSiteInfo') {
+                document.getElementById("market").contentWindow.postMessage({
+                    'type': 'returnWebSiteInfo',
+                    'domain': window.location.host,
+                    'title': website_title
+                }, '*');
+            }
+            if (event.data.type == 'install') {
+                $('#install_token').val(event.data.token);
+				$('#install_md5').val(event.data.md5);
+                $('#install_cookie').val(event.data.cookie);
+				$('#install_oid').val(event.data.oid);
+                $('#install_form').submit();
+            }
+			if(event.data.type == 'msg') {
+                layer.msg(event.data.info, {icon: event.data.icon, fixed: true, offset: '80%', time:1000});
+			}
+        })
+    </script>
+</block>

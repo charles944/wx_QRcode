@@ -1,0 +1,119 @@
+-- -----------------------------
+-- 表结构 `qn_ucenter_admin`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_admin` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '管理员ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员用户ID',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '管理员状态',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='管理员表';
+
+
+-- -----------------------------
+-- 表结构 `qn_ucenter_extend_log`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_extend_log` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `uc_uid` int(11) NOT NULL,
+  `uc_username` varchar(200) NOT NULL,
+  `uc_email` varchar(255) NOT NULL,
+  `source` varchar(255) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+
+-- -----------------------------
+-- 表结构 `qn_ucenter_member`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_member` (
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` varchar(200) DEFAULT NULL COMMENT '用户名',
+  `password` char(32) DEFAULT NULL COMMENT '密码',
+  `email` varchar(200) DEFAULT NULL COMMENT '用户邮箱',
+  `email_ver` tinyint(3) NOT NULL DEFAULT '0' COMMENT '邮箱验证',
+  `mobile` char(15) DEFAULT '' COMMENT '用户手机',
+  `mobile_ver` tinyint(3) NOT NULL DEFAULT '0' COMMENT '手机验证',
+  `reg_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
+  `reg_ip` bigint(20) NOT NULL DEFAULT '0' COMMENT '注册IP',
+  `last_login_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后登录时间',
+  `last_login_ip` bigint(20) NOT NULL DEFAULT '0' COMMENT '最后登录IP',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `status` int(3) NOT NULL DEFAULT '1' COMMENT '用户状态',
+  `ups_one` char(32) DEFAULT NULL COMMENT '一级上线',
+  `ups_two` char(32) DEFAULT NULL COMMENT '二级上线',
+  `ups_three` char(32) DEFAULT NULL COMMENT '三级上线',
+  `ups_four` char(32) DEFAULT NULL COMMENT '四级上线',
+  `ups_five` char(32) DEFAULT NULL COMMENT '五级上线',
+  `ups_six` char(32) DEFAULT NULL COMMENT '六级上线',
+  `ups_seven` char(32) DEFAULT NULL COMMENT '七级上线',
+  `lower_num` int(11) DEFAULT '0' COMMENT '下线人数',
+  `type` tinyint(3) DEFAULT '1' COMMENT '1为用户名注册，2为邮箱注册，3为手机注册',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `username` (`username`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+
+-- -----------------------------
+-- 表结构 `qn_ucenter_score_type`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_score_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `unit` varchar(20) NOT NULL,
+  `mark` varchar(100) NOT NULL,
+  `icon` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+
+-- -----------------------------
+-- 表结构 `qn_ucenter_setting`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_setting` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '设置ID',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '配置类型（1-用户配置）',
+  `value` text NOT NULL COMMENT '配置数据',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='设置表';
+
+
+-- -----------------------------
+-- 表结构 `qn_ucenter_user_link`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `qn_ucenter_user_link` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `uc_uid` int(11) NOT NULL,
+  `uc_username` varchar(50) NOT NULL,
+  `uc_email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
+-- -----------------------------
+-- 表内记录 `qn_ucenter_member`
+-- -----------------------------
+INSERT INTO `qn_ucenter_member` VALUES ('1', 'admin', '750abc0509ed4fb9060d60cb1cbe09ce', 'admin@admin.com', '0', '', '0', '1427904683', '0', '1434930795', '0', '1427904683', '1', '1233', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('101', 'zixuzz', '750abc0509ed4fb9060d60cb1cbe09ce', '411924848@qq.com', '1', '15888225326', '1', '1431275343', '0', '1434862270', '0', '1431275343', '1', '1', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('102', 'bbcbbc', '750abc0509ed4fb9060d60cb1cbe09ce', '12333@123.com', '0', '', '0', '1432135778', '0', '1432136047', '0', '1432135778', '1', '', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('103', '123asdasd', '750abc0509ed4fb9060d60cb1cbe09ce', '123123@1442.com', '0', '', '0', '1432136763', '0', '1432136763', '0', '1432136763', '1', 'bbcbbc', '', '', '', '', '', '', '1', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('108', 'xxx1', '750abc0509ed4fb9060d60cb1cbe09ce', 'xxx@xx.com', '0', '1xxxxxx', '0', '1432544626', '3086315833', '1432544659', '3086315833', '1432544626', '1', '1', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('109', 'xxx2', 'd627be447210ebe044a61443a1ccd32f', 'xxx1@xx1.com', '0', '12xxxxxx', '0', '1432544626', '3086315833', '0', '0', '1432544626', '1', '', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('115', '23123', '750abc0509ed4fb9060d60cb1cbe09ce', '', '0', '', '0', '1433838481', '3086316049', '0', '0', '1433838481', '1', '1', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('125', '', '750abc0509ed4fb9060d60cb1cbe09ce', '601611743@qq.com', '0', '', '0', '1433840588', '3086316049', '0', '0', '1433840588', '3', '1', '', '', '', '', '', '', '0', '2');
+INSERT INTO `qn_ucenter_member` VALUES ('126', 'gameuser', 'd627be447210ebe044a61443a1ccd32f', '', '0', '', '0', '1433840885', '3086316049', '1434957556', '0', '1433840885', '1', '1', '', '', '', '', '', '', '0', '1');
+INSERT INTO `qn_ucenter_member` VALUES ('128', '', '750abc0509ed4fb9060d60cb1cbe09ce', '4119248483@qq.com3', '0', '158882253262', '1', '1433841198', '3086316049', '1433850345', '3086316049', '1433841198', '1', '', '', '', '', '', '', '', '0', '2');
+INSERT INTO `qn_ucenter_member` VALUES ('129', '', 'd627be447210ebe044a61443a1ccd32f', '4119248488@qq.com', '0', '', '0', '1433841658', '3086316049', '1433849701', '3086316049', '1433841658', '1', '', '', '', '', '', '', '', '0', '2');
+INSERT INTO `qn_ucenter_member` VALUES ('130', '', '751aa7dff41d05911a3ad1827ca9d2f6', '', '0', '13112343235', '0', '1434961001', '0', '1434961001', '0', '1434961001', '1', '', '', '', '', '', '', '', '0', '3');
+-- -----------------------------
+-- 表内记录 `qn_ucenter_score_type`
+-- -----------------------------
+INSERT INTO `qn_ucenter_score_type` VALUES ('1', '积分', '1', '分', 'score', '170');
+INSERT INTO `qn_ucenter_score_type` VALUES ('2', '金币', '1', '金', 'gold_coin', '');
+INSERT INTO `qn_ucenter_score_type` VALUES ('3', '集分宝', '1', '分', 'jifenbao', '');
+INSERT INTO `qn_ucenter_score_type` VALUES ('4', '余额', '1', '元', 'money', '');
+INSERT INTO `qn_ucenter_score_type` VALUES ('5', '金券', '1', '元', 'money_ticket', '');

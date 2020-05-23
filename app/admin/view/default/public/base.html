@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!--[if IE 8]> <html lang="zh" class="ie8 no-js" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 9]> <html lang="zh" class="ie9 no-js" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if !IE]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" class="no-js">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8"/>
+<title>首页 - {:modC('WEB_SITE_NAME','','CONFIG')}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta content="{:modC('WEB_SITE_NAME','','CONFIG')}" name="description"/>
+<meta content="{:modC('WEB_SITE_NAME','','CONFIG')}" name="author"/>
+<link rel="shortcut icon" href="__ROOT__/favicon.ico"/>
+<link href="__LAYER__/css/layui.css" rel="stylesheet" type="text/css" />
+<link href="__CSS__/global_new.css" rel="stylesheet" type="text/css" />
+<link href="__CSS__/admin.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__JS__/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="__JS__/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.cookie.js"></script>
+<script type="text/javascript" src="__JS__/jquery-ui.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.bgColorSelector.js"></script>
+<script type="text/javascript" src="__LAYER__/layui.js"></script>
+<script>
+$(function(){
+layui.cache.user = {username: '游客',uid: -1};
+layui.config({version: "2.0.1",base: '__ADMIN__/mods/'}).extend({qn: 'index', echarts: 'echarts', echartsTheme: 'echartsTheme'}).use('qn');
+});
+</script>
+<script type="text/javascript">
+var ThinkPHP = window.Think = {
+	"ROOT": "__ROOT__", //当前网站地址
+	"APP": "__APP__", //当前项目地址
+	"PUBLIC": "__PUBLIC__", //项目公共目录地址
+	"DEEP": "{:C('URL_PATHINFO_DEPR')}", //PATHINFO分割符
+	"MODEL": ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
+	"VAR": ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
+	'URL_MODEL': "{:C('URL_MODEL')}",
+}
+</script>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<block name="style"></block>
+<php>
+$user_arr = array();
+$main_arr = array();
+$other_arr = array();
+$qk_arr = array();
+$pay_arr = array();
+</php>
+<volist name="__SMENU__.main" id="menu" key="key">
+<php>
+if(stripos($menu['url'],'cloud') !== false){
+$qk_arr[] = $menu;
+}else if(stripos($menu['url'],'index/') !== false){
+$home_arr[] = $menu;
+}else if(stripos($menu['url'],'pay/') !== false){
+$pay_arr[] = $menu;
+}else if(stripos($menu['url'],'config/') !== false || stripos($menu['url'],'actionlimit') !== false || stripos($menu['url'],'authorize') !== false){
+$main_arr[] = $menu;
+}else if(stripos($menu['url'],'user/') !== false || stripos($menu['url'],'message/') !== false || stripos($menu['url'],'invite/') !== false){
+$user_arr[] = $menu;
+}else{
+$other_arr[] = $menu;
+}
+</php>
+</volist>
+</head>
+<body class="layui-layout-body">
+<div class="bgSelector"></div>
+<div id="qn_app" class="">
+<div class="layui-layout layui-layout-admin">
+	<div class="layui-header">
+		<div class="layui-logo" lay-href="">
+		  <a>{:modC('WEB_SITE_NAME','','Config')}</a> 
+		</div>
+		<include file="public:header" />
+	</div>
+
+	<div class="qn-fixed" lay-templateid="TPL_layout">
+		<include file="public:sidebar" />
+	</div>
+  
+	<div class="layui-body" id="qn_app_body">
+		<block name="body"></block>
+	</div>
+</div>
+</div>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<block name="script"></block>
+{:hook('adminpagefooter')}
+</body>
+</html>

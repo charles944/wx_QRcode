@@ -1,0 +1,146 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的手机</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<php>
+			$mobiles = substr_replace($mobile,'****',3,4);
+		</php>
+		
+		<div class="layui-form layui-form-pane mine-view" <if condition="$tabhash == 'bind'">style="display:block"<else/>style="display:none"</if> >
+			<form action="{:U('Ucenter/Config/dobindmobile')}" method="post" class="layui-form" role="form">
+				<input type="hidden" class="form-control" name="type" value="mobile">
+				<input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+				<div class="layui-form-item">
+					<label for="inputMobile" class="layui-form-label">手机号码</label>
+					<div class="layui-input-inline">
+						<input type="text" name="mobile" required="" lay-verify="required" id="inputMobile" class="layui-input" placeholder="输入手机号码"/>
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a style="" id="sendSms" class="layui-btn layui-btn-sm layui-btn-danger" >发送手机验证码</a>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="verify" class="layui-form-label">短信验证码</label>
+					<div class="layui-input-inline">
+						<input type="text" name="verify" required="" lay-verify="required" id="verify" class="layui-input" placeholder="输入手机验证码"/>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">绑定手机号码</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- 二 !-->
+		<div class="layui-form layui-form-pane mine-view" <if condition="$tabhash == 'unbind'">style="display:block"<else/>style="display:none"</if> >
+			<form action="{:U('Ucenter/Config/dounbindmobile')}" method="post" class="form-horizontal form-without-legend ajax-form" role="form">
+				<input type="hidden" class="form-control" name="type" value="mobile">
+				<input type="hidden" class="form-control" name="uid" value="{:is_login()}">
+				<div class="layui-form-item">
+					<label for="" class="layui-form-label">已绑定手机号码</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="num" placeholder="" value="{$mobiles}"/>
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="verify" class="layui-form-label">短信验证码</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" required="" lay-verify="required" name="verify" id="verify" placeholder="输入手机验证码"/>
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a style="" id="sendSms2" class="layui-btn layui-btn-sm layui-btn-danger" >发送手机验证码</a>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="" class="layui-form-label">安全码</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" required="" lay-verify="required" name="safecode" placeholder="输入安全码"/>
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				
+				<div class="layui-form-item">
+					<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">解绑手机</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+    <script>
+        //点击发送验证码
+        $(function(){
+			var DecTime = {
+				obj:0,
+				time:0,
+				dec_time : function(){
+					if(this.time > 0){
+						this.obj.text(this.time--+'S')
+						setTimeout("DecTime.dec_time()",1000)
+					}else{
+						this.obj.text('发送手机验证码')
+						this.obj.attr('disabled',false)
+					}
+
+				}
+			}
+			
+            var $button = $('#sendSms');
+            $button.click(function(){
+                $button.addClass('disabled',true);
+				var $this = $(this);
+				var account = $('#inputMobile').val();
+				$.post("{:U('home/verify/sendVerify')}", {account: account, type: 'mobile' ,action:'config', todo: 'bindmobile'}, function (res) {
+					if(res.status){
+						DecTime.obj = $this
+						DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+						$this.attr('disabled',true)
+						DecTime.dec_time();
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					}
+					else{
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				});
+            });
+			
+			
+            var $button2 = $('#sendSms2');
+            $button2.click(function(){
+				$button.addClass('disabled',true);
+				var $this = $(this);
+				$.post("{:U('home/verify/sendVerify')}", {account: '<php>echo $mobile;</php>', type: 'mobile' ,action:'config', todo: 'unbindmobile'}, function (res) {
+					if(res.status){
+						DecTime.obj = $this
+						DecTime.time = "{: modC('SMS_RESEND','60','USERCONFIG')}";
+						$this.attr('disabled',true)
+						DecTime.dec_time();
+						layer.msg(res.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+					} else {
+						layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+					}
+				});
+            });
+			
+        });
+    </script>
+</block>

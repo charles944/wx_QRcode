@@ -1,0 +1,129 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/center.css" rel="stylesheet" type="text/css"/>
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page" style="padding-top:20px;padding-bottom:20px">
+	<div class="layout">
+			<div class="main-wrap">
+
+				<div class="ucenter-module-hd">
+					<h2>我的等级</h2>
+					<div class="operation">
+					</div>
+				</div>
+
+				<div class="ucenter-module-layout grid-l5m0r5 clearfix" id="ucenter-module-layout">
+					<div class="layui-tab">
+						<ul class="layui-tab-title">
+							<li class="layui-this">基本资料</li>
+						</ul>
+						<div class="layui-tab-content">
+							<div class="layui-tab-item layui-show">
+								<div class="title" style="font-size: 18px;line-height: 50px;">已有等级</div>
+								<volist name="already_groups" id="role">
+									<div class="qn-msg">
+										<span style="width:20%">{$role.title}</span>
+										{$role.user_status}
+										<neq name="role.user_group_status" value="0">
+											<eq name="role.can_login" value="1">
+											<else/>
+												当前登录
+											</eq>
+										</neq>
+									</div>
+								</volist>
+								
+								<div class="title" style="font-size: 18px;line-height: 50px;">可升级的等级</div>
+								<volist name="can_have_groups" id="role">
+									<div class="qn-msg">
+										<span style="width:20%">{$role.title}</span>
+										<span style="width:20%">
+											<switch name="role.levelmod">
+												<case value="buy">
+													<font color="red">{$role.buyvalue}元</font> 购买升级
+												</case>
+												<case value="invite">
+													<font color="red">邀请升级</font>
+												</case>
+												<case value="authen">
+													<font color="red">认证升级</font>
+												</case>
+												<case value="close">
+													X
+												</case>
+											</switch>
+										</span>
+										<span style="width:20%">
+											<switch name="role.levelmod">
+												<case value="close">
+													X
+												</case>
+												<default />可升级
+											</switch>
+										</span>
+										<switch name="role.levelmod">
+											<case value="buy">
+												<a data-group="up_group" data-url="{:U('home/member/upgroup')}" data-id="{$role.id}" data-type="buy" class="layui-btn layui-btn-sm">{$role.buyvalue}元 购买升级</a>
+											</case>
+											<case value="invite">
+												<a data-group="up_group" data-url="{:U('home/member/upgroup')}" data-id="{$role.id}" data-type="invite" class="layui-btn layui-btn-sm">邀请升级</a>
+											</case>
+											<case value="authen">
+												<a data-group="up_group" data-url="{:U('home/member/upgroup')}" data-id="{$role.id}" data-type="authen" class="layui-btn layui-btn-sm">认证升级</a>
+											</case>
+											<case value="close">
+												X
+											</case>
+										</switch>
+									</div>
+								</volist>
+								<if condition="!count($can_have_groups)&&!count($can_up_groups)">
+									<div class="qn-msg">已经没有可以升级的等级！</div>
+								</if>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+					$(function(){
+						$('[data-group="up_group"]').click(function(){
+							var url = $(this).attr('data-url');
+							var group_id = $(this).attr('data-id');
+							var type = $(this).attr('data-type');
+							if(type == 'buy'){
+								$.post(url,{group_id:group_id},function(data){
+									if(data.status == 1){
+										if(data.url!=undefined){
+											layer.msg(data.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+											setTimeout(function(){
+												window.location.href=data.url;
+											},1500);
+										}else{
+											layer.msg(data.info, {icon: 1, fixed: true, offset: '80%', time: 1000});
+											setTimeout(function(){
+												window.location.reload();
+											},1500);
+										}
+									}else{
+										layer.msg(data.info, {icon: 2, fixed: true, offset: '80%', time: 1000});
+										setTimeout(function(){
+											window.location.reload();
+										},1500);
+									}
+								});
+							}else if(type == 'invite'){
+							}else if(type == 'authen'){
+							}else{
+							}
+						});
+					});
+				</script>
+			</div>
+	</div>
+</div>
+</block>

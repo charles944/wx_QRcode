@@ -1,0 +1,44 @@
+<extend name="public/base"/>
+
+<block name="header">
+    <li class="success"><a href="javascript:;">安装协议<img src="__IMG__/bullet_green.png" /></a></li>
+    <li class="success"><a href="javascript:;">环境检测<img src="__IMG__/bullet_green.png" /></a></li>
+	<li class="active"><a href="javascript:;">验证授权</a></li>
+    <li><a href="javascript:;">创建数据库</a></li>
+    <li><a href="javascript:;"><eq name="Think.session.update" value="1">升级<else/>安装</eq></a></li>
+    <li><a href="javascript:;">完成</a></li>
+</block>
+
+<block name="body">
+<div class="container" id="step2">
+	<div class="logo">
+        <h1>准备好激活程序，开启创造价值之旅？</h1>
+        <form action="__SELF__" method="post" class="layui-form layui-form-pane" style="max-width:500px;margin:0 auto;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前IP</label>
+                <div class="layui-input-block">
+                  <input type="text" name="vdomain" required value="{:gethostbyname($_SERVER['SERVER_NAME'])}" readonly="" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前域名</label>
+                <div class="layui-input-block">
+                  <input type="text" name="vip" readonly="" required value="{$_SERVER['SERVER_NAME']}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">激活码</label>
+                <div class="layui-input-block">
+                  <input type="text" name="vcode" required  lay-verify="required" placeholder="请输入激活码" autocomplete="off" class="layui-input" value="{:C('QN_ACTIVATION_CODE')}">
+                </div>
+            </div>
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-radius layui-btn-normal" lay-submit="" lay-filter="install">立刻激活程序</button>
+			</div>
+		</form>
+    </div>
+</div>
+</block>
+
+<block name="footer">
+</block>

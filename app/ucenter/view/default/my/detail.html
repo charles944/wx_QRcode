@@ -1,0 +1,80 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>我的收入</h2>
+    <div class="operation">
+    </div>
+</div>
+
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+<div class="layui-tab">
+  <ul class="layui-tab-title">
+    <li onclick="javascript:location.href='{:U('System/useraccount/')}'" <eq name="tab_s" value="0">class="layui-this"</eq>>总收入明细</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+		<blockquote class="layui-elem-quote layui-quote-nm">
+			<volist name="scores" id="vo">
+				<p><b>{$vo.title}</b>：<b style="color:red;font-size:16px">{$vo.value|number_format=2}</b> {$vo.unit}</p>
+			</volist>
+		</blockquote>
+		
+		<blockquote class="layui-elem-quote layui-quote-nm">
+			温馨提示： <b>+</b>：表示当时奖励的数值； <b>=</b>：表示奖励过后剩余的数值
+		</blockquote>
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th width="140">获取时间</th>
+					<th width="180">明细</th>
+					<volist name="scoretypelist" id="v">
+					<th>+{:getScoreTypeName($v['mark'])}</th>
+					</volist>
+					<volist name="scoretypelist" id="v">
+					<th>={:getScoreTypeName($v['mark'])}</th>
+					</volist>
+				</tr>
+			</thead>
+			<tbody id="task_log_list">
+			<notempty name="accountdetail">
+			<volist name="accountdetail" id="vo">
+			<tr>
+				<td>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+				<td><a style="width:180px; height:20px; line-height:20px;display:inline-block; text-overflow:ellipsis; white-space:nowrap;overflow:hidden;" data-toggle="tooltip" title="" data-original-title="{$vo.remark|op_t}">{$vo.remark|op_t}</a></td>
+				<volist name="scoretypelist" id="v">
+				<td>{$vo[$v['mark']]|number_format=0}</td>
+				</volist>
+				<volist name="scoretypelist" id="v">
+				<php>$mark = 're_'.$v['mark'];</php>
+				<td>{$vo[$mark]|number_format=0}</td>
+				<php>unset($mark);</php>
+				</volist>
+			</tr>
+			</volist>
+			<else/>
+			<tr><td colspan="12">暂无获取明细</td></tr>
+			</notempty>
+			</tbody>
+		</table>
+		<div class="home_page" id="page_content">
+		{:getPagination($totalPageCount,$r)}
+		</div>
+		
+	</div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+$('[data-toggle="tooltip"]').tooltip({container:"body"})
+});
+</script>
+</block>

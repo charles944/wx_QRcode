@@ -1,0 +1,211 @@
+<div class="portlet">
+<form class="frm_change_group layui-form" action="__SELF__" method="post">
+	<div class="layui-form-item">
+		<label class="layui-form-label">输入用户ID查询</label>
+		<div class="layui-input-inline">
+			 <input type="text" data-role="searchUser" class="text input-medium layui-input"/>
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">输入用户名(username)查询</label>
+		<div class="layui-input-inline">
+			 <input type="text" data-role="searchUsername" class="text input-medium layui-input"/>
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">输入邮箱(Email)查询</label>
+		<div class="layui-input-inline">
+			 <input type="text" data-role="searchUseremail" class="text input-medium layui-input"/>
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">输入手机(Mobile)查询</label>
+		<div class="layui-input-inline">
+			 <input type="text" data-role="searchUsermobile" class="text input-medium layui-input"/>
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	
+	<div style="border-top:1px dashed #ccc;margin-top: 15px;margin-bottom: 15px "></div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">当前选中用户(单击删除)：</label>
+		<div class="layui-input-block">
+			<div id="userlist" style="word-wrap: break-word">
+				<volist name="users" id="user">
+					<button class="layui-btn layui-btn-xs">{$user.username} <input type="hidden" name="uid[]" value="{$user.uid}"/></button>
+				</volist>
+			</div>
+		</div>
+	</div>
+
+	<div style="border-top:1px dashed #ccc;margin-top: 15px;margin-bottom: 15px "></div>
+	
+	<notempty name="scoreTypes">
+		<volist name="scoreTypes" id="vo">
+			<div class="layui-form-item">
+				<label class="layui-form-label">{$vo.title}（{$vo.mark}）</label>
+				<div class="layui-inline">
+					<div class="layui-input-inline">
+						<select class="pull-left layui-input" name="action_score{$vo.id}" style="width: 85px;">
+							<option value="inc">增加</option>
+							<option value="dec">减少</option>
+							<option value="to">设置到</option>
+						</select>
+					</div>
+					<div class="layui-inline">
+						<input type="text" name="value_score{$vo.id}" value="0" class="text input-large layui-input" style="width: 310px;display: inline-block"/>
+						<span class="input-group-addon">{$vo.unit}</span>
+					</div>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+		</volist>
+	<else/>
+		<p>当前没有设置货币类型,请先设置</p>
+	</notempty>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">标题（必填）</label>
+		<div class="layui-input-inline">
+			<textarea class="layui-textarea" placeholder="" required type="text" name="title"></textarea>
+		</div>
+		<div class="layui-form-mid layui-word-aux">用于站内信的标题，以及明细表的注释；</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">备注（必填）</label>
+		<div class="layui-input-inline">
+			<textarea class="layui-textarea" placeholder="" required type="text" name="remark"></textarea>
+		</div>
+		<div class="layui-form-mid layui-word-aux">用于站内信的内容提示</div>
+	</div>
+    <div class="clear"></div>
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+		<button type="submit" class="layui-btn layui-btn-sm ajax-post" target-form="layui-form">立即提交</button>
+		</div>
+	</div>
+</form>
+</div>
+
+<script>
+    $(function () {
+        $('[data-role="searchUser"]').keypress(function (e) {
+            if ( e.which == 13 || e.which == 10) {
+                $(this).blur();
+
+            }
+        });
+        $('[data-role="searchUsername"]').keypress(function (e) {
+            if ( e.which == 13 || e.which == 10) {
+                $(this).blur();
+
+            }
+        });
+        $('[data-role="searchUseremail"]').keypress(function (e) {
+            if ( e.which == 13 || e.which == 10) {
+                $(this).blur();
+
+            }
+        });
+        $('[data-role="searchUsermobile"]').keypress(function (e) {
+            if ( e.which == 13 || e.which == 10) {
+                $(this).blur();
+
+            }
+        });
+    });
+    function delUser(){
+        $('[data-role="delUser"]').unbind('click');
+        $('[data-role="delUser"]').click(function(){
+            var obj = $(this);
+            obj.remove();
+        })
+    }
+
+    $(function () {
+        delUser();
+        $('[data-role="searchUser"]').blur(function(){
+            var obj = $(this);
+            var val = parseInt(obj.val());
+
+            if(!isNaN(val)){
+                var flag = true;
+                $.each($('#userlist').find('input'), function(i,item){
+                    flag = flag && ($(item).val()==val?false:true);
+                })
+                if(flag){
+                    $.get('{:U(getNickname)}',{uid:val},function(res){
+                        obj.parents('form').find('#userlist').append(' <div class="layui-btn layui-btn-xs" data-role="delUser">'+res.nickname+' <input type="hidden" name="uid[]" value="'+res.uid+'"/></div>');
+                        delUser();
+                        obj.val('')
+                        obj.focus();
+                    },'json')
+                }
+            }
+        });
+        $('[data-role="searchUsername"]').blur(function(){
+            var obj = $(this);
+            var val = obj.val().replace(/\s+/g,"");
+
+            if(val){
+                var flag = true;
+                    $.get('{:U(getNickname)}',{username:val},function(res){
+                    	$.each($('#userlist').find('input'), function(i,item){
+                            flag = flag && ($(item).val()==res.uid?false:true);
+                        })
+                        if(flag){
+	                        obj.parents('form').find('#userlist').append(' <div class="btn btn-info" data-role="delUser">'+res.nickname+'<input type="hidden" name="uid[]" value="'+res.uid+'"/></div>');
+	                        delUser();
+	                        obj.val('')
+	                        obj.focus();
+                        }
+                    },'json')
+            }
+        });
+        $('[data-role="searchUseremail"]').blur(function(){
+            var obj = $(this);
+           // var Regex = /^(?:\w+\.?)*\w+@(?:\w+\.)*\w+$/;
+            var myreg = /^([a-za-z0-9]+[_|_|.]?)*[a-za-z0-9]+@([a-za-z0-9]+[_|_|.]?)*[a-za-z0-9]+.[a-za-z]{2,3}$/;
+            if(myreg.test(obj.val())){
+            	var val = obj.val().replace(/\s+/g,"");
+                var flag = true;
+                    $.get('{:U(getNickname)}',{email:val},function(res){
+                    	$.each($('#userlist').find('input'), function(i,item){
+                            flag = flag && ($(item).val()==res.uid?false:true);
+                        })
+                        if(flag){
+	                        obj.parents('form').find('#userlist').append(' <div class="btn btn-info" data-role="delUser">'+res.nickname+' <input type="hidden" name="uid[]" value="'+res.uid+'"/></div>');
+	                        delUser();
+	                        obj.val('')
+	                        obj.focus();
+                        }
+                    },'json')
+            }
+        });
+        $('[data-role="searchUsermobile"]').blur(function(){
+            var obj = $(this);
+            var val = obj.val().replace(/\s+/g,"");
+            if(/^13d{9}$/g.test(val)||(/^15[8,9]d{8}$/g.test(val))){
+                var flag = true;
+                    $.get('{:U(getNickname)}',{mobile:val},function(res){
+                    	$.each($('#userlist').find('input'), function(i,item){
+                            flag = flag && ($(item).val()==res.uid?false:true);
+                        })
+                        if(flag){
+	                        obj.parents('form').find('#userlist').append(' <div class="btn btn-info" data-role="delUser">'+res.nickname+' <input type="hidden" name="uid[]" value="'+res.uid+'"/></div>');
+	                        delUser();
+	                        obj.val('')
+	                        obj.focus();
+                        }
+                    },'json')
+            }
+        });
+    })
+</script>

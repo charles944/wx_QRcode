@@ -1,0 +1,15 @@
+<extend name="base/common"/>
+<block name="style">
+<link href="__CSS__/home.css" rel="stylesheet">
+</block>
+<block name="body">
+<volist name="showBlocks" id="v">
+	<php>if($v=='slider'){</php>
+	<php>}else{</php>
+	{:W($v.'/HomeBlock/render')}
+	<php>}</php>
+</volist>
+</block>
+
+<block name="script">
+</block>

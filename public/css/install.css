@@ -1,0 +1,44 @@
+/**
+ Power by 朝兮夕兮
+*/
+body{box-sizing: border-box;}
+.container{text-align:center;}
+.container .logo {-ms-transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);min-width:80%;padding:30px;text-align:center;position:absolute;left:50%;top:50%;border-top:none;}
+
+.container .logo h1{letter-spacing: 0.05em;font-size: 24px;text-transform: uppercase;margin-bottom:20px;}
+.container .step1{}
+#agreement{display:none}
+#LAY_layuipro{padding:30px;}
+.layui-btn{position:relative}
+.layui-btn span.content {z-index:10;-webkit-transition:-webkit-transform 0.3s;transition:transform 0.3s;display:block;position:relative;}
+
+.state-loading{color:white;}
+.finished{color:white;}
+.layui-btn-disabled {background:#1E9FFF;border-color:#1E9FFF}
+
+.w50{width:50%}
+.m0c{margin: 0 auto}
+.green{color:green}
+.red{color:red}
+
+#step1 .logo{margin-top:2%;margin-bottom:0}
+#step2 .logo{margin-top:2%;margin-bottom:0}
+#step3 .logo{margin-top:2%;margin-bottom:0}
+#step4 .logo{margin-top:2%;margin-bottom:0}
+#step2 .main{max-width:35%;margin:0 auto;}
+#step3 .main{max-width:35%;margin:0 auto;}
+#step1 table{margin-bottom:20px}
+#step1 table caption{margin-bottom:10px;}
+#step1 table caption h3{font-size:20px;}
+.footer{margin-bottom:40px}
+
+#step4 #show-list{margin:0 auto; max-width:35%;margin-bottom:30px;display:none}
+#step4 h3{font-size: 20px; font-weight: 300; margin-bottom:20px;}
+#step4 #install-tip{position:relative}
+
+.layui-form-label{width:20%}
+.layui-input-block{margin-left:31%}
+.progress {background:#0885f0;}
+.progress-inner {top:0;width:0;height:100%;-webkit-transition:width 0.3s,opacity 0.3s;transition:width 0.3s,opacity 0.3s;border-radius:100px;}
+.progress-inner {position:absolute;left:0;background:#0885f0;}
+.notransition {-webkit-transition:none !important;transition:none !important;}

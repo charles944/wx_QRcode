@@ -1,0 +1,84 @@
+<php>
+need_login();
+$unreadMessage=D('Common/Message')->getHaventReadMeassageAndToasted(is_login());
+</php>
+<style>
+.badge-text{position:relative !important;top:0 !important;margin:0 !important;}
+</style>
+<div class="layui-header" style="background-color:{:modC('HEADER_NAV_COLOR', '', 'CONFIG')}">
+	<ul class="layui-nav layui-layout-left">
+	</ul>
+	<ul class="layui-nav layui-layout-right" lay-filter="layout-right">
+		<if condition="is_login()">
+			<php>
+				$common_header_user = query_user(array('nickname','avatar32'));
+				$scoreModel = D('User/Score');
+				$scores = $scoreModel->getTypeList(array('status'=>1));
+				foreach ($scores as &$v) {
+					$v['value'] = $scoreModel->getUserScore(is_login(), $v['id']);
+				}
+				unset($v);
+			</php>
+			<li class="layui-nav-item layui-hide-xs">
+				<a href="{:U('Ucenter/Message/Message')}"><cite>{$common_header_user.nickname}
+				<if condition="count($unreadMessage) gt 0 and count($unreadMessage) lt 99">
+					<span id="" class="badge-text layui-badge">{:count($unreadMessage)}</span>
+				<elseif condition="count($unreadMessage) egt 99"/>
+					<span id="" class="badge-text layui-badge">99+</span>
+				</if>
+				</cite>
+			</a>
+			</li>
+			<li class="layui-nav-item layui-hide-xs">
+				<a href="javascript:;">
+					<cite>{:get_login_group_name()}</cite>
+				</a>
+			</li>
+			<li class="layui-nav-item layui-hide-xs">
+				<a event-node="logout" href="javascript:void(0);">退出</a>
+			</li>
+		</if>
+		
+	</ul>
+	
+</div>
+
+<!-- <div class="layadmin-fixed" lay-templateid="TPL_layout"> -->
+	<div class="layui-side layui-side-menu">
+		<div class="layui-side-scroll">
+			<div class="layui-logo" lay-href="">
+				<a>{:modC('WEB_SITE_NAME','','Config')}</a> 
+			</div>
+			
+			<ul class="layui-nav layui-nav-tree">
+				<think:nav name="nav" tree="true">
+					<neq name="nav['_']" value="">
+						<php>if(check_auth($nav['url'])){</php>
+						<li class="layui-nav-item <eq name='nav.url|get_nav_active' value='1'>layui-nav-itemed</eq>">
+							<a href="javascript:;" title="{$nav.title}"><notempty name="nav.band_text"><i class="layui-icon">{$nav.band_text}</i></notempty><cite>{$nav.title}</cite></a>
+							<dl class="layui-nav-child">
+								<volist name="nav._" id="subnav">
+									<php>if(check_auth($subnav['url'])){</php>
+									<dd>
+									<a style="<notempty name="subnav.color">color:{$subnav.color}</notempty>" href="{$subnav.url|get_nav_url}" target="<eq name='subnav.target' value='1'>_blank<else/>_self</eq>">
+									{$subnav.title} <notempty name="subnav.band_text"><span class="layui-badge">{$subnav.band_text}</span></notempty>
+									</a>
+									</dd>
+									<php>}</php>
+								</volist>
+							</dl>
+						</li>
+						<php>}</php>
+						<else/>
+						<php>if(check_auth($nav['url'])){</php>
+						<li class="layui-nav-item <eq name='nav.url|get_nav_active' value='1'>layui-nav-itemed</eq>">
+							<a href="{$nav.url|get_nav_url}" target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>" title="{$nav.title}" style="<neq name='nav.url|get_nav_active' value='1'></neq>"><notempty name="nav.band_text"><span class="layui-badge">{$nav.band_text}</span></notempty><cite>{$nav.title}</cite></a>
+						</li>
+						<php>}</php>
+					</neq>
+				</think:nav>
+			</ul>
+		</div>
+	</div>
+<!-- </div> -->
+{:hook('aftertop')}

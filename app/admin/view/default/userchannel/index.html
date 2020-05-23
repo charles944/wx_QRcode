@@ -1,0 +1,89 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>会员中心导航管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+			<div class="portlet-title">
+				<div class="actions">
+						<a class="layui-btn layui-btn-xs fbutton" href="{:U('add','pid='.$pid)}">新 增</a>
+						<button class="layui-btn layui-btn-xs fbutton list_sort" url="{:U('sort',array('pid'=>I('get.pid',0)),'')}">排序</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+				<div class="portlet-body">
+				<div class="table-scrollable layui-form">
+					<table class="layui-table" lay-even lay-skin="line">
+						<thead>
+						<th width="2%" class="check">
+							<input type="checkbox" class="group-checkable" lay-skin="primary" lay-filter="allChoose">
+						</th>
+						<th>ID</th>
+						<th>导航名称</th>
+						<th>导航地址</th>
+						<th>分组</th>
+						<th>新窗口打开</th>
+						<th>排序</th>
+						<th>操作</th>
+						</thead>
+						<tbody>
+							<volist name="list" id="channel">
+							<tr>
+								<td class="check ">
+									<input class="ids" type="checkbox" name="ids[]" value="{$channel['id']}" lay-skin="primary" lay-filter="ids"/>
+								</td>
+								<td>{$channel.id}</td>
+								<td><a href="{:U('index?pid='.$channel['id'])}">{$channel.title}</a></td>
+								<td>{$channel.url}</td>
+								<td>{$channel.group}</td>
+								<td><eq name="channel.target" value="1">是<else/>不是</eq></td>
+								<td>{$channel.sort}</td>
+								<td>
+									<a href="{:U('setStatus?ids='.$channel['id'].'&status='.abs(1-$channel['status']))}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash">{$channel.status|show_status_op}</a>
+									<a title="编辑" class="layui-btn layui-btn-xs hbutton btn_edit" href="{:U('edit?id='.$channel['id'].'&pid='.$pid)}">编辑</a>
+									<a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" title="删除" href="{:U('del?id='.$channel['id'])}">删除</a>
+								</td>
+							</tr>
+							</volist>
+						</tbody>
+					</table>
+                </div>
+                <div class="layui-table-page">
+                {$_page}
+                </div>
+              </div>
+        </div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+<script>
+$('.list_sort').click(function(){
+	var url = $(this).attr('url');
+	var ids = $('.ids:checked');
+	var param = '';
+	if(ids.length > 0){
+		var str = new Array();
+		ids.each(function(){
+			str.push($(this).val());
+		});
+		param = str.join(',');
+	}
+
+	if(url != undefined && url != ''){
+		window.location.href = url + '/ids/' + param;
+	}
+});
+</script>
+</block>
+<block name="jquery_script">
+</block>

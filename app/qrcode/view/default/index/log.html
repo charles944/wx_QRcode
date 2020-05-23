@@ -1,0 +1,51 @@
+<extend name="base/common"/>
+<block name="header"></block>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>【ID：{$data.id}，{$data.title}】扫描记录</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<!-- <div class="" style="margin-bottom:10px"><a href="{:U('qrcode/index/dellog')}" class="layui-btn-sm layui-btn">批量删除所有</a></div> -->
+			<table class="layui-table" lay-skin="line" lay-even>
+				<thead>
+				  <tr>
+					<th>序号</th>
+					<th>扫描时间</th>
+					<th>IP地址</th>
+					<th>IP归属地</th>
+					<th>扫描设备</th>
+					<th>操作</th>
+				  </tr> 
+				</thead>
+				<tbody>
+				<notempty name="list">
+					<volist name="list" id="data">
+					<tr>
+						<td>{$i}</td>
+						<td>{$data.create_time|date='Y-m-d H:i:s',###}</td>
+						<td>{$data.ip|long2ip}</td>
+						<td><notempty name="data.ip_addr">{$data.ip_addr}<else/>{$data.ip|long2ip|ipfrom}</notempty></td>
+						<td><php>$tmp = json_decode($data['scan_device'],true); echo '扫描设备:'.$tmp['sys'].' , 浏览器:'.$tmp['bro'];</php></td>
+						<td><a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/dellog',array('id'=>$data['id']))}" >删除</a></td>
+					</tr>
+					</volist>
+				<else/>
+				<tr>
+					<td colspan="6">暂无数据</td>
+				</tr>
+				</notempty>
+				</tbody>
+			</table>
+			<div class='layui-table-page'>{:getPagination($totalCount,$r)}</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+</block>

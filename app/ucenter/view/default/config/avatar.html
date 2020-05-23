@@ -1,0 +1,34 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的头像</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<div id="center"  style="padding: 20px ; border:1px solid #e0e0e0;background:#fff">
+			<php>
+				$user = query_user(array('avatar128'));
+			</php>
+			<div class="ucenter-avatar col-xs-12">
+				<php>if(file_exists('./api/uc_login.lock')){
+					include_once './api/uc_client/client.php';
+					$html = uc_avatar(is_login());
+				</php>
+				{$html}
+				<php>}else{</php>
+				{:W('home/UploadAvatar/render',array('uid'=>is_login()))}
+				<php>}</php>
+			</div>
+		</div>
+	</div>
+</div>
+</block>

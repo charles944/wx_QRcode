@@ -1,0 +1,180 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="{:U('index')}"><cite>网站设置</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+	<div class="explanation" id="explanation" style="margin-bottom:10px">
+		<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+		<p>此处配置网站的系统设置</p>
+	</div>
+	<form action="{:U('save')}" id="form" class="layui-form" method="post">
+	<div class="layui-tab">
+	  <ul class="layui-tab-title">
+		<volist name="Think.config.CONFIG_GROUP_LIST" id="group">
+			<li id="tab_1_{$i}" class="<if condition="$key eq $id">layui-this</if>" onclick="javascript:location.href='{:U('?id='.$key)}';">{$group}配置</li>
+		</volist>
+	  </ul>
+	  <div class="layui-tab-content">
+		<php>$p = 1;</php>
+			<div class="layui-tab-item <if condition="$p eq 1">layui-show</if>" id="tab_1_{$p}">
+				<volist name="list" id="config">
+					<div class="layui-form-item">
+						<label class="layui-form-label">{$config.title|htmlspecialchars}</label>
+						<switch name="config.type">
+						<case value="0">
+							<div class="layui-input-inline">
+								<input type="text" name="config[{$config.name}]" value="{$config.value}" autocomplete="off" placeholder="" class="layui-input">
+							</div>
+							<div class="layui-form-mid layui-word-aux">
+								<notempty name="config.remark">{$config.remark}</notempty>
+							</div>
+						</case>
+						<case value="1">
+							<div class="layui-input-inline">
+								<input type="text" name="config[{$config.name}]" value="{$config.value}" autocomplete="off" placeholder="" class="layui-input">
+							</div>
+							<div class="layui-form-mid layui-word-aux">
+								<notempty name="config.remark">{$config.remark}</notempty>
+							</div>
+						</case>
+						<case value="2">
+							<div class="layui-input-block">
+								<textarea name="config[{$config.name}]" class="layui-textarea" placeholder="{$config.remark}">{$config.value}</textarea>
+								<div class="layui-form-mid layui-word-aux"><notempty name="config.remark">{$config.remark}</notempty></div>
+							</div>
+						</case>
+						<case value="3">
+							<div class="layui-input-block">
+								<textarea name="config[{$config.name}]" class="layui-textarea" placeholder="{$config.remark}">{$config.value}</textarea>
+								<div class="layui-form-mid layui-word-aux"><notempty name="config.remark">{$config.remark}</notempty></div>
+							</div>
+						</case>
+						<case value="4">
+							<div class="layui-input-inline">
+								<select class="" name="config[{$config.name}]">
+									<volist name=":parse_config_attr($config['extra'])" id="vo">
+									<option value="{$key}" <eq name="config.value" value="$key">selected</eq>>{$vo}</option>
+									</volist>
+								</select>
+							</div>
+							<div class="layui-form-mid layui-word-aux">
+								<notempty name="config.remark">{$config.remark}</notempty>
+							</div>
+						</case>
+						<case value="5">
+							<div class="layui-input-block">
+								{:W('common/ueditor/editor',array($config['name'],$config['name'],$config['value'],'100%','200px',''))}
+								
+								<div class="layui-form-mid layui-word-aux"><notempty name="field.remark">{$field.remark|htmlspecialchars}</notempty></div>
+								
+								<!-- <textarea class="layui-textarea qn-editor" name="$config['name']" lay-verify="content" id="LAY_demo_editor">{$config['value']}</textarea>
+								<div class="layui-form-mid layui-word-aux"><notempty name="config.remark">{$config.remark}</notempty></div> -->
+							</div>
+						</case>
+						<case value="6">
+							<div class="layui-input-inline">
+								<input type="password" name="config[{$config.name}]" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input" value="{$config.value}">
+							</div>
+						</case>
+						<case value="7">
+							<div class="layui-input-block">
+								<input type="button" id="upload_single_image_{$config.name}" class="layui-upload-button" value="上传图片" />
+								<input type="button" class="layui-box layui-upload-button selectImg" style="padding:0 15px" id="selectImg_{$config.name}" data-name="{$config.name}" value="浏览服务器" data-type="0" />
+								
+								<input type="hidden" id="url" name="{$config.name}" value="{$config['value']}"/>
+								<div class="upload_picture" style="margin-top:10px;display:block;overflow:hidden;">
+									<notempty name="config.value">
+										<a href="{$config.value|get_cover='path'}" target="_blank" title="点击查看大图" style="display:block;float:left;margin-right:10px;">
+											<img src="{$config.value|get_cover='path'}" id="upload_{$config.name}" style="width:100px;height:100px"/>
+										</a>
+									<else/>
+										<a href="{$config.value|get_cover='path'}" target="_blank" title="点击查看大图" style="display:block;float:left;margin-right:10px;">
+											<img src="{$config.value|get_cover='path'}" id="upload_{$config.name}" style="width:100px;height:100px"/>
+										</a>
+									</notempty>
+								</div>
+								<div class="layui-form-mid layui-word-aux">
+									<notempty name="config.remark">{$config.remark}</notempty>
+								</div>
+							</div>
+							<script type="text/javascript">
+								layui.use('upload', function(){
+									var upload = layui.upload;
+									upload.render({
+										url: '{:U("File/uploadPicture",array("session_id"=>session_id()))}'
+										,elem: '#upload_single_image_{$config.name}' //指定原始元素，默认直接查找class="layui-upload-file"
+										,method: 'post' //上传接口的http类型
+										,accept: 'images'
+										,field: '{$config.name}_id'
+										,before: function(input){
+											//layer.msg('文件上传中', {icon: 16, fixed: true, offset: '80%', time:2000});
+											layer.load(2, {shade: false});
+										}
+										,done: function(res, index, upload){
+											layer.closeAll('loading'); //关闭loading
+											upload_{$config.name}.src = res.url.{$config.name}_id.path;
+											$("[name='{$config.name}']").val(res.url.{$config.name}_id.id);
+										}
+										,error: function(res, index, upload){
+											layer.closeAll('loading'); //关闭loading
+											layer.msg(res.info, {icon: 2, fixed: true, offset: '80%', time:1000});
+										}
+									});
+								});
+							</script>
+						</case>
+
+						<case value="8">
+							<php>
+								$config['value_array'] = explode(',', $config['value']);
+								$config['extra'] = explode("\r\n", $config['extra']);
+								$config['opt'] = array();
+								foreach( $config['extra'] as &$val){
+									$val =  explode(':', $val);
+									$config['opt'][$val[0]] =  $val[1];
+								}
+							</php>
+							<div class="layui-input-block">
+							<volist name="config.opt" id="option">
+								<php>
+									$checked = in_array($key,$config['value_array']) ? 'checked' : '';
+									$inputId = "id_$config[name]_$key";
+								</php>
+								<input type="checkbox" lay-skin="primary" name="config[{$config.name}][]" id="{$inputId}" title="{$option|htmlspecialchars}" value="{$key}" {$checked}>
+							</volist>
+							</div>
+						</case>
+						</switch>
+					</div>
+				</volist>
+			</div>
+	  </div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+		<div class="layui-input-block">
+			<empty name="list">
+				<button type="submit" disabled class="layui-btn layui-btn-sm" target-form="layui-form">确 定</button>
+			<else/>
+				<button type="submit" class="layui-btn layui-btn-sm ajax-post" target-form="layui-form">确 定</button>
+			</empty>
+			<button class="layui-btn layui-btn-sm layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</div>
+	</form>
+</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+
+</block>

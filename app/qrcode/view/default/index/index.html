@@ -1,0 +1,78 @@
+<extend name="base/common"/>
+<block name="header"></block>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>活码管理</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<div class="" style="margin-bottom:10px"><a href="{:U('qrcode/index/edit')}" class="layui-btn-sm layui-btn">新增活码</a></div>
+			<table class="layui-table" lay-skin="line" lay-even>
+				<thead>
+				  <tr>
+					<th>排序</th>
+					<th>二维码</th>
+					<th>名称</th>
+					<th>今日扫活码人数</th>
+					<th>总扫活码次数</th>
+					<th>子码识别次数</th>
+					<th>操作</th>
+				  </tr>
+				</thead>
+				<tbody>
+				<notempty name="list">
+					<volist name="list" id="data">
+					<tr>
+						<td>{$data.sort}</td>
+						<td>
+							<div style="text-align:center">
+								<a href="{:U('qrcode/index/qr',array('id'=>$data['id']))}" target="_blank" style="border:none;"><img class="qrcode" src="/uploads/picture/QRcode/{$data.id}_{$data.qr_domain}.png?t={:TIME()}"></a>
+								<p style="text-align:center">{$data.title}</p>
+							</div>
+							<div style="text-align:center">
+								<a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/edit',array('id'=>$data['id']))}">编辑活码</a>
+							</div>
+						</td>
+						<td>
+							<p >
+								子码数量：{$data.qrcode_child}
+							</p>
+							<p >
+								显示模式：<switch name="data.view_mode"><case value="1">随机显示</case><case value="2">逐个显示</case></switch>
+							</p>
+							<p >
+								活码类型：<font color="red"><switch name="data.type_mode"><case value="1">微信群活码</case><case value="2">城市分组码</case><case value="3">自定义分组码</case><case value="4">客服循环码</case><case value="5">机型码</case></switch></font>
+							</p>
+							<p >
+								每码阀值：{$data.max_scan}
+							</p>
+							<p>显示限制：<switch name="data.view_limit_mode"><case value="1">每刷新都不一样</case><case value="2">同IP显示一个</case></switch></p>
+						</td>
+						<td><a href="{:U('qrcode/index/tjlog',array('id'=>$data['id']))}">共 {$data.today_people} 人</a></td>
+						<td><a href="{:U('qrcode/index/log',array('id'=>$data['id']))}">共 {$data.scan_count} 次</a></td>
+						<td>共 {$data.scan_child_count} 次</td>
+						<td>
+							<a class="layui-btn-xs layui-btn" href="{:U('qrcode/index/child',array('id'=>$data['id']))}">子码管理</a>
+							<a class="layui-btn-xs layui-btn layui-btn-danger ajax-get confirm" href="{:U('qrcode/index/del',array('id'=>$data['id']))}" >删除活码</a>
+						</td>
+					</tr>
+					</volist>
+				<else/>
+				<tr>
+					<td colspan="7">暂无数据</td>
+				</tr>
+				</notempty>
+				</tbody>
+			</table>
+			<div class='layui-table-page'>{:getPagination($totalCount,$r)}</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+</block>

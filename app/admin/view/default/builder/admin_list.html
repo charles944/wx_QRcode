@@ -1,0 +1,113 @@
+<extend name="public/base"/>
+<block name="style"></block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>{$title|htmlspecialchars}<if condition="$suggest">（{$suggest|htmlspecialchars}）</if></cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+		<php>
+		foreach($searches as $search){
+			if($_REQUEST[$search['name']])
+			{
+				$show=1;
+			}
+		}
+		</php>
+		<div style="margin-bottom: 10px; display:none" <eq name='show' value="1">class="show" </eq> id="search_form">
+		<form id="searchForm" method="get" action="{$searchPostUrl}" class="layui-form layui-form-pane form-dont-clear-url-param">
+			<volist name="searches" id="search">
+				<include file="builder/admin_search_key"/>
+			</volist>
+			<div class="layui-form-item">
+				  <input type="submit" class="layui-btn layui-btn-sm green" value="确定"/>
+			</div>
+			
+		</form>
+		<div style="border-top:1px solid #ccc;border-bottom: 1px solid white"></div>
+		</div>
+		<div class="portlet">
+			<notempty name="suggest">
+			<div class="explanation" id="explanation" style="margin-bottom:10px">
+				<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+				<p>{$suggest}</p>
+			</div>
+			</notempty>
+			<div class="portlet-title">
+				<div class="actions">
+					<if condition="count($searches) gt 0">
+						<button class="layui-btn layui-btn-xs toggle_search fbutton" id=""><i class="layui-icon">&#xe615;</i> 搜索</button>
+					</if>
+					<volist name="buttonList" id="button">
+						<{$button.tag} {$button.attr}>{$button.title|op_h}</{$button.tag}>
+					</volist>
+				</div>
+				<php>foreach($selects as $select){
+						if($_REQUEST[$select['name']]){
+						   $show=1;
+						}
+					 }
+				</php>
+				<!-- 选择框select -->
+				<div class="actions">
+					<form id="selectForm" method="get" action="{$selectPostUrl}" class="layui-form layui-form-pane filter">
+						<volist name="selects" id="select">
+							<div class="oneselect">
+								<div class="title">{$select.title}</div>
+								<div class="select_box">
+								<select name="{$select['name']}" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+									<volist name="select['arrvalue']" id="svo">
+										<option value="{$svo.id}" <eq name="svo.id" value="$_GET[$select['name']]">selected</eq>>{$svo.value}</option>
+									</volist>
+								</select>
+								</div>
+							</div>
+						</volist>
+					</form>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="portlet-body">
+				<div class="table-scrollable layui-form">
+					<table class="layui-table" lay-skin="line">
+						<thead>
+						<tr>
+						<th width="2%">
+							<input type="checkbox" class="group-checkable check-all" lay-skin="primary" lay-filter="allChoose">
+						</th>
+						<volist name="keyList" id="field">
+							<th>{$field.title|htmlspecialchars}</th>
+						</volist>
+						</tr>
+						</thead>
+						<tbody>
+							<volist name="list" id="e">
+								<tr>
+									<td class="check">
+										<input name="ids[]" type="checkbox" value="{$e['id']}" class="ids" lay-skin="primary" lay-filter="ids"/>
+									</td>
+									<volist name="keyList" id="field">
+										<td>{$e[$field['name']]}</td>
+									</volist>
+								</tr>
+							</volist>
+						</tbody>
+					</table>
+				</div>
+					<!-- 分页 -->
+				<div class="layui-table-page">
+					{$pagination}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script"></block>
+<block name="jquery_script"></block>       

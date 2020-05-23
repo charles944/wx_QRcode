@@ -1,0 +1,85 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+<div class="ucenter-module-hd">
+    <h2>提现方式</h2>
+    <div class="operation">
+    </div>
+</div>
+
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+    <div class="usercenter">
+        <div class="uc">
+<div class="uc_content clearfix" style=" border-bottom:0">
+				<table class="layui-table" style="margin:0;">
+					<thead>
+						<tr>
+							<th width="18%" class="hidden-xs">钱包名</th>
+							<th>姓名</th>
+							<th>账号</th>
+							<th class="hidden-xs">绑定时间</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="task_log_list">
+					<notempty name="purse_list">
+					<volist name="purse_list" id="vo">
+					<tr>
+						<td class="hidden-xs">{$vo.pursename|op_t}</td>
+						<td>{$vo.user.name}</td>
+						<td >{$vo.user.pursecardno|substr_replace=###,'****',3,4}</td>
+						<td>{$vo.user.create_time|date='Y-m-d H:i:s',###}</td>
+						<td ><switch name="vo.user.status">
+						<case value="0">
+						禁用
+						</case>
+						<case value="1">
+						正常
+						</case>
+						<case value="2">
+						未审核
+						</case>
+						</switch></td>
+						<td><if condition="$vo['user']['pursecardno'] eq null or $vo['user']['pursecardno'] eq ''"><a href="{:U('Ucenter/System/five')}" target="_blank" >绑定</a><else/><a href="{:U('Ucenter/System/five')}" target="_blank" >更改</a></if></td>
+					</tr>
+					</volist>
+					<else/>
+					<tr><td colspan="5">暂无获取明细</td></tr>
+					</notempty>
+					</tbody>
+				</table>
+</div>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+        $(function () {
+            $(window).resize(function () {
+                $(".wrapper").css("min-height", $(window).height() - 243);
+            }).resize();
+        })
+    </script>
+<script>
+//tab切换
+function setTab(name, cursel, n) {
+    for (i = 1; i <= n; i++) {
+        var menu = document.getElementById(name + i);
+        var con = document.getElementById("con_" + name + "_" + i);
+        menu.className = i == cursel ? "hover" : "";
+        con.style.display = i == cursel ? "block" : "none";
+    }
+}
+</script>
+</block>

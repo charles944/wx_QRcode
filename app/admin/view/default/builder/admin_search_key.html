@@ -1,0 +1,42 @@
+<!--判断搜索选项是TEXT还是SELECT-->
+<switch name="search['type']">
+<case value="select">
+<div class="layui-form-item">
+	<label class="layui-form-label">{$search.title}</label>
+	<div class="layui-input-inline">
+	  <select name="{$search['name']}" lay-filter="aihao">
+		<option value="">全部</option>
+		<volist name="search['arrvalue']" id="svo">
+            <option value="{$svo.id}" <eq name="svo.id" value="$_GET[$search['name']]">selected</eq>>{$svo.value}</option>
+       </volist>
+	  </select>
+	</div>
+	<div class="layui-form-mid layui-word-aux">{$search.des}</div>
+</div>
+</case>
+<case value="time">
+   <php>$value = I($search['name']);
+   		if($value){
+            $value = time_format($value);
+        }
+   </php>
+<div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">{$search.title}</label>
+      <div class="layui-input-block">
+	    <input type="hidden" name="{$search['name']}" value="{$value}"/>
+        <input type="text" name="{$search['name']}" id="date-{$search['name']}" autocomplete="off" class="layui-input date_layui_element" value="{$value}">
+      </div>
+    </div>
+	<div class="layui-form-mid layui-word-aux">{$search.des}</div>
+</div>
+</case>
+<default/>
+<div class="layui-form-item">
+	<label class="layui-form-label">{$search.title}</label>
+	<div class="layui-input-inline">
+		<input type="text" name="{$search.name}" lay-verify="required" placeholder="请输入" value="{:I($search['name'])}" autocomplete="off" class="layui-input">
+	</div>
+    <div class="layui-form-mid layui-word-aux">{$search.des}</div>
+</div>
+</switch>

@@ -1,0 +1,91 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>权限管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+		<div class="explanation" id="explanation" style="margin-bottom:10px">
+			<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+			<p>ID=1 为默认用户组，不可删除</p>
+		</div>
+		<div class="portlet-title">
+			<div class="actions">
+				<a id="add-group" class="layui-btn layui-btn-xs fbutton" href="{:U('editGroup')}">新增用户组（套餐）</a>
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('Admin/menu/index')}">后台菜单管理</a>
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('Admin/menu/add')}">新增后台菜单</a>
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('addNode')}">新增前台权限节点</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="portlet-body">
+			<div class="table-scrollable">
+				<table class="layui-table" lay-even lay-skin="line">
+					<thead>
+						<tr>
+							<th width="2%">
+								ID
+							</th>
+							<th width="100">用户组</th>
+							<th>排序</th>
+							<th>授权</th>
+							<th width="50">状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="_list" id="vo">
+							<tr>
+								<td>
+								   {$vo.id}
+								</td>
+								<td><a href="{:U('AuthManager/editgroup?id='.$vo['id'])}">{$vo.title}</a> </td>
+								<td>{$vo.sort}</td>
+								<td>
+									<a href="{:U('AuthManager/access?group_name='.$vo['title'].'&group_id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_see">后台访问授权</a>
+									<a href="{:U('AuthManager/accessuser?group_name='.$vo['title'].'&group_id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_see">前台访问授权</a>
+									<a href="{:U('AuthManager/user?group_name='.$vo['title'].'&group_id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_see">成员授权</a>
+									<a href="{:U('AuthManager/union?group_name='.$vo['title'].'&group_id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_see" >提成设置</a>
+								</td>
+								<td>{$vo.status_text}</td>
+								<td>
+									<a href="{:U('AuthManager/configrank?id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_edit" data-toggle="confirmation">默认信息配置</a>
+									<a href="{:U('AuthManager/editgroup?id='.$vo['id'])}" class="layui-btn layui-btn-xs hbutton btn_edit" data-toggle="confirmation">编辑</a>
+									<eq name="vo.status" value="1">
+										<a href="{:U('AuthManager/changeStatus?method=forbidGroup&id='.$vo['id'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_trash"><i class="layui-icon">&#x1006;</i> 禁用</a>
+									<else/>
+										<a href="{:U('AuthManager/changeStatus?method=resumeGroup&id='.$vo['id'])}" class="ajax-get layui-btn layui-btn-xs hbutton btn_see"><i class="layui-icon">&#xe605;</i> 启用</a>
+									</eq>
+									<a href="{:U('AuthManager/changeStatus?method=deleteGroup&id='.$vo['id'])}" class="confirm ajax-get layui-btn layui-btn-xs hbutton btn_trash" data-toggle="confirmation"><i class="layui-icon">&#xe640;</i> 删除</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+</block>
+<block name="jquery_script">
+var table;
+ // handle group checkboxes check/uncheck
+$('.group-checkable', table).change(function() {
+    var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
+    var checked = $(this).is(":checked");
+    $(set).each(function() {
+        $(this).attr("checked", checked);
+    });
+    //$.uniform.update(set);
+});
+</block>

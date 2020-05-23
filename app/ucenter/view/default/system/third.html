@@ -1,0 +1,132 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+    <style>
+#processor {padding:15px 10px;position:relative}
+.processorBox{display: -webkit-flex;display:flex;flex-direction: row;justify-content:space-around}
+.processorBox li {flex:1;}
+.step_inner {color:#fff;text-align:center;width:100px;margin:0 auto}
+.step_line {width:100%;background-color:#e8e8e8;height:6px;position:absolute;top:50%;left:0;margin:-15px auto auto auto;z-index:1}
+.processorBox li .icon_step {width:36px;height:36px;line-height:36px;display:inline-block;border-radius:50%;-webkit-border-radius:50%;-moz-border-radius:50%;color:#fff;font-size:18px;text-align:center;background-color:#e8e8e8;position:relative;z-index:2}
+.processorBox li.current .icon_step {background-color:#64bd2e}
+.processorBox h4 {color:#bbb;margin-top:5px}
+.processorBox li.current h4 {color:#64bd2e}
+.oh {
+    overflow: hidden;
+}
+  </style>
+</block>
+
+<block name="body">
+<div class="wrap">
+  <div class="processor" id="processor">
+    <ol class="processorBox oh">
+      <li class="current">
+        <div class="step_inner fl">
+        <span class="icon_step"></span>
+        <h4>完善个人资料</h4>
+        </div>
+      </li>
+      <eq name="cash_sms_on" value="1">
+      <li class="current">
+        <div class="step_inner">
+        <span class="icon_step">2</span>
+        <h4>绑定手机号</h4>
+        </div>
+      </li>
+      </eq>
+      <eq name="cash_email_on" value="1">
+      <li class="current">
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>绑定邮箱</h4>
+        </div>
+      </li>
+      </eq>
+      <li >
+        <div class="step_inner">
+        <span class="icon_step"></span>
+        <h4>设置交易密码</h4>
+        </div>
+      </li>
+      <li>
+        <div class="step_inner fr">
+        <span class="icon_step"></span>
+        <h4>绑定支付方式</h4>
+        </div>
+      </li>
+    </ol>
+    <div class="step_line"></div>
+  </div>
+  <div class="">
+  <div id="step1" class="">
+    <ul class="prompt">
+        <li>邮箱认证：为了保证账号的安全性，<i class="red">找回密码</i>、<i class="red">申请提现</i>、<i class="red">兑换奖品</i>需要进行邮箱认证。</li>
+        <li>为了保证账号的<i class="red">唯一性</i>，请注意一个邮箱地址只能<i class="red">绑定一个账号</i>。</li>
+        <li>验证了邮箱地址后，可以使用邮箱来进行登录网站。</li>
+        <li>由于各大邮箱过滤机制不同，可能发送的邮件会在垃圾邮件中，请注意查收。</li>
+    </ul>
+    <form action="__SELF__" method="post" id="step3_frm" class="layui-form">
+      <input type="hidden" name="step" id="step" value="3">
+      <input type="hidden" name="uid" value="{:is_login()}">
+      <div class="layui-form-item">
+        <label class="layui-form-label">邮箱账号</label>
+        <div class="layui-input-inline">
+          <input type="text" <if condition="$self['email'] neq '' and $self['email'] neq null and $self['email_ver'] eq 1">value="{$self.email}" disabled="disabled"</if> name="email" id="account" class="layui-input">
+          <if condition="$self['email'] neq '' and $self['email'] neq null and $self['email_ver'] eq 1"><input type="hidden" name="email" value="{$self.email}" /></if>
+        </div>
+        <div class="layui-form-mid layui-word-aux"><i>*&nbsp;</i>请填写正确的邮箱账号</div>
+      </div>
+      <if condition="$self['email_ver'] eq 0">
+      <div class="layui-form-item">
+        <label class="layui-form-label">验证码</label>
+        <div class="layui-input-inline">
+          <input name="verify" lay-verify="required" placeholder="" value="" class="layui-input">
+        </div>
+        <div class="layui-input-inline layui-btn-container" style="width: auto;">
+          <button class="layui-btn layui-btn-primary" id="btnSendVCode" type="button" data-role="getVerify">发送邮箱验证</button>
+        </div>
+      </div>
+      </if>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+            <if condition="$self['email_ver'] eq 0">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="*">确认，继续下一步</button>
+                <else/>
+                <a class="layui-btn layui-btn-sm" href="{:U('four')}" style="width:220px">已设置，继续下一步</a>
+            </if>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<script>
+    $(function () {
+        $("[data-role='getVerify']").click(function () {
+            $("#btnSendVCode").attr("disabled","disabled");
+            $("#btnSendVCode").attr("class", "layui-btn layui-btn-primary layui-btn-disabled");
+            $("#btnSendVCode").val('正在发送中...');
+            var account = $('#account').val();
+            $.post("{:U('home/verify/sendVerify')}", {account: account, type: 'email',action:'config', todo: 'reg_email_verify'}, function (res) {
+                if(res.status){
+                    $("#btnSendVCode").attr("disabled","");
+                    $("#btnSendVCode").attr("class", "layui-btn layui-btn-primary");
+                    $("#btnSendVCode").val('再次尝试发送');
+                    layer.alert(res.info, {icon: 1});
+                }
+                else{
+                    $("#btnSendVCode").attr("disabled","");
+                    $("#btnSendVCode").attr("class", "layui-btn layui-btn-primary");
+                    $("#btnSendVCode").val('再次尝试发送');
+                    layer.alert(res.info, {icon: 2});
+                }
+            })
+        })
+    })
+</script>
+</block>
+
+<block name="script">
+</block>

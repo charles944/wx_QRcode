@@ -1,0 +1,127 @@
+<extend name="public/base"/>
+<block name="style"></block>
+
+<block name="body">
+<ul class="page-breadcrumb breadcrumb">
+	<li>
+		<a href="#">首页</a><i class="fa fa-circle"></i>
+	</li>
+	<li class="active">
+		 网站数据统计报表 
+		 <a href="{:U('index')}" class="btn btn-sm purple">全部</a><a href="{:U('game')}" class="btn btn-sm purple">游戏</a><a href="{:U('dama')}" class="btn btn-sm purple">打码</a><a href="{:U('task')}" class="btn btn-sm purple">广告</a>
+	</li>
+</ul>
+<div class="portlet light">
+	<div class="portlet-body>
+			<!-- BEGIN PAGE CONTENT-->
+			<div class="invoice">
+				<hr/>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 style="display:none">账单:</h3>
+						<ul class="list-unstyled">
+							<li>
+								 <b>目前累计处理提现总支出</b>：<b style="color:red;font-size:16px">{$totalpay}</b> 元
+							</li>
+							<li>
+								 <b>网站未处理提现支出</b>：<b style="color:red;font-size:16px">{$totalpayoff}</b> 元
+							</li>
+							<volist name="scores" id="vo">
+								<eq name="vo.cash" value="1">
+								<li><b>会员拥有未提现总{$vo.title}</b>：<b style="color:red;font-size:16px">{$vo.value|number_format=2}</b> {$vo.unit}
+								
+								(<b style="color:red;font-size:16px">{$vo.exchange}</b> {$vo.title} =  <b style="color:red;font-size:16px">1</b> 元 )
+								<php>$str = $vo['value']/$vo['exchange'];
+								$str = explode('.',$str);
+								</php>
+								<b>≈</b>：<b style="color:red;font-size:16px">{$str[0]}</b> 元
+								</li>
+								</eq>
+								
+							</volist>
+
+						</ul>
+					</div>
+				</div>
+				<hr/>
+				<div class="row">
+					<div class="col-xs-12">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a aria-expanded="true" href="#tab_1_1" data-toggle="tab">
+							已支付统计数据 </a>
+						</li>
+						
+					</ul>
+					<div class="tab-content">
+						<table class="table table-striped table-hover">
+						<thead>
+						<tr>
+							<th>
+								 #
+							</th>
+							<th>
+								 用户名|ID
+							</th>
+							<th class="hidden-480">
+								 姓名
+							</th>
+							<th class="hidden-480">
+								 卡号
+							</th>
+							<th class="hidden-480">
+								 钱包
+							</th>
+							<th>
+								 总额
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						<volist name="data" id="v">
+						<tr>
+							<td>
+								 {$i}
+							</td>
+							<td>
+								 {$v.uid}|{$v.username}
+							</td>
+							<td class="hidden-480">
+								 {$v.name}
+							</td>
+							<td class="hidden-480">
+								 {$v.pursecardno}
+							</td>
+							<td class="hidden-480">
+								{$v.purse_pname}
+							</td>
+							<td>
+								 {$v.sum_pay}
+							</td>
+						</tr>
+						</volist>
+						</tbody>
+						</table>
+				</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+
+					</div>
+					<div class="col-xs-8 invoice-block" style="text-align:right">
+						<a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();">
+						Print <i class="fa fa-print"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- END PAGE CONTENT-->
+	</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+</script>
+</block>

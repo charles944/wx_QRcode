@@ -1,0 +1,108 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><present name="data">编辑<else />新增</present>钩子</a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+
+			<form action="__SELF__" id="form" class="layui-form" method="post">
+				<div class="form-body">
+					<div class="layui-form-item">
+						<label class="layui-form-label">钩子名称</label>
+						<div class="layui-input-inline">
+							<input class="layui-input" placeholder="" type="text" value="{$data.name}" name="name" />
+						</div>
+						<div class="layui-form-mid layui-word-aux">需要在程序中先添加钩子，否则无效</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">钩子描述</label>
+						<div class="layui-input-inline">
+							<textarea class="layui-input" rows="3" name="description" >{$data.description}</textarea>
+						</div>
+						<div class="layui-form-mid layui-word-aux"></div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">钩子类型</label>
+						<div class="layui-input-inline">
+							<select name="type" class="layui-input">
+								<volist name=":C('HOOKS_TYPE')" id="vo">
+									<option value="{$key}" <eq name="data.type" value="$key"> selected</eq>>{$vo}</option>
+								</volist>
+							</select>
+						</div>
+						<div class="layui-form-mid layui-word-aux"></div>
+					</div>
+					<present name="data">
+					<div class="layui-form-item">
+						<label class="layui-form-label">钩子挂载的插件排序</label>
+						<div class="layui-input-inline">
+							<input type="hidden" name="addons" value="{$data.addons}" readonly>
+							<empty name="data.addons">
+								暂无插件，无法排序
+							<else />
+							<ul id="sortUl" class="dragsort" style="list-style: none;">
+								<volist name=":explode(',',$data['addons'])" id="addons_vo">
+									<li class="getSort form-control"><b>&times;</b><em>{$addons_vo}</em></li>
+								</volist>
+							</ul>
+							<span class="help-block">（拖动后保存顺序，影响同一个钩子挂载的插件执行先后顺序）</span>
+							<script type="text/javascript">
+								$(function(){
+									$("#sortUl").dragsort({
+										dragSelector:'li',
+										placeHolderTemplate: '<li class="draging-place">&nbsp;</li>',
+										dragEnd:function(){
+											updateVal();
+										}
+									});
+
+									$('#sortUl li b').click(function(){
+										$(this).parent().remove();
+										updateVal();
+									});
+
+									// 更新排序后的隐藏域的值
+									function updateVal() {
+										var sortVal = [];
+										$('#sortUl li').each(function(){
+											sortVal.push($('em',this).text());
+										});
+										$("input[name='addons']").val(sortVal.join(','));
+									}
+								})
+							</script>
+							</empty>
+						</div>
+						<div class="layui-form-mid layui-word-aux"></div>
+					</div>
+					</present>
+					<div class="layui-form-item">
+						<label class="layui-form-label"></label>
+						<div class="layui-input-inline">
+						<div class="layui-footer">
+							<input type="hidden" name="id" value="{$data.id}">
+							<button type="submit" class="layui-btn layui-btn-sm ajax-post" target-form="layui-form">确 定</button>
+							<button class="layui-btn layui-btn-sm layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+						</div>
+						</div>
+						<div class="layui-form-mid layui-word-aux"></div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+	<present name="data">
+		<script type="text/javascript" src="__JS__/jquery.dragsort-0.5.1.min.js"></script>
+	</present>
+</block>

@@ -1,0 +1,20 @@
+<php>
+    $qn_seo_meta = get_seo_meta($vars,$seo);
+</php>
+<if condition="$qn_seo_meta['title']">
+<title>{$qn_seo_meta['title']}</title>
+<elseif condition="!empty($seo['title'])" />
+<title>{$seo['title']} - {:modC('WEB_SITE_NAME','暂未设置','Config')}</title>
+<else/>
+<title>{:modC('WEB_SITE_NAME','暂未设置','Config')}</title>
+</if>
+<if condition="$qn_seo_meta['keywords']">
+<meta name="keywords" content="{$qn_seo_meta['keywords']}"/>
+<elseif condition="!empty($seo['keywords'])" />
+<meta name="keywords" content="{$seo['keywords']}"/>
+</if>
+<if condition="$qn_seo_meta['description']">
+<meta name="description" content="{$qn_seo_meta['description']}"/>
+<elseif condition="!empty($seo['description'])" />
+<meta name="description" content="{$seo['description']}"/>
+</if>

@@ -1,0 +1,51 @@
+<div class="with-padding" style="margin-bottom:10px;">
+    <a class="layui-btn layui-btn-sm" href="{:U('adminList',array('name'=>'yixinxi','method'=>'add'))}">新 增</a>
+</div>
+<div class="explanation" id="explanation">
+    <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+    <p>默认模板可修改，但是参数建议不要修改</p>
+</div>
+<div class="with-padding">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="row-selected row-selected"><input class="check-all" type="checkbox"></th>
+            <th>序号</th>
+            <volist name="listKey" id="vo">
+                <th>{$vo}</th>
+            </volist>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="_list" id="lv" key="vo">
+            <tr>
+                <td style="width: 25px"><input class="ids" type="checkbox" name="id[]" value="{$lv.id}"></td>
+                <td>{$lv.id}</td>
+                <volist name="listKey" id="lk">
+                   <td>
+					<switch name="key">
+						<case value="preview">
+							 {$lv['template_content']}
+						</case>
+                        <case value="status">
+                            {$lv[$key]==1?'<i class="layui-icon" style="font-size: 20px; color: #1E9FFF;">&#xe605;</i>' : '<i class="layui-icon" style="font-size: 20px; color: red;">&#x1006;</i>'}
+                        </case>
+						<default/>{$lv.$key}
+					</switch>
+					</td>
+                </volist>
+                <td>
+                    <a href="{:U('adminList',array('name'=>'yixinxi','method'=>'edit','id'=>$lv['id']))}">编辑</a>
+                    <if condition="$lv.status eq 1">
+                        <a class="confirm ajax-get" href="{:U('adminList',array('name'=>'yixinxi','method'=>'forbidden','id'=>$lv['id']))}">禁用</a>
+                        <else/>
+                        <a class="confirm ajax-get" href="{:U('adminList',array('name'=>'yixinxi','method'=>'off','id'=>$lv['id']))}">启用</a>
+                    </if>
+                    <a class="confirm ajax-get" href="{:U('adminList',array('name'=>'yixinxi','method'=>'del','id'=>$lv['id']))}">删除</a>
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>

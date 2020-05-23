@@ -1,0 +1,273 @@
+<extend name="base/common"/>
+<block name="style">
+<style>.layui-form-label{width:120px !important}</style>
+</block>
+<block name="header"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>{$title}</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form form-container" id="form1" action="__SELF__" method="post">
+				<input type="hidden" name="pid" id="pid" value="<notempty name="data">{$data.qr_pid}<else/>{$pdata.id}</notempty>" />
+                <input type="hidden" name="qr_img" value="" />
+				
+				<switch name="pdata.type_mode">
+	                <case value="1">
+	                	<input type="hidden" name="qr_type" value="1" title="图片" />
+	                    <div class="layui-form-item">
+                            <label class="layui-form-label">多图上传</label>
+                            <div class="layui-input-block" style="width:70%">
+                                <div class="layui-upload">
+                                  <button type="button" class="layui-btn layui-btn-sm" id="testList">选择多文件</button> 
+                                  <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                      <thead>
+                                        <tr>
+                                        <th>缩略图</th>
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                      </tr></thead>
+                                      <tbody id="demoList"></tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+	                </case>
+	                <case value="2">
+	                	<input type="hidden" name="qr_type" value="1" title="图片" />
+	                    <div class="layui-form-item">
+							<label class="layui-form-label">城市</label>
+	                        {:hook('j_china_city',array('province'=>$data["qr_province"],'city'=>$data["qr_city"],'district'=>$data["qr_district"]))}
+	                        <div class="layui-form-mid layui-word-aux">必须设置到第二个市级或者省级，才能生效</div>
+	                    </div>
+						
+                      	<div class="layui-form-item">
+                            <label class="layui-form-label">多图上传</label>
+                            <div class="layui-input-block" style="width:70%">
+                                <div class="layui-upload">
+                                  <button type="button" class="layui-btn layui-btn-sm" id="testList">选择多文件</button> 
+                                  <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                      <thead>
+                                        <tr>
+                                        <th>缩略图</th>  
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                      </tr></thead>
+                                      <tbody id="demoList"></tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+	                </case>
+	                <case value="3">
+	                	<div class="layui-form-item">
+							<label class="layui-form-label">类型</label>
+							<div class="layui-input-inline" style="width:70%">
+								<input type="radio" name="qr_type" value="1" title="图片" <eq name="data.qr_type" value="1">checked</eq>>
+								<input type="radio" name="qr_type" value="2" title="链接" <eq name="data.qr_type" value="2">checked</eq>>
+								<input type="radio" name="qr_type" value="3" title="文本" <eq name="data.qr_type" value="3">checked</eq>>
+							</div>
+							<div class="layui-form-mid layui-word-aux">必须选一个，然后上传对应资源</div>
+						</div>
+
+	                    <div class="layui-form-item">
+                            <label class="layui-form-label">多图上传</label>
+                            <div class="layui-input-block" style="width:70%">
+                                <div class="layui-upload">
+                                  <button type="button" class="layui-btn layui-btn-sm" id="testList">选择多文件</button> 
+                                  <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                      <thead>
+                                        <tr>
+                                        <th>缩略图</th>
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                      </tr></thead>
+                                      <tbody id="demoList"></tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+						<div class="layui-form-item cg cg2">
+							<label class="layui-form-label">链接</label>
+							<div class="layui-input-inline" style="width:70%">
+							  <input name="qr_link" placeholder="链接，带http://，如：http://www.baidu.com" class="layui-input" value="{$data.qr_link}" />
+							</div>
+						</div>
+
+						<div class="layui-form-item cg cg3">
+							<label class="layui-form-label">文本</label>
+							<div class="layui-input-inline" style="width:70%">
+								{:W('Common/Ueditor/editor',array('qr_text','qr_text',$data['qr_text'],"100%","300px","toolbars:[['source','|','bold','italic','underline','fontsize','forecolor', 'backcolor','|','justifyleft','justifycenter', 'justifyjustify', 'justifyright','|','fontfamily','|','map','emotion','insertimage']]"))}
+							  <!-- <textarea name="qr_text" placeholder="文本" class="layui-textarea">{$data.qr_text}</textarea> -->
+							</div>
+						</div>
+	                </case>
+	                <case value="4">
+	                	<input type="hidden" name="qr_type" value="1" title="图片" />
+	                    <div class="layui-form-item">
+                            <label class="layui-form-label">多图上传</label>
+                            <div class="layui-input-block" style="width:70%">
+                                <div class="layui-upload">
+                                  <button type="button" class="layui-btn layui-btn-sm" id="testList">选择多文件</button> 
+                                  <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                      <thead>
+                                        <tr>
+                                        <th>缩略图</th>
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                      </tr></thead>
+                                      <tbody id="demoList"></tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+	                </case>
+	                <case value="5">
+	                	<input type="hidden" name="qr_type" value="1" title="图片" />
+	                	<div class="layui-form-item">
+							<label class="layui-form-label">机型</label>
+							<div class="layui-input-inline" style="width:70%">
+								<input type="radio" name="qr_mob_type" value="1" title="安卓" <eq name="data.qr_mob_type" value="1">checked</eq>>
+								<input type="radio" name="qr_mob_type" value="2" title="IOS" <eq name="data.qr_mob_type" value="2">checked</eq>>
+							</div>
+							<div class="layui-form-mid layui-word-aux">必须选一个，然后上传对应资源</div>
+						</div>
+	                    <div class="layui-form-item">
+                            <label class="layui-form-label">多图上传</label>
+                            <div class="layui-input-block" style="width:70%">
+                                <div class="layui-upload">
+                                  <button type="button" class="layui-btn layui-btn-sm" id="testList">选择多文件</button> 
+                                  <div class="layui-upload-list">
+                                    <table class="layui-table">
+                                      <thead>
+                                        <tr>
+                                        <th>缩略图</th>
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                      </tr></thead>
+                                      <tbody id="demoList"></tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+	                </case>
+	            </switch>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">是否重新生成二维码</label>
+					<div class="layui-input-block">
+						<input type="radio" name="qr_read_mode" required="" lay-verify="required" value="1" title="识别上传的图片重新生成二维码" >
+						<input type="radio" name="qr_read_mode" required="" lay-verify="required" value="2" checked title="保持默认">
+						<div class="layui-form-mid layui-word-aux fl_none"></div>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+                      	<button type="button" class="layui-btn-sm layui-btn layui-btn-normal" id="uploadaction">① 开始上传图片</button>
+						<button class="layui-btn-sm layui-btn" lay-submit="" lay-filter="no_refresh">立即提交</button>
+						<a onclick="javascript:history.go(-1);" class="layui-btn-sm layui-btn layui-btn-primary" >返回上一页</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	layui.use('upload', function(){
+        var $ = layui.jquery
+  		,upload = layui.upload;
+        
+      	//多文件列表示例
+        var demoListView = $('#demoList')
+        , newArr = []
+        ,uploadListIns = upload.render({
+          elem: '#testList'
+          ,url: '{:U("home/File/uploadPicture",array("session_id"=>session_id()))}'
+          ,accept: 'images'
+          ,acceptMime: 'image/*'
+          ,size: 200
+          ,multiple: true
+          ,number: 5
+          ,auto: false
+          ,bindAction: '#uploadaction'
+          ,choose: function(obj){   
+            var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+            //读取本地文件
+            obj.preview(function(index, file, result){
+              var tr = $(['<tr id="upload-'+ index +'">'
+                ,'<td><img src="'+ result +'" /></td>'
+                ,'<td>'+ file.name +'</td>'
+                ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+                ,'<td>等待上传</td>'
+                ,'<td>'
+                  ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                  ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                ,'</td>'
+              ,'</tr>'].join(''));
+
+              //单个重传
+              tr.find('.demo-reload').on('click', function(){
+                obj.upload(index, file);
+              });
+
+              //删除
+              tr.find('.demo-delete').on('click', function(){
+                delete files[index]; //删除对应的文件
+                tr.remove();
+                uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+              });
+
+              demoListView.append(tr);
+            });
+          }
+          ,done: function(res, index, upload){
+            if(res.status == 1){ //上传成功
+              var tr = demoListView.find('tr#upload-'+ index)
+              ,tds = tr.children();
+              tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
+              tds.eq(4).html(''); //清空操作
+              newArr.push(res.data.file.id);
+              $("[name=qr_img]").val(newArr.join(','));
+              return delete this.files[index]; //删除文件队列已经上传成功的文件
+            }
+            this.error(index, upload);
+          }
+          ,error: function(index, upload){
+            var tr = demoListView.find('tr#upload-'+ index)
+            ,tds = tr.children();
+            tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
+            tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
+          }
+        });
+	});
+</script>
+</block>

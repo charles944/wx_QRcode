@@ -1,0 +1,63 @@
+<extend name="public/base" />
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">插件后台</a>
+		<a href=""><cite>{$title}</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+	<empty name="custom_adminlist">
+	<div class="table-scrollable">
+		<table class="layui-table">
+			<thead>
+				<tr>
+					<th width="2%">
+						<input type="checkbox" class="group-checkable">
+					</th>
+					<volist name="listKey" id="vo">
+						<th>{$vo}</th>
+					</volist>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="_list" id="lv" key="vo">
+					<tr>
+						<td><input class="ids" type="checkbox" value="{$lv.id}" name="ids[]"></td>
+						<volist name="listKey" id="lk">
+							<td>{$lv.$key}</td>
+						</volist>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+	<else />
+		<present name="custom_adminlist">
+			{$custom_adminlist}
+		</present>
+	</empty>
+	</div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+</block>
+<block name="jquery_script">
+var table;
+ // handle group checkboxes check/uncheck
+$('.group-checkable', table).change(function() {
+    var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
+    var checked = $(this).is(":checked");
+    $(set).each(function() {
+        $(this).attr("checked", checked);
+    });
+    //$.uniform.update(set);
+});
+</block>

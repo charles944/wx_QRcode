@@ -1,0 +1,25 @@
+<extend name="base/common"/>
+<block name="style">
+<style>.layui-form-label{width:120px !important}</style>
+</block>
+<block name="header"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>查看二维码</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<volist name="filename" id="val">
+				<div class=""><img src="{$val}?t={:TIME()}" /></div>
+				<div class="" style="margin-top:10px">活码{$key}对应网址：{$url[$key]}</div>
+			</volist>
+          	<p>温馨提示：当更换后台短连接模式时，请多刷新几次本页面，直到显示出二维码为止，因为后台程序正在更新二维码！</p>
+		</div>
+	</div>
+</div>
+</block>

@@ -1,0 +1,106 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="{:U('index')}">后台导航管理</a>
+		<a href=""><cite><present name="data.title">[ {$data.title} ] 子</present>菜单管理 </cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+	<div class="portlet-title">
+		<div class="actions">
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('add',array('pid'=>I('get.pid',0)))}">新 增</a>
+				<a class="layui-btn layui-btn-xs fbutton ajax-post confirm" url="{:U('del')}" target-form="ids" data-toggle="confirmation">删 除</a>
+		        <a class="layui-btn layui-btn-xs fbutton" href="{:U('import',array('pid'=>I('get.pid',0)))}">导 入</a>
+		        <button class="list_sort layui-btn layui-btn-xs fbutton" url="{:U('sort',array('pid'=>I('get.pid',0)),'')}">排序</button>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="portlet-body">
+	<div class="table-scrollable layui-form">
+		<table class="layui-table" lay-even lay-skin="line">
+			<thead>
+			<tr>
+			<th width="2%">
+				<input type="checkbox" class="group-checkable" lay-skin="primary" lay-filter="allChoose">
+			</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>上级菜单</th>
+            <th>分组</th>
+            <th>URL</th>
+            <th>排序</th>
+            <th>仅开发者模式显示</th>
+            <th>隐藏</th>
+            <th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+				<volist name="list" id="menu">
+                   <tr>
+                   	<td class="check">
+                       <input class="ids" type="checkbox" name="ids[]" value="{$menu.id}" lay-skin="primary" lay-filter="ids"/>
+                    </td>
+                       <td>{$menu.id}</td>
+                       <td>
+                           <a href="{:U('index?pid='.$menu['id'])}">{$menu.title}</a>&nbsp;(+)
+                       </td>
+                       <td>{$menu.up_title|default='无'}</td>
+                       <td>{$menu.group}</td>
+                       <td>{$menu.url}</td>
+                       <td>{$menu.sort}</td>
+                       <td>
+                           <a href="{:U('toogleDev',array('id'=>$menu['id'],'value'=>abs($menu['is_dev']-1)))}" class="ajax-get">
+                           {$menu.is_dev_text}
+                           </a>
+                       </td>
+                       <td>
+                           <a href="{:U('toogleHide',array('id'=>$menu['id'],'value'=>abs($menu['hide']-1)))}" class="ajax-get">
+                           {$menu.hide_text}
+                           </a>
+                       </td>
+                       <td>
+                           <a title="编辑" class="layui-btn layui-btn-xs hbutton btn_edit" href="{:U('edit?id='.$menu['id'])}"><i class="fa fa-edit"></i> 编辑</a>
+                           <a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" title="删除" href="{:U('del?ids='.$menu['id'])}">删除</a>
+                       </td>
+                   </tr>
+               </volist>
+			</tbody>
+			</table>
+		</div>
+		<div class="layui-table-page">
+		{$_page}
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script>
+//点击排序
+$('.list_sort').click(function(){
+	var url = $(this).attr('url');
+	var ids = $('.ids:checked');
+	var param = '';
+	if(ids.length > 0){
+		var str = new Array();
+		ids.each(function(){
+			str.push($(this).val());
+		});
+		param = str.join(',');
+	}
+
+	if(url != undefined && url != ''){
+		window.location.href = url + '/ids/' + param;
+	}
+});
+</script>
+</block>

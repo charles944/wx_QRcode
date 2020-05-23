@@ -1,0 +1,110 @@
+<extend name="public/base"/>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>核心程序自助升级</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+	
+    <div class="portlet">
+    	<div class="portlet-title clearfix" style="clear:both;height:auto">
+			<blockquote class="layui-elem-quote layui-quote-nm">
+				<p>当前远程最新版本：<strong>{$version.0.name}</strong></p>
+				<p>当前的系统版本号：<strong>{$currentVersion}</strong></p>
+			</blockquote>
+			<blockquote class="layui-elem-quote layui-quote-nm">
+				<p class="alert alert-danger">请先到后台<a target="_blank" href="{:U('config/group')}">系统设置</a>页面，关闭网站。</p>
+				<p class="alert alert-danger">在安装更新之前，先<a target="_blank" href="{:U('database/index?type=export')}">备份数据库</a>，再备份网站源码，防止数据或者二次开发内容丢失。
+				</p>
+				<p class="alert alert-danger">如果不希望自动更新，请到<a target="_blank" href="{:U('config/group')}">系统设置</a>页面，手动<strong>关闭自动更新</strong>。</p>
+			</blockquote>
+            <div class="clear"></div>
+		</div>
+		<div class="portlet-body">
+		<div class="table-scrollable">
+        <table class="layui-table" lay-skin="line">
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>版本名</th>
+                <th>版本号</th>
+                <th>发布时间</th>
+                <th>更新说明</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="version" id="vo">
+                <tr class="{$vo.class}">
+                    <td>
+                        {$vo.number}
+                    </td>
+                    <td><a data-remote="{:U('Cloud/version',array('name'=>$vo['number']))}" data-role="info" data-title="{$vo.title}-{$vo.name} 更新日志">{$vo.title}</a>{$vo.word}</td>
+                    <td>
+                        <strong>{$vo.name}</strong>
+                    </td>
+                    <td>{$vo.create_time|friendlyDate}<br/>{$vo.update_time|friendlyDate}</td>
+                    <td>
+                    	<a data-remote="{:U('Cloud/version',array('name'=>$vo['number']))}" data-role="info" data-title="{$vo.title}-{$vo.name} 更新日志">更新日志</a>
+                    </td>
+                    <td>
+                        <if condition="$vo[name] eq $nextVersion['name']">
+                            <a href="{:U('getFileList',array('version'=>$vo['number']))}" class="layui-btn layui-btn-xs layui-btn-info">自动升级</a><a href="{$cloud}{:cloudU('appstore/update/download',array('number'=>$vo['number']))}" target="_blank" class="layui-btn layui-btn-xs layui-btn-primary">手动下载</a>
+                            <else/>
+                            <if condition="version_compare($vo['name'],$currentVersion) eq 0">
+                                <span class="layui-btn layui-btn-xs layui-btn-danger">当前版本</span>
+                            <else/>
+                                <if condition="version_compare($vo['name'],$currentVersion) eq -1">
+                                    <span class="layui-btn layui-btn-xs layui-btn-disabled">历史版本</span>
+                                    <else/>
+                                    <span class="layui-btn layui-btn-xs layui-btn-normal">未来版本</span>
+                                </if>
+
+
+                            </if>
+							<a href="{$cloud}{:cloudU('appstore/update/download',array('number'=>$vo['number']))}" target="_blank" class="layui-btn layui-btn-xs layui-btn-primary">手动下载</a>
+                        </if>
+                      </td>
+                </tr>
+
+            </volist>
+            </tbody>
+
+        </table>
+        	</div>
+		</div>
+    </div>
+	</div>
+	</div>
+	</div>
+
+    <script>
+    	$('[data-role="info"]').click(function () {
+            var $this = $(this)
+	    	var url = $this.attr('data-remote');
+            var domain = window.location.host;
+            url = 'http://'+domain + url;
+	    	layer.open({
+			  type: 2,
+			  title: '更新简介',
+			  shadeClose: true,
+			  shade: 0.8,
+			  area: ['380px', '60%'],
+			  content: url
+			});
+    	})
+    
+        function writeMessage($data) {
+            $('#message').append($data);
+        }
+        function replaceMessage($data) {
+            $('#message').children().last().remove();
+            $('#message').children().last().remove();
+            $('#message').append($data);
+        }
+    </script>
+</block>

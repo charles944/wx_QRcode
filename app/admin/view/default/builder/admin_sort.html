@@ -1,0 +1,149 @@
+<extend name="public/base" />
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>配置排序</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		<div class="portlet-title tabbable-line">
+			<notempty name="suggest">
+			<div class="explanation" id="explanation" style="margin-bottom:10px">
+				<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+				<p>{$suggest}</p>
+			</div>
+			</notempty>
+			<div class="clear"></div>
+		</div>
+		<div class="portlet-body form">
+			<form action="{$savePostUrl}" id="form" class="form-horizontal form-bordered layui-form" method="post">
+			<div class="form-body">
+				<div class="layui-form-item">
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-block">
+						<ul class="select">
+							<volist name="list" id="vo">
+								<li class="ids" title="{$vo.title}" data-value="{$vo.id}">{$vo.title}</li>
+							</volist>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label class="layui-form-label"></label>
+					<div class="layui-input-block">
+						<button class="top layui-btn layui-btn-xs layui-btn-primary" type="button">第 一</button>
+						<button class="up layui-btn layui-btn-xs layui-btn-primary" type="button">上 移</button>
+						<button class="down layui-btn layui-btn-xs layui-btn-primary" type="button">下 移</button>
+						<button class="bottom layui-btn layui-btn-xs layui-btn-primary" type="button">最 后</button>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label class="layui-form-label"></label>
+					<div class="layui-input-block">
+						<input type="hidden" name="ids">
+						<volist name="buttonList" id="button">
+							<a {$button.attr}>{$button.title}</a>
+						</volist>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            sort();
+            $(".top").click(function(){
+                rest();
+                $("li.selected").prependTo("ul.select");
+                sort();
+            })
+            $(".bottom").click(function(){
+                rest();
+                $("li.selected").appendTo("ul.select");
+                sort();
+            })
+            $(".up").click(function(){
+                rest();
+                $("li.selected").after($("li.selected").prev());
+                sort();
+            })
+            $(".down").click(function(){
+                rest();
+                $("li.selected").before($("li.selected").next());
+                sort();
+            })
+            $(".search").click(function(){
+                var v = $("input").val();
+                $("li:contains("+v+")").attr('selected','selected');
+            })
+            function sort(){
+                $('ul.select li').html(function(){return ($(this).index()+1)+'.'+$(this).html()});
+            }
+            function rest(){
+                $('ul.select li').html(function(){
+                    return $(this).html().split('.')[1]
+                });
+            }
+            $('.sort_confirm').click(function(){
+                var arr = new Array();
+                $('.ids').each(function(){
+                    arr.push($(this).attr("data-value"));
+                });
+                $('input[name=ids]').val(arr.join(','));
+                $.post(
+					$('form').attr('action'),{'ids' :  arr.join(',')},function(data){
+						if (data.status == 1) {
+                            if (data.url) {
+								layer.msg(data.info, {
+								  icon: 1,
+								  time: 10*1000,
+								  fixed: true, 
+								  offset: '80%',
+								  end: location.href = data.url
+								});
+                            } else {
+                            	layer.msg(data.info, {
+								  icon: 1,
+								  time: 10*1000,
+								  fixed: true, 
+								  offset: '80%',
+								  end: location.reload()
+								});
+                            }
+                        } else {
+							if (data.url) {
+								layer.msg(data.info, {
+								  icon: 2,
+								  time: 10*1000,
+								  fixed: true, 
+								  offset: '80%',
+								  end: location.href = data.url
+								});
+							} else {
+								layer.msg(data.info, {
+								  icon: 2,
+								  time: 10*1000,
+								  fixed: true, 
+								  offset: '80%',
+								  //end: location.href = data.url
+								});
+							}
+                        }
+					},'json');
+            });
+        });
+    </script>
+ 
+</block>

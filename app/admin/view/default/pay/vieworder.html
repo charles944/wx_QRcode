@@ -1,0 +1,307 @@
+<extend name="public/base"/>
+<block name="style"></block>
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">付款单详情报表</a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+
+			<div class="clearfix" style="margin-bottom:20px;">
+				<div class="actions">
+					<a href="{:U('Pay/paymentorder')}" class="layui-btn layui-btn-xs fbutton">返回上一页</a>
+				</div>
+				<div style="actions">
+					<a href="{:U('Pay/paymentorder')}" class="layui-btn layui-btn-xs fbutton">撤销此付款单</a>
+				</div>
+			</div>
+			
+			<div class="invoice">
+				<div class="row invoice-logo">
+					<div class="col-xs-6 invoice-logo-space">
+						<i class="glyphicon glyphicon-bookmark" style="color:red; font-weight:500;font-size:50px;"></i>
+					</div>
+					<div class="col-xs-6">
+						<p style="padding: 5px 0;font-size: 26px;line-height: 28px;text-align: right;">
+							<if condition="count($data) gt 1">
+							<volist name="data" id="vo">
+							#{$vo.id} / 
+							</volist>
+							<else/>
+							#{$data[0]['id']} / {$data[0]['create_time']|date="Y-m-d H:i:s",###}
+							</if><span class="muted" style="font-size:14px; display:block;">付款单</span>
+						</p>
+					</div>
+				</div>
+				<hr/>
+				<div class="row">
+					<div class="col-xs-12">
+					<ul class="nav nav-tabs">
+						<if condition="count($data) gt 1">
+							<volist name="data" id="vo">
+							<li class="<eq name="i" value="1">active</eq>">
+								<a aria-expanded="false" href="#tab_1_{$i}" data-toggle="tab">
+								#{$vo['id']} / {$vo['create_time']|date="Y-m-d H:i:s",###}
+								</a>
+							</li>
+							</volist>
+						<else/>
+							<li class="active">
+								<a aria-expanded="false" href="#tab_1_1" data-toggle="tab">
+								#{$data[0]['id']}
+								</a>
+							</li>
+						</if>
+					</ul>
+					<div class="tab-content">
+					<php>$j = 0;</php>
+					<if condition="count($data) egt 1">
+						<volist name="data" id="vo">
+							<php>$j = $j + 1;</php>
+							<div id="tab_1_{$j}" class="tab-pane fade <eq name="j" value="1">active in</eq>">
+							<table class="layui-table">
+							<thead>
+								<tr>
+									<th>
+										 #
+									</th>
+									<th class="">
+										 钱包
+									</th>
+									<th>
+										 用户名|ID
+									</th>
+									<th class="">
+										 姓名
+									</th>
+									<th class="">
+										 卡号
+									</th>
+									<th>
+										 总额
+									</th>
+									<th>
+										 提现时间
+									</th>
+									<th>
+										 处理时间
+									</th>
+									<th>
+										 提现IP
+									</th>
+									<th>
+										状态
+									</th>
+									<th>
+										 备注
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+							<php>
+							$sdata = D('user_pay_offer')->where('order_sel='.$vo['id'])->order('pay_offer desc')->select();
+							</php>
+							<volist name="sdata" id="v">
+							<tr>
+								<td>
+									 {$i}
+								</td>
+								<td class="hidden-480">
+									{$v.purse_pname}
+								</td>
+								<td>
+									 {$v.uid}|{$v.username}
+								</td>
+								<td class="hidden-480">
+									 {$v.name}
+								</td>
+								<td class="hidden-480">
+									 {$v.pursecardno}
+								</td>
+								<td>
+									 {$v.pay_offer}元
+								</td>
+								<td>
+									 {$v.create_time|date="Y年m月d日 H:i:s",###}
+								</td>
+								<td>
+									 {$v.update_time|date="Y年m月d日 H:i:s",###}
+								</td>
+								<td>
+									 {$v.action_ip|ip2long}
+								</td>
+								<td>
+									<switch name="v['status']">
+									<case value="1"><span class="label label-warning">待处理</span></case>
+									<case value="2"><span class="label label-success">已处理</span></case>
+									<case value="3"><span class="label label-danger">已退回</span></case>
+									<case value="0"><span class="label label-warning">待验证</span></case>
+									</switch>
+								</td>
+								<td>
+									 {$v.remark}
+								</td>
+							</tr>
+							</volist>
+							</tbody>
+							</table>
+							
+							<div class="row">
+								<div class="col-xs-4">
+
+								</div>
+								<div class="col-xs-8 invoice-block" style="text-align:right">
+									<ul class="list-unstyled amounts">
+										<li style="margin-right:20px;margin-bottom:10px">
+											<strong>总笔数：</strong><strong style="color:red;font-size:16px;">{$vo.order_num}</strong>
+										</li>
+										<li style="margin-right:20px;margin-bottom:20px">
+											<strong>总支出：</strong> ¥ <strong style="color:red;font-size:16px;">{$vo.order_money}</strong>
+										</li>
+									</ul>
+									
+									<a class="layui-btn layui-btn-xs">导出CSV</a>
+								</div>
+							</div>
+							
+							
+							</div>
+						</volist>
+						<else/>
+						<div id="tab_1_1" class="tab-pane fade active in">
+							<table class="layui-table">
+							<thead>
+							<tr>
+								<th>
+									 #
+								</th>
+								<th class="">
+									 钱包
+								</th>
+								<th>
+									 用户名|ID
+								</th>
+								<th class="">
+									 姓名
+								</th>
+								<th class="">
+									 卡号
+								</th>
+								
+								<th>
+									 总额
+								</th>
+								<th>
+									 提现时间
+								</th>
+								<th>
+									 处理时间
+								</th>
+								<th>
+									 提现IP
+								</th>
+								<th>
+									状态
+								</th>
+								<th>操作</th>
+								<th>
+									 备注
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<php>
+							$sdata = D('pay_offer')->where('order_sel='.$data[0]['id'])->order('pay_offer desc')->select();
+							</php>
+							<volist name="sdata" id="v">
+							<tr>
+								<td>
+									 {$i}
+								</td>
+								<td class="hidden-480">
+									{$v.purse_pname}
+								</td>
+								<td>
+									 <a href="{:U('user/mingxi?nickname='.$v['uid'])}" target="_blank">{$v.uid}|{$v.username}</a>
+								</td>
+								<td class="hidden-480">
+									 {$v.name}
+								</td>
+								<td class="hidden-480">
+									 {$v.pursecardno}
+								</td>
+								
+								<td>
+									 {$v.pay_offer}元
+								</td>
+								<td>
+									<empty name="v['create_time']">-<else/>{$v.create_time|date="Y年m月d日 H:i:s",###}</empty>
+								</td>
+								<td>
+									 <empty name="v['update_time']">-<else/>{$v.update_time|date="Y年m月d日 H:i:s",###}</empty>
+								</td>
+								<td>
+									 {$v.action_ip|ip2long}
+								</td>
+								<td>
+									<switch name="v['status']">
+									<case value="1"><span class="label label-warning" style="text-decoration:line-through;">待处理</span></case>
+									<case value="2"><span class="label label-success" style="text-decoration:line-through;">已处理</span></case>
+									<case value="3"><span class="label label-danger" style="text-decoration:line-through;">已退回</span></case>
+									<case value="0"><span class="label label-warning" style="text-decoration:line-through;">待验证</span></case>
+									</switch>
+								</td>
+								<td>
+									<php>if($v['status'] != '3' && $v['status'] != '0'){</php>
+									<a class="label label-danger ajax-get" href="{:U('Pay/setpaystatus?ids='.$v['id'].'&status=3')}" title="点击退回">退回</a>
+									<php>}</php>
+								</td>
+								<td>
+									 {$v.remark}
+								</td>
+							</tr>
+							</volist>
+							</tbody>
+							</table>
+							
+							<div class="row">
+								<div class="col-xs-4">
+
+								</div>
+								<div class="col-xs-8 invoice-block" style="text-align:right">
+									<ul class="list-unstyled amounts">
+										<li style="margin-right:20px;margin-bottom:10px">
+											<strong>总笔数：</strong><strong style="color:red;font-size:16px;">{$data.0.order_num}</strong>
+										</li>
+										<li style="margin-right:20px;margin-bottom:20px">
+											<strong>总支出：</strong> ¥ <strong style="color:red;font-size:16px;">{$data.0.order_money}</strong>
+										</li>
+									</ul>
+									<br/>
+									<a class="btn btn-lg blue hidden-print margin-bottom-5" onclick="javascript:window.print();">
+									Print <i class="fa fa-print"></i>
+									</a>
+									<a class="btn btn-lg green hidden-print margin-bottom-5">
+									导出CSV <i class="fa fa-check"></i>
+									</a>
+								</div>
+							</div>
+							
+							</div>
+						</if>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+</block>
+<block name="script"></block>

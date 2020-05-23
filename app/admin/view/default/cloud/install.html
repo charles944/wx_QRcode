@@ -1,0 +1,50 @@
+<extend name="public/base"/>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>应用在线安装</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+	
+		<div class="layui-elem-quote layui-quote-nm" style="">
+			<div id="message" style="">
+
+			</div>
+			<div style="margin-top: 10px">
+				<div class="progress progress-striped active hide" style="border-radius: 3px">
+					<div id="progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+						 aria-valuemin="0" aria-valuemax="100" style="width:0">
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+</div>
+</div>
+
+<script>
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data){
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	var progress = {
+		'show': function () {
+			$('#progress').parent().show();
+		},
+		'setValue': function ($value) {
+			$('#progress').css('width',$value);
+		},
+		'hide': function () {
+			$('#progress').parent().hide();
+		}
+	}
+</script>
+</block>

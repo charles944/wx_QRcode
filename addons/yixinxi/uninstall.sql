@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `qn_yixinxi_tpl`;

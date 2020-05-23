@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="__ADMIN__/pages/css/error.css" rel="stylesheet" type="text/css"/>
+
+<title>系统发生错误</title>
+<style>
+.page-404 .number{
+	top:0;
+}
+.details{
+	word-break;:break-all;
+}
+</style>
+</head>
+<body class="page-404-full-page">
+<div class="row">
+	<div class="col-md-12 col-xs-12 col-lg-12 page-404">
+		<div class="number col-xs-12 col-md-6 col-lg-6">
+			 SYSTEM_ERROR
+		</div>
+		<div class="details col-xs-12 col-md-6 col-lg-6">
+			<?php if(isset($e['file'])) {?>
+					<h3>错误位置</h3>
+					<p>FILE: <?php echo $e['file'] ;?> &#12288;LINE: <?php echo $e['line'];?></p>
+			<?php }?>
+			<?php if(isset($e['trace'])) {?>
+					<h3>TRACE</h3>
+					<p><?php echo nl2br($e['trace']);?></p>
+			<?php }?>
+			<p><a title="" href="">靑年PHP</a>核心驱动<sup><?php echo QN_VERSION ?></sup></p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

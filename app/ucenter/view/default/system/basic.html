@@ -1,0 +1,195 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>安全设置</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+		<div class="usercenter">
+			<div class="uc">
+				<div class="uc_content clearfix">
+
+				<div class="account-info fn-clear">
+					<ul class="account-info-list">
+						<li class="fn-clear">
+							  <span class="fn-left">账号:&nbsp;&nbsp;
+							  <switch name="self['type']">
+							  <case value="1">{$self.username}</case>
+							  <case value="2">{$self.email}</case>
+							  <case value="3">{$self.mobile}</case>
+							  </switch>
+							  </span>
+						</li>
+						<li class="fn-clear">
+							  <span class="fn-left">注册时间:&nbsp;&nbsp;{$self.reg_time|date="Y年m月d日 H:i:s",###}</span>
+						</li>
+						<li class="fn-clear">
+							<span class="fn-left">上次登录网站时间：<span>{$self.last_login_time|date="Y-m-d H:i:s",###}</span></span>
+						</li>
+					</ul>
+					<ul class="account-info-list">
+						<li class="fn-clear">
+							 <p class="dj clearfix">
+							 <span>安全等级：</span>
+							 <if condition="$self['mobile'] neq null and $self['mobile_ver'] eq 1">
+								<i class="i_2"></i>
+								<elseif condition="$self['email'] neq null and $self['email_ver'] eq 1" />
+								<i class="i_2"></i>
+								<elseif condition="$self['mobile'] neq null and $self['email'] neq null and $self['mobile_ver'] eq 1 and $self['email_ver'] eq 1" />
+								<i class="i_3"></i>
+								<else/>
+								<i class="i_1"></i>
+								</if>
+							  
+						  <em class="went"></em>
+							 <i class="ts" style="display: none;">
+								 <em>安全提示方式：</em>
+								 <em>1、绑定手机</em>
+								 <em>2、绑定邮箱</em>
+								 <em>3、身份认证</em>
+							 </i>
+						 </p>
+						</li>
+						<li class="fn-clear">
+						<p class="fs clearfix">
+							<span>提现方式：</span>
+							<notempty name="purse_list">
+							<volist name="purse_list" id="vo">
+									<notempty name="vo.user.pursecardno">
+									<if condition="$vo.pursename eq '支付宝'">
+									<a title="支付宝已绑定" class="a_1" href=""></a>
+									<elseif condition="$vo.pursename eq '财付通'" />
+									<a title="财付通已绑定" class="a_2" href=""></a>
+									<else/>
+									<a title="银行卡已绑定" class="a_3" href=""></a>
+									</if>
+									<else/>
+									<if condition="$vo.pursename eq '支付宝'">
+									<a title="支付宝已绑定" class="a_1 a_1no" href=""></a>
+									<elseif condition="$vo.pursename eq '财付通'" />
+									<a title="财付通未绑定" class="a_2 a_2no" href=""></a>
+									<else/>
+									<a title="银行卡未绑定" class="a_3 a_3no" href=""></a>
+									</if>
+									</notempty>
+								</a>
+							</volist>
+							<else/>
+							</notempty>
+						</p>
+						</li>
+					</ul>
+				</div>
+
+				<div style="margin: 20px;">
+				<div class="ui-block">
+					<div class="qn-msg">
+						<span class="fn-left" style="width:28%">登录密码</span>
+						<span style="width:28%">登录账户时需要输入的密码</span>
+						<span style="width:20%"><a href="{:U('Config/password')}" target="_blank" class="lh32 button_1" title="重置">重置</a></span>
+					</div>
+					<div class="qn-msg">
+						<span class="fn-left" style="width:28%">交易密码</span>
+						<span style="width:28%">在账户资金变动，提现或者兑换，修改账户信息时需要输入的密码</span>
+						<span style="width:20%">
+								<if condition="$self['safecode'] eq '' or $self['safecode'] eq null">
+								<a href="{:U('Config/safepass')}" target="_blank" class="lh32 button_1" title="立即设置" >立即设置</a>
+								<else/>
+								<a href="{:U('Config/safepass')}" target="_blank" class="lh32 button_1" title="重置" >重置</a>
+								</if>
+						</span>
+					</div>
+					<div class="qn-msg">
+						<span style="width:28%">安全保护问题</span>
+						<span style="width:28%">暂无</span>
+						<span style="width:20%">
+							<a href="javascript:void(0);" title="修改" target="_blank" class="lh32 button_1">修改</a>
+						</span>
+					</div>
+					<div class="qn-msg">
+						<span style="width:28%">手机绑定</span>
+						<span style="width:28%">
+								<php>
+								$mobile = $self['mobile'];
+								$mobiles = substr_replace($mobile,'****',3,4);
+								
+								</php>
+								<if condition="$self['mobile']">
+									 <font style="color:red">{$mobiles|htmlspecialchars}</font>
+									 <else/>
+									  未绑定
+									</if>
+						</span>
+						<span style="width:20%">
+									<if condition="$self['mobile']">
+										<eq name="self['mobile_ver']" value="0">
+										<a class=" lh32 button_1" href="{:U('Ucenter/Config/mobile')}" target="_blank">激活</a>
+										<else/>
+										<a class=" lh32 button_1" href="{:U('Ucenter/Config/mobile')}" target="_blank">更换</a>
+										</eq>
+										<else/>
+										<a class=" lh32 button_1" href="{:U('Ucenter/Config/mobile')}" target="_blank">立即绑定</a>
+									</if>
+						</span>
+					</div>
+					<div class="qn-msg">
+						<span style="width:28%">邮箱绑定</span>
+						<span style="width:28%">
+								<php>
+								$email = $self['email'];
+								$emails = substr_replace($email,'****',3,4);
+								
+								</php>
+								<if condition="$self['email']">
+								<font style="color:red"><php>echo $emails;</php></font>
+								<else/>
+								未绑定
+								</if>
+						</span>
+						<span style="width:20%">
+									<if condition="$self['email']">
+										<eq name="self['email_ver']" value="0">
+										<a class=" lh32 button_1" href="{:U('Ucenter/Config/email')}" target="_blank">激活</a>
+										<else/>
+										<a class=" lh32 button_1" href="{:U('Ucenter/Config/email')}" target="_blank">更换</a>
+										</eq>
+										<else/>
+										 <a class=" lh32 button_1" href="{:U('Ucenter/Config/email')}" target="_blank">立即绑定</a>
+									</if>
+						</span>
+					</div>
+					<notempty name="purse_list">
+					<volist name="purse_list" id="vo">
+							<notempty name="vo.user.pursecardno">
+							<div class="qn-msg">
+								<span style="width:28%">{$vo.pursename}</span>
+								<span style="width:28%">{$vo.user.pursecardno|substr_replace=###,'****',3,4}</span>
+								<span style="width:20%"><a href="{:U('Ucenter/System/five')}" target="_blank" class="blue-link" >修改绑定</a></span>
+							</div>
+							<else/>
+							<div class="qn-msg">
+								<span style="width:28%">{$vo.pursename}</span>
+								<span style="width:28%">未绑定</span>
+								<span style="width:20%"><a href="{:U('Ucenter/System/five')}" target="_blank" class="lh32 button_1" >立即绑定</a></span>
+							</div>
+							</notempty>
+					</volist>
+					<else/>
+					</notempty>
+				</div>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+</block>

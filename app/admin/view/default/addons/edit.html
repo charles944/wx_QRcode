@@ -1,0 +1,127 @@
+<extend name="public/base" />
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href=""><cite>{$meta_title}</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+    <div class="layui-card-body">
+    <form id="form" action="{:U('edit?name='.trim($_GET['name']))}" method="POST" class="layui-form">
+		<div id="tab" class="tab-pane in tab1">
+            <volist name="fields" id="field">
+                <if condition="$field['is_show'] == 1 || ($field['is_show'] == 3 && $data['id']) || ($field['is_show'] == 2 && !$data['id'])">
+                <div class="form-item cf">
+                    <label class="item-label">{$field['title']}<span class="check-tips"><notempty name="field['remark']">（{$field['remark']}）</notempty></span></label>
+                    <div class="controls">
+                        <switch name="field.type">
+                            <case value="num">
+                                <input type="text" class="text input-medium" name="{$field.name}" value="{$data[$field['name']]}">
+                            </case>
+                            <case value="string">
+                                <input type="text" class="text input-large" name="{$field.name}" value="{$data[$field['name']]}">
+                            </case>
+                            <case value="textarea">
+                                <label class="textarea input-large">
+                                <textarea name="{$field.name}">{$data[$field['name']]}</textarea>
+                                </label>
+                            </case>
+                            <case value="datetime">
+                                <input type="text" name="{$field.name}" class="text input-large time" value="{$data[$field['name']]|date='Y-m-d H:i',###}" placeholder="请选择时间" />
+                            </case>
+                            <case value="bool">
+                                <select name="{$field.name}">
+                                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                        <option value="{$key}" <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}</option>
+                                    </volist>
+                                </select>
+                            </case>
+                            <case value="select">
+                                <select name="{$field.name}">
+                                    <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                        <option value="{$key}" <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}</option>
+                                    </volist>
+                                </select>
+                            </case>
+                            <case value="radio">
+                                <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                	<label class="radio">
+                                    <input type="radio" value="{$key}" name="{$field.name}" <eq name="data[$field['name']]" value="$key">checked="checked"</eq>>{$vo}
+                                	</label>
+                                </volist>
+                            </case>
+                            <case value="checkbox">
+                                <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                	<label class="checkbox">
+                                    <input type="checkbox" value="{$key}" name="{$field.name}[]" <in name="key" value="$data[$field['name']]" >checked="checked"</in>>{$vo}
+                                	</label>
+                                </volist>
+                            </case>
+                            <case value="editor">
+                                <label class="textarea">
+                                <textarea name="{$field.name}">{$data[$field['name']]}</textarea>
+                                {:hook('adminarticleedit', array('name'=>$field['name'],'value'=>$data[$field['name']]))}
+                                </label>
+                            </case>
+                            <case value="picture">
+                                <div class="controls">
+									<input type="button" id="upload_picture_{$field.name}" class="layui-upload-button" value="上传图片" />
+									<input type="hidden" name="{$field.name}" id="cover_id_{$field.name}" value="{$data[$field['name']]}"/>
+									<div class="upload-img-box">
+									<notempty name="data[$field['name']]">
+										<div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+									</notempty>
+									</div>
+								</div>
+								
+                            </case>
+                            <case value="file">
+								<div class="controls">
+									<input type="button" id="upload_file_{$field.name}" class="layui-upload-button" value="上传文件" />
+									<input type="hidden" name="{$field.name}" value="{$data[$field['name']]}"/>
+									<div class="upload-img-box">
+										<present name="data[$field['name']]">
+											<div class="upload-pre-file"><span class="upload_icon_all"></span>{$data[$field['name']]|get_table_field=###,'id','name','File'}</div>
+										</present>
+									</div>
+								</div>
+								
+                            </case>
+                            <default/>
+                            <input type="text" class="text input-large" name="{$field.name}" value="{$data[$field['name']]}">
+                        </switch>
+                    </div>
+                </div>
+                </if>
+            </volist>
+            <input type="hidden" name="id" value="{$data.id|default=0}">
+        </div>
+        <div class="form-item cf">
+            <button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+            <a class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</a>
+        </div>
+    </form>
+    </div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+$('#submit').click(function(){
+    $('#form').submit();
+});
+
+$(function(){
+	$('.time').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        language:"zh-CN",
+        minView:2,
+        autoclose:true
+    });
+});
+</script>
+</block>

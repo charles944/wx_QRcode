@@ -1,0 +1,166 @@
+<extend name="public/base" />
+<block name="style">
+<style>
+.content-wrapper {
+	float:left;
+}
+.cover-wrapper .cover-icon {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    background: #fff;
+    border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    display: inline-block;
+	border:none;
+	border:1px solid #f1f1f1;
+}
+.cover-wrapper {
+    width: 60px;
+    margin-right: 15px;
+    float: left;
+}
+.thumbnail{
+	position:relative;
+    padding: 10px;
+	min-height:44px; 
+	overflow:hidden;
+	width:50%;
+	float:left;
+	box-sizing: border-box;
+}
+.cover-wrapper .cover-icon i {
+    font-size: 64px;
+    line-height: 120px;
+    color: white;
+}
+.content-wrapper .bottom-btns {
+    margin-top: 10px;
+}
+.content-wrapper .title a {
+    font-size: 14px;
+    color: #333;
+}
+.content-wrapper .title{
+    margin-bottom:0;
+}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">模块管理</a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+			<div class="portlet-title">
+				<div class="actions">
+						<a href="{:U('Module/index',array_merge($_GET,array('refresh'=>2)))}" class="layui-btn layui-btn-xs fbutton"><i class="icon-level-up"></i> 立刻检查更新</a>
+						<a href="{:U('Module/index',array_merge($_GET,array('refresh'=>1)))}" class="layui-btn layui-btn-xs fbutton"><i class="icon-undo"></i> 重置全部（模块信息不同步的时候使用）</a>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="portlet-body">
+				<div class="layui-tab">
+					<ul class="layui-tab-title">
+						<li id="type_all" class="layui-this" onclick="javascript:location.href='{:U('index',array('type'=>'all'))}'">全部</li>
+						<li id="type_installed" onclick="javascript:location.href='{:U('index',array('type'=>'installed'))}'">已安装</li>
+						<li id="type_uninstalled" onclick="javascript:location.href='{:U('index',array('type'=>'uninstalled'))}'">未安装</li>
+						<li id="type_core" onclick="javascript:location.href='{:U('index',array('type'=>'core'))}'">系统模块</li>
+					</ul>
+					<script>
+						$('#type_{$type}').addClass('layui-this').siblings().removeClass('layui-this');
+					</script>
+					<div class="layui-tab-content">
+						<div class="layui-tab-item layui-show">
+							<notempty name="modules">
+							<volist name="modules" id="vo">
+
+								<div class="col-sm-12 col-md-4 clearfix">
+									<div class="thumbnail">
+									<div class="cover-wrapper">
+										<empty name="vo.version_info.goods.cover_url">
+											<div style="position:relative; border-radius: 16px; -moz-border-radius: 16px; -webkit-border-radius: 16px;">
+												<img src="<php>echo APP_PATH;</php>{$vo.name|strtolower}/info/preview.jpg" alt="{$vo.name}" class="cover-icon" style="width:100%;">
+											</div>
+										<else/>
+											<img class="cover" src="__CLOUD__/{$vo.version_info.goods.cover_url}"/>
+										</empty>
+									</div>
+									<div class="content-wrapper">
+										<div class="title">
+											<a href="{:U('edit?', array('name' => $vo['name']))}" title="{$vo.name}，{$vo.developer}，{$vo.summary}">{$vo.alias}</a>
+											<empty name="vo['version_info']['goods']">
+												<span class="layui-btn layui-btn-xs layui-btn-primary">本地</span>
+												<else/>
+												<span class="layui-btn layui-btn-xs layui-btn-primary">云</span>
+											</empty>
+											<empty name="vo['update_list']">
+												<empty name="vo['token']">
+													<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version}</span>
+												<else/>
+													<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version_info.goods.version}</span>
+												</empty>
+												<else/>
+												<php>$vt = version_compare($vo['version'],$vo['update_list'][0]['version']);
+												if($vt < 0){</php>
+													<span class="layui-btn layui-btn-xs layui-btn-danger">有新版{$vo.update_list.0.version}</span>
+												<php>}else{</php>
+													<span class="layui-btn layui-btn-xs layui-btn-primary">{$vo.version}</span>
+												<php>}</php>
+												
+											</empty>
+										</div>
+										<div class="clearfix bottom-btns">
+											<div class="pull-left">
+
+												<a class="layui-btn layui-btn-xs layui-btn-primary" href="{:U('edit?', array('name' => $vo['name']))}">编辑</a>
+												<if condition="$vo['can_uninstall'] ">
+													<if condition="$vo['is_setup']">
+														<a class="layui-btn layui-btn-xs layui-btn-danger" href="{:U('uninstall', array('id' => $vo['id']))}">卸载</a>
+														<else/>
+														<a class="layui-btn layui-btn-xs layui-btn-info" href="{:U('install', array('name' => $vo['name']))}">安装</a>
+													</if>
+
+												</if>
+												<empty name="vo['update_list']">
+													<else/>
+													<php>$vt = version_compare($vo['version'],$vo['update_list'][0]['version']);
+													if($vt < 0){</php>
+														<a class="layui-btn layui-btn-xs layui-btn-info" href="{:U('Cloud/updateGoods',array('token'=>$vo['token'],'oid'=>$vo['oid'],'md5'=>$vo['md5']))}">更新</a>
+														<a target="_blank" href="{:appstoreU('Appstore/Index/goodsDetail',array('token'=>$vo['token']))}" class="layui-btn layui-btn-xs layui-btn-primary">查看</a>
+													<php>}else{</php>
+														<a target="_blank" href="{:appstoreU('Appstore/Index/goodsDetail',array('token'=>$vo['token']))}" class="layui-btn layui-btn-xs layui-btn-primary">查看</a>
+													<php>}</php>
+													
+												</empty>
+											</div>
+
+										</div>
+									</div>
+									</div>
+								</div>
+							</volist>
+							<else/>
+								<div class="text-center"> aOh! 暂时还没有内容!</div>
+							</notempty>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 数据列表 -->
+				<!-- 分页 -->
+				<div class="layui-table-page">
+					{$_page}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</block>

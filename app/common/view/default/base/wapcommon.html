@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta name="applicable-device"content="mobile">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<meta http-equiv="Cache-Control" content="no-transform" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="">
+	{:hook('syncmeta')}
+	<include file="public/seo"/>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/wap/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/wap/css/font/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/wap/css/hui.css" />
+	<script src="__PUBLIC__/wap/css/font/iconfont.js"></script>
+	<block name="style"></block>
+	<include file="public/var"/>
+	<php>
+	$open_quick_login = modC('OPEN_QUICK_LOGIN', 0, 'USERCONFIG');
+	$open_quick_register = modC('OPEN_QUICK_REGISTER', 0, 'USERCONFIG');
+	$register_type = modC('REGISTER_TYPE','normal','UserConfig');
+	$register_type = explode(',',$register_type);
+	$only_open_register = 0;
+	if(in_array('invite',$register_type)&&!in_array('normal',$register_type)){
+	$only_open_register=1;
+	}
+	</php>
+	<script>
+	//全局内容的定义
+	var _ROOT_ = "__ROOT__";
+	var MID = "{:is_login()}";
+	var MODULE_NAME="<php>echo MODULE_NAME;</php>";
+	var ACTION_NAME="<php>echo ACTION_NAME;</php>";
+	var OPEN_QUICK_LOGIN = "{$open_quick_login}";
+	var OPEN_QUICK_REGISTER = "{$open_quick_register}";
+	var ONLY_OPEN_REGISTER = "{$only_open_register}";
+	</script>
+	<php>
+	need_login();
+	$uid = is_login();
+	$unreadMessage=D('Common/Message')->getHaventReadMeassageAndToasted($uid);
+	</php>
+</head>
+<block name="body"></block>
+{:C('COUNT_CODE')}
+</html>

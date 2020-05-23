@@ -1,0 +1,346 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<span class="layui-breadcrumb">
+	<a href="#">首页</a><i class="fa fa-circle"></i>
+	<a><cite>用户列表</cite></a>
+</span>
+<div class="clearfix">
+   </div>
+<!-- End PAGE HEADER-->
+<php>
+    if($_REQUEST['nickname']||$_REQUEST['email']||$_REQUEST['qq']||$_REQUEST['mobile'])
+	{
+		$show=1;
+	}
+</php>
+<div style="margin-bottom: 10px; display:none" <eq name='show' value="1">class="show" </eq> id="search_form">
+<style>
+.tb_search td{padding: 5px 10px;}
+</style>
+<form id="searchForm" method="get" action="{:U()}" class="layui-form layui-form-pane">
+    <div class="search-form  cf " style="margin-bottom: 10px">		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">用户昵称或用户ID</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="nickname" id="nickname" autocomplete="off" class="layui-input" value="{:I('nickname')}" />
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">邮箱</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="email" id="email" autocomplete="off" class="layui-input" value="{:I('email')}" />
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">手机</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="mobile" id="mobile" autocomplete="off" class="layui-input" value="{:I('mobile')}" />
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">QQ</label>
+			<div class="layui-input-inline">
+				 <input type="text" name="qq" id="qq" autocomplete="off" class="layui-input" value="{:I('qq')}" />
+			</div>
+		</div>
+		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-inline">
+			<php> $vst = I('vsort',0);</php>
+				 <select style="float: none" name="vsort" class="search-input form-control form-input-width" >
+					 <option value="uid" <eq name="vst" value="uid">selected="selected"</eq>>ID</option>
+					 <option value="reg_time" <eq name="vst" value="reg_time">selected="selected"</eq>>注册日期</option>
+					 <option value="last_login_time" <eq name="vst" value="last_login_time">selected="selected"</eq>>登录日期</option>
+					 <option value="lower_num" <eq name="vst" value="lower_num">selected="selected"</eq>>下线数量</option>
+					 <option value="login" <eq name="vst" value="lower_num">selected="selected"</eq> >登录次数</option>
+					 <option value="lower_gold_coin" <eq name="vst" value="lower_gold_coin">selected="selected"</eq>>下线提成</option>
+					 <option value="pay_money" <eq name="vst" value="pay_money">selected="selected"</eq>>总提现</option>
+					 <volist name="scoretypelist" id="v">
+						<option value="{$v['mark']}" <eq name="vst" value="$v['mark']">selected="selected"</eq>>{:getScoreTypeName($v['mark'])}</option>
+					 </volist>
+				 </select>
+			</div>
+		</div>
+		 
+		<div class="layui-form-item">
+			<label class="layui-form-label">升降</label>
+			<div class="layui-input-inline">
+				<php> $st = I('st',0);</php>
+				 <select style="float: none" name="st" class="search-input form-control form-input-width" >
+					 <option value="asc" <eq name="st" value="asc">selected="selected"</eq> >升序</option>
+					 <option value="desc" <eq name="st" value="desc">selected="selected"</eq>>降序</option>
+				 </select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			  <input type="submit" class="layui-btn layui-btn-xs green" value="确定"  lay-submit="" lay-filter=""/>
+			  <button class="layui-btn layui-btn-xs default toggle_search" id="">关闭</button>
+		</div>
+	</div>
+</form>
+<div style="border-top:1px solid #ccc;border-bottom: 1px solid white"></div>
+</div>
+<div class="portlet">
+	<div class="portlet-title">
+		<div class="caption">
+		</div>
+		<div class="actions">
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-xs" onclick="toggle_search()"><i class="fa fa-search"></i> 搜索</button>
+				<a class="layui-btn layui-btn-xs" href="{:U('User/mingxi')}">查看收入明细</a>
+				<a class="layui-btn layui-btn-xs green" href="{:U('User/add')}">新 增</a>
+                
+	            <button class="ajax-post layui-btn layui-btn-xs" url="{:U('User/changeStatus',array('method'=>'resumeUser'))}" target-form="ids"><i class="fa fa-check"></i> 启 用</button>
+	            <button class="ajax-post layui-btn layui-btn-xs" url="{:U('User/changeStatus',array('method'=>'forbidUser'))}" target-form="ids"><i class="fa fa-ban"></i> 冻 结</button>
+	            <button class="layui-btn layui-btn-xs ajax-post red" url="{:U('User/changeStatus',array('method'=>'deleteUser'))}" target-form="ids"><i class="fa fa fa-trash-o"></i> 删 除</button>
+	            <a class="layui-btn layui-btn-xs purple" href="{:U('User/import')}"><i class="fa fa-file-excel-o"></i> 导入会员</a>
+	            <button class="layui-btn layui-btn-xs ajax-get" onclick="post_select_form()" target-form="ids">选择用户分组</button>
+	            <button class="layui-btn layui-btn-xs ajax-post" data-confirm="密码重置为“123456”" url="{:U('User/initPass')}" target-form="ids"><i class="fa fa-refresh"></i> 重置密码：123456</button>
+                <a class="layui-btn layui-btn-xs red" href="{:U('Userlog/index')}"><i class="fa fa-search"></i> 查看违规记录</a>
+              </div>
+		</div>
+		<php>foreach($selects as $select){
+	            if($_REQUEST[$select['name']]){
+	               $show=1;
+	            }
+             }
+        	</php>
+            <!-- 选择框select -->
+            <div style="float: right;" class="filter">
+                <form id="selectForm" method="get" action="{:U()}" class="layui-form layui-form-pane">
+                        <div class="oneselect">
+                            <div class="title">显示：</div>
+                            <div class="select_box">
+                            <select name="r" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+                                    <option value="50" <eq name="r" value="50">selected</eq>>显示50行</option>
+                                    <option value="100" <eq name="r" value="100">selected</eq>>显示100行</option>
+                                    <option value="200" <eq name="r" value="200">selected</eq>>显示200行</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="oneselect">
+                            <div class="title">状态：</div>
+                            <div class="select_box">
+                            <select name="dead" data-role="select_text" lay-filter="select_text" class="form-control input-small">
+                            		<option value="0" <eq name="dead" value="0">selected</eq>>全部</option>
+                                    <option value="1" <eq name="dead" value="1">selected</eq>>正常</option>
+                                    <option value="2" <eq name="dead" value="2">selected</eq>>冻结</option>
+                                    <option value="3" <eq name="dead" value="3">selected</eq>>未激活</option>
+                                    <option value="4" <eq name="dead" value="4">selected</eq>>已删除</option>
+                            </select>
+                            </div>
+                        </div>
+                </form>
+            </div>
+	</div>
+	<div class="portlet-body">
+	<div class="table-scrollable layui-form">
+		<table class="layui-table" lay-even id="">
+			<thead>
+			<tr>
+			<th>
+				<input type="checkbox" class="group-checkable" lay-skin="primary" lay-filter="allChoose">
+			</th>
+            <th>UID</th>
+            <th>昵称</th>
+            <th>提现/下线/提成</th>
+            <th>邮箱/手机号</th>
+            <th>注册/登录时间（次数 & IP）</th>
+            <th>状态</th>
+            <th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+				<volist name="_list" id="vo">
+					<tr <switch name="vo.status"><case value="0">style="background-color:#FFFFE5"</case><case value="3">style="background-color:#FFE5E5"</case></switch>>
+						<td class="check">
+							<input class="ids" type="checkbox" name="ids[]" value="{$vo.uid}" lay-skin="primary" lay-filter="ids"/>
+						</td>
+						<td>{$vo.uid}</td>
+						<td>
+							昵称：<br />
+							<a href="{:U('User/mingxi',array('nickname'=>$vo['uid']))}" >{$vo.nickname|op_t}</a>
+							<br />
+							用户名：
+							<br />
+							{$vo.username|op_t}
+							<br />
+							<volist name="scoretypelist" id="v">
+							{:getScoreTypeName($v['mark'])}：{$vo[$v['mark']]}<br />
+							</volist>
+						</td>
+						<td>
+							提现：
+							<a href="{:U('pay/payoffer',array('title'=>$vo['username']))}" >{$vo.pay_money}元</a>
+							<br />
+							下线：
+							<a href="{:U('User/userlower',array('uid'=>$vo['uid']))}" >{$vo.lower_num} 个</a>
+							<br />
+							提成：
+							{$vo.lower_gold_coin} 元
+						</td>
+						<td>
+							邮箱：{$vo.email}<br />（{$vo.email_ver}）
+							<br />
+							手机：{$vo.mobile}<br />（{$vo.mobile_ver}）
+						</td>
+						<td>
+							<span>注册：{$vo.reg_time|time_format}</span><br />
+							<span>登录：{$vo.last_login_time|time_format}</span><br />
+							<span>登录：{$vo.login}次</span><br />
+							<span>IP：{$vo['last_login_ip']|long2ip}</span><br/>
+							<span>地址：{$vo['last_login_ip']|long2ip|ipfrom}</span>
+						</td>
+						<td>{$vo.status_txt}</td>
+						<td>
+							<a href="{:U('User/expandinfo_details',array('uid'=>$vo['uid']))}" class="layui-btn layui-btn-xs"><i class="fa fa-search"></i> 资料</a>
+							<eq name="vo.status" value="1">
+								<a href="{:U('User/changeStatus?method=forbidUser&ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-times"></i> 冻结</a>
+								<else/>
+								<a href="{:U('User/changeStatus?method=resumeUser&ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-unlock-alt"></i> 解冻</a>
+							</eq>
+							<a href="" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-unlink"></i> 解除上下级</a>
+							<br/>
+							<a href="{:U('AuthManager/group?uid='.$vo['uid'])}" class="authorize layui-btn layui-btn-xs"><i class="fa fa-key"></i> 授权</a>
+							<a url="{:U('User/changeStatus?method=deleteUser&ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-trash-o"></i> 注销</a>
+							<a href="{:U('User/initPass?ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-refresh"></i> 重置密码</a>
+							<a href="{:U('User/freshuserlower?ids='.$vo['uid'])}" class="ajax-get layui-btn layui-btn-xs"><i class="fa fa-refresh"></i> 更新下线数</a>
+							<a href="{:U('Userlog/index?nickname='.$vo['uid'])}" class="layui-btn layui-btn-xs"><i class="fa fa-search"></i> 查看违规记录</a>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+			</table>
+			</div>
+	</div>
+</div>
+<div class="row">
+{$_page}
+</div>
+<div class="cf">
+	<script>
+		function post_select_form(){
+			var ids=$('input[type="checkbox"]').serialize();
+			console.log(ids);
+			$.post("{:U('user/changeGroup')}",ids,function(msg){
+				$('#select_group').show();
+				$('#select_group').html(msg);
+			})
+		}
+	</script>
+	<div  id="select_group" style="display:none;position: fixed;top:30%;left: 50%;width:400px;margin-left:-200px;background: white;padding: 50px;border: 1px solid #ccc">
+		载入中.......
+	</div>
+
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+var $,layer,util,laytpl,form,laypage,fly;
+layui.use(['qn','laypage','form','laypage','layer'], function(){
+	$ = layui.jquery;
+	layer = layui.layer;
+	util = layui.util;
+	laytpl = layui.laytpl;
+	form = layui.form();
+	laypage = layui.laypage;
+	fly = layui.qn;
+	
+	form.on('select(select_text)', function(data) {
+		//$('#selectForm').submit();
+		//e.preventDefault();
+		var url = document.location.toString();
+		var seperator = "?";
+		var form2 = $('#selectForm').serialize();
+		var action = $('#selectForm').attr('action');
+		if(action == ''){
+			 action = location.href;
+		}
+		form2 = form2+"&";
+		var formarr = form2.split("&");
+		for(var i=0;i < formarr.length-1;i++){
+			var argarr = formarr[i].split("=");
+			var arg = argarr[0];
+			var arg_val = argarr[1];
+			url = changeURLArg(url,arg,arg_val);
+		}
+		location.href = url;
+		return false;
+	});
+	//全选
+	form.on('checkbox(allChoose)', function(data){
+		var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+		child.each(function(index, item){
+			item.checked = data.elem.checked;
+			if(data.elem.checked){
+				$(item).attr("checked", "checked");
+			}else{
+				$(item).attr("checked", false);
+			}
+		});
+		form.render('checkbox');
+	});
+	form.on('checkbox(ids)', function(data){
+		if(data.elem.checked){
+			$(data.elem).attr("checked", "checked");
+		}else{
+			$(data.elem).attr("checked", false);
+		}
+		form.render('checkbox');
+	});
+	
+});
+
+        function toggle_search(){
+            $('#search_form').toggle();
+        }
+
+        $(document).on('submit', '.form-dont-clear-url-param', function(e){
+            e.preventDefault();
+            var url = document.location.toString();
+            var seperator = "?";
+            var form = $(this).serialize();
+            var action = $(this).attr('action');
+            if(action == ''){
+                 action = location.href;
+            }
+            form = form+"&";
+            var formarr = form.split("&");
+            for(var i=0;i < formarr.length-1;i++){
+            	var argarr = formarr[i].split("=");
+            	var arg = argarr[0];
+            	var arg_val = argarr[1];
+            	url = changeURLArg(url,arg,arg_val);
+            }
+            location.href = url;
+
+            return false;
+        });
+        
+        function changeURLArg(url,arg,arg_val){ 
+            var pattern=arg+'=([^&]*)';
+            var replaceText=arg+'='+arg_val; 
+            if(url.match(pattern)){ 
+                var tmp='/('+ arg+'=)([^&]*)/gi'; 
+                tmp=url.replace(eval(tmp),replaceText); 
+                return tmp; 
+            }else{ 
+                if(url.match('[\?]')){ 
+                    return url+'&'+replaceText; 
+                }else{ 
+                    return url+'?'+replaceText; 
+                } 
+            } 
+            return url+'\n'+arg+'\n'+arg_val; 
+        }
+    </script>
+</block>
+<block name="jquery_script">
+</block>

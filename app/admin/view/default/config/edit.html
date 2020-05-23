@@ -1,0 +1,102 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="{:U('index')}"><cite>{$info['id']?'编辑':'新增'}配置</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+		<form action="{:U()}" id="form" class="layui-form" method="post">
+		<div class="form-body">
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置标识</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="name" value="{$info.name|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">用于C函数调用，只能使用英文且不能重复</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置标题</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="title" value="{$info.title|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">用于后台显示的配置标题</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="" type="text" name="sort" value="{$info.sort|default=''}" />
+				</div>
+				<div class="layui-form-mid layui-word-aux">用于分组显示的顺序</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置类型</label>
+				<div class="layui-input-inline">
+					<select class="form-control select2me" name="type">
+						<volist name="Think.config.CONFIG_TYPE_LIST" id="type">
+							<option value="{$key}" <if condition="$info['type'] eq $key">selected</if>>{$type}</option>
+						</volist>
+					</select>
+				</div>
+				<div class="layui-form-mid layui-word-aux">系统会根据不同类型解析配置值</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置分组</label>
+				<div class="layui-input-inline">
+					<select class="form-control select2me" name="group">
+						<option value="0">不分组</option>
+						<volist name="Think.config.CONFIG_GROUP_LIST" id="group">
+							<option value="{$key}" <if condition="$info['group'] eq $key">selected</if>>{$group}</option>
+						</volist>
+					</select>
+				</div>
+				<div class="layui-form-mid layui-word-aux">配置分组,用于批量设置,不分组则不会显示在系统设置中</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置值</label>
+				<div class="layui-input-inline">
+					<textarea class="layui-textarea" rows="3" name="value">{$info.value|default=''}</textarea>
+				</div>
+				<div class="layui-form-mid layui-word-aux">配置值</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">配置项</label>
+				<div class="layui-input-inline">
+					<textarea class="layui-textarea" rows="3" name="extra">{$info.extra|default=''}</textarea>
+				</div>
+				<div class="layui-form-mid layui-word-aux">如果是枚举型，需要配置该项</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">说明</label>
+				<div class="layui-input-inline">
+					<textarea class="layui-textarea" rows="3" name="remark">{$info.remark|default=''}</textarea>
+				</div>
+				<div class="layui-form-mid layui-word-aux">配置详细说明</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-inline">
+					<input type="hidden" name="id" value="{$info.id|default=''}">
+					<button class="layui-btn layui-btn-sm ajax-post" id="submit" type="submit" target-form="layui-form">确 定</button>
+					<button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+				<div class="layui-form-mid layui-word-aux"></div>
+			</div>
+          </div>
+        </form>
+    </div>
+</div>
+</div>
+</block>
+
+<block name="jquery_script">
+Think.setValue("type", {$info.type|default=0});
+Think.setValue("group", {$info.group|default=0});
+</block>
+<block name="script">
+</block>

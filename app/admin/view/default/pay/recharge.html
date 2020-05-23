@@ -1,0 +1,23 @@
+<extend name="public/base"/>
+
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">积分充值</a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<div class="">
+				<a href="{:U('import')}" class="layui-btn layui-btn-xs fbutton">批量充值</a>
+			</div>
+			<include file="pay/_recharge"/>
+		</div>
+	</div>
+</div>
+</block>
+<block name="script">
+
+</block>

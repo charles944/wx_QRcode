@@ -1,0 +1,130 @@
+<extend name="public/base"/>
+<block name="style">
+<link rel="stylesheet" href="__PUBLIC__/js/codemirror/codemirror.css">
+<link rel="stylesheet" href="__PUBLIC__/js/codemirror/theme/{:C('codemirror_theme')}.css">
+<style>
+	.CodeMirror, #preview_window {
+		width: 700px;
+		height: 500px;
+	}
+
+	#preview_window.loading {
+		background: url('__PUBLIC__/js/thinkbox/skin/default/tips_loading.gif') no-repeat center;
+	}
+
+	#preview_window textarea {
+		display: none;
+	}
+</style>
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>补丁管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+		
+			<div class="portlet-title">
+				<div class="actions">
+					<a id="addpack" class="layui-btn layui-btn-xs fbutton" href="{:U('addpack')}">新增补丁</a>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="portlet-body">
+			<div class="table-scrollable">
+				<table class="layui-table" lay-even lay-skin="line">
+					<thead>
+					<tr>
+					<th width="200">名称</th>
+					<th width="200">用途介绍</th>
+					<th width="100">作者</th>
+					<th width="80">大小</th>
+					<th width="150">补丁创建时间</th>
+					<th width="150">最后修改时间</th>
+					<th width="230">操作</th>
+					</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="data">
+							<tr>
+								<td><a href="{:U('addpack?id='.$data['id'])}">{$data.title}</a></td>
+								<td>{$data.des}</td>
+								<td>{$data.author}</td>
+								<td>{$data.size}</td>
+								<td>{$data.ctime}</td>
+								<td>{$data.mtime}</td>
+			
+								<td class="action">
+									<a class="ajax-get use db-import layui-btn layui-btn-xs hbutton btn_see" style="cursor: pointer;" href="{:U('use_pack?id='.$data['id'])}">使用</a>
+									<a class="use layui-btn layui-btn-xs hbutton btn_edit" href="{:U('addpack?id='.$data['id'])}">编辑</a>
+									<a id="" class="db-import view layui-btn layui-btn-xs hbutton btn_see" style="cursor: pointer" data="{$data.id}" type="button">查看</a>
+									<a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" href="{:U('del_pack?id='.$data['id'])}"><i class="fa fa-trash"></i> 删除</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+					</table>
+				</div>
+				<div class="layui-table-page">
+				{$_page}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript" src="__PUBLIC__/js/codemirror/codemirror.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/codemirror/clike.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/codemirror/sql.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/thinkbox/jquery.thinkbox.js"></script>
+</block>
+<block name="jquery_script">
+var table;
+
+$('.view').click(function () {
+	var preview_url = '{:U("view")}';
+	var title = $(this).attr('data');
+	$.post(preview_url, {title: title}, function (data) {
+		$.thinkbox('<div id="preview_window" class="loading"><textarea></textarea></div>', {
+			afterShow: function () {
+				var codemirror_option = {
+					lineNumbers: true,
+					matchBrackets: true,
+					mode: "sql",
+					indentUnit: 4,
+					gutter: true,
+					fixedGutter: true,
+					indentWithTabs: true,
+					readOnly: true,
+					lineWrapping: true,
+					height: 500,
+					enterMode: "keep",
+					tabMode: "shift",
+					theme: "{:C('CODEMIRROR_THEME')}"
+				};
+				var preview_window = $("#preview_window").removeClass(".loading").find("textarea");
+				var editor = CodeMirror.fromTextArea(preview_window[0], codemirror_option);
+				editor.setValue(data);
+				$(window).resize();
+			},
+
+			title: '查看内容',
+			unload: true,
+			actions: ['close'],
+			drag: true
+		});
+	});
+	return false;
+});
+
+
+function showmsg(id, msg) {
+$form.find("input[value=" + tables[id] + "]").closest("tr").find(".info").html(msg);
+}
+</block>

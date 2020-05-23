@@ -1,0 +1,100 @@
+<extend name="public/base"/>
+<block name="body">
+<style>
+.alert{
+	line-height: 40px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	padding:10px;
+	margin-bottom:10px;
+	
+}
+.alert-warning{
+	background-color: #ffede7;
+    color: #787878;
+}
+.alert-info{
+	background-color: #f2f2f2;
+    color: #787878;
+}
+.text-success{color:#44b549}
+</style>
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href=""><cite>应用自动升级 - 比较本地文件</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+
+		<div class="with-padding">
+			<include file="_updatingGoods"/>
+			<h3><strong class="text-success">1.下载更新包，获取更新文件列表 &gt; 2.本地文件对比</strong> &gt; 3.代码升级 &gt; 4.数据库升级 &gt; 升级完成</h3>
+			<p class="alert alert-warning">请确保所有涉及的文件状态为 <strong class="text-success">可写</strong> 。若无法进入下一步，请在ftp上赋予这些未具备可写权限的文件写入权限后 <strong class="text-success">刷新</strong> 本页面。</p>
+			<p class="alert alert-info">
+			对于冲突文件，开发者请自行找到新文件手动合并代码，合并完成后，点击灰色按钮跳过代码自动更新，以保证你的二次开发内容被保留。
+			</p>
+			<p class="alert alert-info">
+			如果您未修改过文件，但却发现所有的文件都产生了冲突，那么请确保您上传文件的方式为2进制。
+			</p>
+
+			<h3>本次更新涉及的文件：</h3>
+
+			<table class="layui-table" lay-skin="line" id="file">
+				<thead>
+					<tr><th>文件名</th><th>状态</th><th>权限</th></tr>
+				</thead>
+			</table>
+
+			<h3>备份文件存放位置（如果您进行了二次开发，并导致了文件差异，您可以在此找回这些被覆盖的文件）：</h3>
+
+			<p class="alert alert-warning">
+				<span class="text-success">{$path}/backup</span>
+			</p>
+
+			<a id="compare_btn" href="{:U('updating3')}" class="layui-btn layui-btn-sm layui-btn-danger" disabled="disabled" onclick="if(!confirm('确定覆盖文件升级？此操作可能会导致扩展无法运行，请确认后升级。')){return false}">下一步，覆盖这些文件，丢失修改，并升级（可能会出错）</a>
+			<a href="{:U('updating4')}" class="layui-btn layui-btn-sm layui-btn-primary" onclick="if(!confirm('确定跳过文件升级步骤？如果您不是开发人员，或者还未对代码进行合并操作，请不要跳过。')){return false}">我已经自行合并代码，跳过文件升级</a>
+
+			<div style="margin-top: 10px">
+				<div class="progress progress-striped active hide" style="border-radius: 3px">
+					<div id="progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+						 aria-valuemin="0" aria-valuemax="100" style="width:0">
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+</div>
+</div>
+
+<script>
+	function writeFile($data) {
+		$('#file').append($data);
+	}
+	function writeMessage($data) {
+		$('#message').append($data);
+	}
+	function replaceMessage($data) {
+		$('#message').children().last().remove();
+		$('#message').children().last().remove();
+		$('#message').append($data);
+	}
+	var progress = {
+		'show': function () {
+			$('#progress').parent().show();
+		},
+		'setValue': function ($value) {
+			$('#progress').css('width', $value);
+		},
+		'hide': function () {
+			$('#progress').parent().hide();
+		}
+	};
+	function enable() {
+		$('#compare_btn').removeAttr('disabled', '');
+	}
+</script>
+</block>

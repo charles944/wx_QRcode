@@ -1,0 +1,180 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+	<div class="ucenter-module-hd">
+		<h2>我的资料</h2>
+		<div class="operation">
+		</div>
+	</div>
+
+	<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+
+	<script>
+		function center_toggle(name) {
+			var show = $('#' + name + '_panel').css('display');
+			$('.center_panel').hide();
+			$('.center_arrow_right').show();
+			$('.center_arrow_bottom').hide()
+			if (show == 'none') {
+				$('#' + name + '_panel').show();
+				$('#' + name + '_toggle_right').hide();
+				$('#' + name + '_toggle_bottom').show()
+			} else {
+				$('#' + name + '_toggle_right').show();
+				$('#' + name + '_toggle_bottom').hide()
+			}
+
+		}
+	</script>
+	<div id="center_account">
+		<div class="layui-tab">
+		  <ul class="layui-tab-title">
+			<li class="layui-this">基本资料</li>
+			<volist name="profile_group_list" id="vl">
+				<li>{$vl.profile_name}</li>
+			</volist>
+		  </ul>
+		  <div class="layui-tab-content">
+			<div class="layui-tab-item layui-show">
+				<div class="layui-form layui-form-pane mine-view">
+				<form class="form-horizontal center_info layui-form" role="form" action="{:U('ucenter/config/index')}" method="post">
+				<div class="layui-form-item">
+					<label for="aUsername" class="layui-form-label">用户名</label>
+					<div class="layui-input-inline">
+						<php>if($self['username']){</php>
+						<input type="text" id="aUsername" name="aUsername" placeholder="还未设置用户名，赶快来设置吧~" autocomplete="off" value="{$self['username']}" class="layui-input" disabled>
+						<span class="lh32"></span>
+						<php>}else{</php>
+						<input type="text" id="aUsername" name="aUsername" placeholder="还未设置用户名，赶快来设置吧~" autocomplete="off" value="" class="layui-input">
+						<a class="pull-left lh32 saveUsername" style="margin-left: 10px">设置</a>
+						<script>
+							$(function () {
+								$('.saveUsername').click(function () {
+									var username = $(this).prev().val();
+									if (!username) {
+										layer.msg('用户名不能为空！', {icon: 2, fixed: true, offset: '80%', time: 1000});
+										return false;
+									}
+									if (confirm('用户名一经设置就不能修改，确定要设置么？')) {
+										$.post("{:U('ucenter/config/saveUsername')}", {username: username}, function (res) {
+											layui.qn.handleAjax(res);
+										})
+									}
+								})
+							})
+						</script>
+						<php>}</php>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label for="aEmail" class="layui-form-label">邮箱</label>
+					<div class="layui-input-inline">
+						<empty name="self.email">
+						<input type="text" id="aEmail" name="aEmail" placeholder="" autocomplete="off" value="{$self.email|default='暂无'}" class="layui-input" disabled>
+						<else/>
+						<input type="text" id="aEmail" name="aEmail" placeholder="" autocomplete="off" value="{$self.email|substr_replace=###,'****',3,4}" class="layui-input" disabled>
+						</empty>
+						
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a class="layui-btn layui-btn-sm layui-btn-primary" href="{:U('ucenter/config/email')}" target="_blank">修改邮箱</a>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label for="aMobile" class="layui-form-label">手机</label>
+					<div class="layui-input-inline">
+						<empty name="self.mobile">
+						<input type="text" id="aMobile" name="aMobile" placeholder="" autocomplete="off" value="{$self.mobile|default='暂无'}" class="layui-input" disabled>
+						<else/>
+						<input type="text" id="aMobile" name="aMobile" placeholder="" autocomplete="off" value="{$self.mobile|substr_replace=###,'****',3,4}" class="layui-input" disabled>
+						</empty>
+						
+					</div>
+					<div class="layui-form-mid layui-word-aux" style="padding:4px 0">
+						<a class="layui-btn layui-btn-sm layui-btn-primary" href="{:U('ucenter/config/mobile')}" target="_blank">修改手机</a>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="nickname" class="layui-form-label">昵称</label>
+					<div class="layui-input-inline">
+						<input type="text" id="nickname" name="nickname" placeholder="" autocomplete="off" value="{$self.nickname|op_t}"  placeholder="昵称" class="layui-input" >
+					</div>
+				</div>
+				<div class="layui-form-item" pane="" style="width:400px">
+					<label for="nickname" class="layui-form-label">性别</label>
+				
+					<div class="layui-input-block">
+						<input name="sex" type="radio" value="1" title="男" <eq name="self['sex']" value="1"> checked</eq> > 
+						<input name="sex" type="radio" value="2" title="女" <eq name="self['sex']" value="2"> checked</eq> >
+						<input name="sex" type="radio" value="0" title="保密" <eq name="self['sex']" value="0"> checked</eq>> 
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label for="aQQ" class="layui-form-label">QQ</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" id="qq" name="qq" value="{$self.qq|op_t}" placeholder="QQ">
+					</div>
+				</div>
+
+				<div class="layui-form-item position">
+					<label for="aprovince" class="layui-form-label">所在地</label>
+					<div class="layui-input-block">	{:hook('j_china_city',array('province'=>$self['pos_province'],'city'=>$self['pos_city'],'district'=>$self['pos_district'],'community'=>$self['pos_community']))}
+					</div>
+				</div>
+				
+				<div class="layui-form-item layui-form-text">
+					<label for="signature" class="layui-form-label">签名</label>
+					<div class="layui-input-block">
+						<textarea placeholder="随便写些什么刷下存在感" id="signature" name="signature" autocomplete="off" class="layui-textarea" style="height: 80px;">{$self.signature|htmlspecialchars}</textarea>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<button class="layui-btn" key="set-mine" lay-filter="*" lay-submit="">保存</button>
+				</div>
+				</form>
+				</div>
+				
+			</div>
+			
+			<volist name="profile_group_list" id="vo">
+				<div class="layui-tab-item" id="expand_tab_{$vo.id}">
+					<form action="{:U('Config/edit_expandinfo')}" method="post" class="ajax-form">
+						<div class="with-padding">
+							<div class="row">
+								<div class="col-xs-8">
+									<input type="hidden" name="profile_group_id" value="{$vo.id}">
+									<div>
+										<volist name="vo.fields" id="vl">
+											<dl>
+												{:W('InputRender/inputRender',array($vl,'personal'))}
+											</dl>
+										</volist>
+									</div>
+									<if condition="count($vo['fields']) neq 0">
+										<input type="submit" value="保存" id="submit_btn"
+											   class="btn btn-primary expandinfo-sumbit">
+										<else/>
+										<span class="expandinfo-noticeinfo">该扩展信息分组没有信息！</span>
+									</if>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</volist>
+		  </div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__JS__/expandinfo-form.js"></script>
+</block>

@@ -1,0 +1,190 @@
+<!-- 左侧主菜单 -->
+<div class="layui-side layui-side-menu">
+	<div class="layui-side-scroll">
+		<ul id="qn_menuItemElem" lay-filter="qn-system-menu">
+			<li class=""><a href="javascript:;" data-show="home">首页</a></li>
+			<li class=""><a href="javascript:;" data-show="user">用户</a></li>
+			<li class=""><a href="javascript:;" data-show="pay">财务</a></li>
+			<li class=""><a href="javascript:;" data-show="setting">设置</a></li>
+			<volist name="other_arr" id="menu" key="key">
+				<php>$menu_sub_tmp = explode('/',$menu['url']);
+				if(!empty($menu_sub_tmp)){
+					$menu_sub = strtolower($menu_sub_tmp[0]);
+				}</php>
+				<li class="">
+					<a href="javascript:;" data-show="mod{$menu_sub}" style="">{$menu.title}</a>
+				</li>
+			</volist>
+		</ul>
+	</div>
+</div>
+<!-- 根据二级菜单情况，自动切换伸缩状态 -->
+<!-- 左侧子菜单 -->
+<div class="layui-side layui-side-child">
+	<div class="layui-side-scroll" id="qn_menuContentElem">
+		<!-- 首页管理 -->
+		<div class="layui-menu-item" data-show="home">
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<volist name="home_arr" id="menu" key="ka">
+					<li class="layui-nav-item layui-nav-itemed" style="" data-show="home-{$ka}">
+						<a href="javascript:;">{$menu.title}<span class="layui-nav-more"></span></a>
+						<notempty name="menu['child']">
+						<dl class="layui-nav-child">
+						<volist name="menu['child']" id="sub_menu" >
+						<notempty name="sub_menu">
+							<php>$j=0;</php>
+							<volist name="sub_menu" id="smenu">
+							<php>$j++;</php>
+							<dd class="{$smenu.class|default=''}" data-show="home-{$ka}-{$j}"><a href="{$smenu.url|U}"><i class="{$smenu.icon}"></i>{$smenu.title}</a></dd>
+							</volist>
+						</notempty>
+						</volist>
+						</dl>
+						</notempty>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		
+		<div class="layui-menu-item " data-show="user">
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<!-- 用户管理 -->
+				<volist name="user_arr" id="menu" key="ka">
+					<li class="layui-nav-item" style="" data-show="user-{$ka}">
+						<a href="javascript:;"><i class="{$menu.icon}"></i>{$menu.title}</a>
+						<notempty name="menu['child']">
+						<dl class="layui-nav-child">
+						<volist name="menu['child']" id="sub_menu">
+						<notempty name="sub_menu">
+							<php>$j=0;</php>
+							<volist name="sub_menu" id="smenu">
+							<php>$j++;</php>
+							<dd class="{$smenu.class|default=''}" data-show="user-{$ka}-{$j}"><a href="{$smenu.url|U}"><i class="{$smenu.icon}"></i>{$smenu.title}</a></dd>
+							</volist>
+						</notempty>
+						</volist>
+						</dl>
+						</notempty>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		<div class="layui-menu-item " data-show="pay" >
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<!-- 充值管理 -->
+				<volist name="pay_arr" id="menu" key="ka">
+					<li class="layui-nav-item"  style="" data-show="pay-{$ka}">
+						<a href="javascript:;">{$menu.title}</a>
+						<notempty name="menu['child']">
+						<dl class="layui-nav-child">
+						<volist name="menu['child']" id="sub_menu">
+						<notempty name="sub_menu">
+						<php>$j=0;</php>
+						<volist name="sub_menu" id="smenu">
+						<php>$j++;</php>
+						<dd class="{$smenu.class|default=''}" data-show="pay-{$ka}-{$j}"><a href="{$smenu.url|U}"><i class="{$smenu.icon}"></i>{$smenu.title}</a></dd>
+						</volist>
+						</notempty>
+						</volist>
+						</dl>
+						</notempty>
+					</li>
+				</volist>
+			</ul>
+		</div>
+				
+		<div class="layui-menu-item " data-show="setting">
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<!-- 系统设置 -->
+				<volist name="main_arr" id="menu" key="ka">
+					<li class="layui-nav-item "  style="" data-show="setting-{$ka}">
+						<a href="javascript:;"><i class="{$menu.icon}"></i>{$menu.title}</a>
+						<notempty name="menu['child']">
+						<dl class="layui-nav-child">
+						<volist name="menu['child']" id="sub_menu">
+						<notempty name="sub_menu">
+						<php>$j=0;</php>
+						<volist name="sub_menu" id="smenu">
+						<php>$j++;</php>
+						<dd class="{$smenu.class|default=''}" data-show="setting-{$ka}-{$j}"><a href="{$smenu.url|U}"><i class="{$smenu.icon}"></i>{$smenu.title}</a></dd>
+						</volist>
+						</notempty>
+						</volist>
+						</dl>
+						</notempty>
+					</li>
+				</volist>
+				<!-- 接口设置 -->
+				<notempty name="qk_arr">
+					<volist name="qk_arr" id="vo" key="ka">
+					<li class="layui-nav-item"  style="" data-show="qn-{$ka}">
+					<a href="javascript:;">{$vo.title}</a>
+					<dl class="layui-nav-child">
+					<volist name="vo['child']" id="sub_menu1" >
+					<notempty name="sub_menu1">
+					<php>$j=0;</php>
+					<volist name="sub_menu1" id="smenu1">
+					<php>$j++;</php>
+					<dd class="{$smenu1.class|default=''}" data-show="qn-{$ka}-{$j}"><a href="{$smenu1.url|U}"><i class="{$smenu1.icon}"></i>{$smenu1.title}</a></dd>
+					</volist>
+					</notempty>
+					</volist>
+					</dl>
+					</li>
+					</volist>
+				</notempty>
+				<!-- 插件后台列表 -->
+				<notempty name="_extra_menu">
+					<li class="layui-nav-item" data-show="addons-1" style="">
+						<a href="javascript:;"><i class=""></i> 插件后台配置</a>
+						<notempty name="_extra_menu">
+							<dl class="layui-nav-child">
+								<php>$j=0;</php>
+								<volist name="_extra_menu" id="extra_vo">
+								<php>$j++;</php>
+									<dd class="{$extra_vo.class|default=''}" data-show="addons-1-{$j}"><a href="{$extra_vo.url}"><i class=""></i>{$extra_vo.title}</a></dd>
+								</volist>
+							</dl>
+						</notempty>
+					</li>
+				</notempty>
+			</ul>
+		</div>
+
+		<volist name="other_arr" id="menu" key="key">
+		<php>$menu_sub_tmp = explode('/',$menu['url']);
+		if(!empty($menu_sub_tmp)){
+			$menu_sub = strtolower($menu_sub_tmp[0]);
+		}</php>
+		<div class="layui-menu-item " data-show="mod{$menu_sub}">
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<!-- 模块设置 -->
+				
+				<li class="layui-nav-item" data-show="mod{$menu_sub}" style="">
+					<a href="javascript:;"><i class="{$menu.icon}"></i> {$menu.title}</a>
+					<notempty name="menu['child']">
+						<dl class="layui-nav-child">
+						<volist name="menu['child']" id="sub_menu">
+						<notempty name="sub_menu">
+						<php>$j=0;</php>
+						<volist name="sub_menu" id="smenu">
+						<php>$j++;</php>
+						<dd class="{$smenu.class|default=''}" data-show="mod{$menu_sub}-{$j}"><a href="{$smenu.url|U}"><i class="{$smenu.icon}"></i>{$smenu.title}</a></dd>
+						</volist>
+						</notempty>
+						</volist>
+						</dl>
+					</notempty>
+				</li>
+				
+			</ul>
+		</div>
+		</volist>
+
+		<div class="layui-menu-item ">
+			<ul class="layui-nav layui-nav-tree" lay-filter="qn-side-child">
+				<span class="layui-nav-bar"></span>
+			</ul>
+		</div>
+	</div>
+</div>

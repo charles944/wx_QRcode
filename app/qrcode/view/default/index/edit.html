@@ -1,0 +1,94 @@
+<extend name="base/common"/>
+<block name="style">
+<style>.layui-form-label{width:120px !important}</style>
+</block>
+<block name="header"></block>
+<block name="body">
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" style="visibility: visible;">
+		<a href="">首页</a>
+		<a href=""><cite>{$title}</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form form-container" action="__SELF__" method="post">
+				<input type="hidden" name="id" id="id" value="{$data.id}"/>
+				<input type="hidden" name="uid" value="{$data.uid}"/>
+				<div class="layui-form-item">
+					<label class="layui-form-label">活码标题</label>
+					<div class="layui-input-inline" style="width:70%">
+						<input type="text" name="title" value="{$data.title}" autocomplete="off" placeholder="{$data.title}" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">单个子码扫描阀值</label>
+					<div class="layui-input-inline">
+						<input type="text" name="max_scan" placeholder="最大扫描次数" autocomplete="off" value="{$data.max_scan}" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">如果是群二维码，请设置最大阀值为100</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">阀值限制模式</label>
+					<div class="layui-input-block">
+						<input type="radio" name="scan_mode" value="1" title="按长按识别量限制" <eq name="data['scan_mode']" value="1">checked=""</eq>>
+						<input type="radio" name="scan_mode" value="2" title="按展现量限制" <eq name="data['scan_mode']" value="2">checked=""</eq>>
+					</div>
+					<div class="layui-form-mid layui-word-aux">阀值限制模式</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">活码类型</label>
+					<div class="layui-input-block">
+						<input type="radio" name="type_mode" value="1" title="微信群活码" <eq name="data['type_mode']" value="1">checked=""</eq>>
+						<input type="radio" name="type_mode" value="2" title="城市分组码" <eq name="data['type_mode']" value="2">checked=""</eq>>
+						<input type="radio" name="type_mode" value="3" title="自定义分组码" <eq name="data['type_mode']" value="3">checked=""</eq>>
+						<input type="radio" name="type_mode" value="4" title="客服循环码" <eq name="data['type_mode']" value="4">checked=""</eq>>
+						<input type="radio" name="type_mode" value="5" title="机型码" <eq name="data['type_mode']" value="5">checked=""</eq>>
+					</div>
+					<div class="layui-form-mid layui-word-aux">微信群活码：只能应用于微信群二维码活码，每码阀值达到最大后，固定显示最后一张；城市分组码：可根据城市自动分组；自定义分组码：子码可以为链接，或者文本等内容；客服循环码：每码显示到最大阀值后依照规则循环显示，上不封顶；机型码：区分安卓和苹果，根据机型显示不同的图片</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">显示模式</label>
+					<div class="layui-input-block">
+						<input type="radio" name="view_mode" value="1" title="随机显示模式" <eq name="data['view_mode']" value="1">checked=""</eq>>
+						<input type="radio" name="view_mode" value="2" title="逐个显示模式" <eq name="data['view_mode']" value="2">checked=""</eq>>
+					</div>
+					<div class="layui-form-mid layui-word-aux">随机模式：每次扫描都随机显示子码，逐个模式：一个子码到达最大次数后显示下一个</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">显示限制</label>
+					<div class="layui-input-block">
+						<input type="radio" name="view_limit_mode" value="1" title="每刷新都不一样" <eq name="data['view_limit_mode']" value="1">checked=""</eq>>
+						<input type="radio" name="view_limit_mode" value="2" title="一个IP显示同一个" <eq name="data['view_limit_mode']" value="2">checked=""</eq>>
+					</div>
+					<div class="layui-form-mid layui-word-aux">一个IP显示同一个：指的是同一个IP的个人，不管他刷新多少次，显示的都是同一张图片或内容，且扫描次数只计算一次；每刷新都不一样：指的是用户刷新一次就变动一次，且每次刷新都记录</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-inline" style="width:70%">
+						<input type="text" name="sort" lay-verify="required" value="{$data.sort}" autocomplete="off" placeholder="排序" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">备注说明</label>
+					<div class="layui-input-inline" style="width:70%">
+						<textarea name="remark" class="layui-textarea">{$data.remark}</textarea>
+					</div>
+					<div class="layui-form-mid layui-word-aux"></div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn-sm layui-btn" lay-submit="" lay-filter="*">立即提交</button>
+						<a onclick="javascript:history.go(-1);" class="layui-btn-sm layui-btn layui-btn-primary" >返回上一页</a>
+					</div>
+				</div>
+			</form>
+		
+		</div>
+	</div>
+</div>
+</block>

@@ -1,0 +1,117 @@
+<extend name="public/base"/>
+<block name="style">
+</block>
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="{:U('index')}"><cite>配置管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+	<div class="layui-card-body">
+		<div class="portlet-title">
+			<div class="actions">
+				<a class="layui-btn layui-btn-xs fbutton" href="{:U('add')}">新 增</a>
+				<button class="layui-btn layui-btn-xs fbutton ajax-post confirm" url="{:U('del')}" target-form="ids" data-toggle="confirmation"><i class="layui-icon">&#xe640;</i> 删 除</button>
+				<a class="layui-btn layui-btn-xs fbutton list_sort" url="{:U('sort?group='.I('group'),'','')}"><i class="layui-icon">&#xe649;</i> 排序</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="portlet-body">
+			<div class="layui-tab" style="">
+				<ul class="layui-tab-title">
+					<present name="Think.get.group">
+						<li class="" onclick="javascript:location.href='{:U('index')}';">全部{$id}</li>
+						<else/>
+						<li class="layui-this" onclick="javascript:location.href='{:U('index')}';">全部{$id}</li>
+					</present>
+					<foreach name="group" item="vo">
+						<neq name="group_id" value="$key">
+							<li class="" onclick="javascript:location.href='{:U('index?group='.$key)}';">{$vo}</li>
+							<else/>
+							<li class="layui-this" onclick="javascript:location.href='{:U('index?group='.$key)}';">{$vo}</li>
+						</neq>
+					</foreach>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<div class="table-scrollable">
+							<table class="layui-table" lay-even lay-skin="line">
+								<thead>
+								<tr>
+								<th width="2%">
+									<input type="checkbox" class="group-checkable">
+								</th>
+								<th>ID</th>
+								<th>名称</th>
+								<th>标题</th>
+								<th>分组</th>
+								<th>类型</th>
+								<th>操作</th>
+								</tr>
+								</thead>
+								<tbody>
+									<volist name="list" id="config">
+										<tr>
+											<td class="check">
+												<input class="ids" type="checkbox" name="id[]" value="{$config.id}" />
+											</td>
+											<td>{$config.id}</td>
+											<td><a href="{:U('edit?id='.$config['id'])}">{$config.name}</a></td>
+											<td>{$config.title}</td>
+											<td>{$config.group|get_config_group}</td>
+											<td>{$config.type|get_config_type}</td>
+											<td>
+												<a title="编辑" class="layui-btn layui-btn-xs hbutton btn_edit" href="{:U('edit?id='.$config['id'])}"><i class="layui-icon">&#xe642;</i> 编辑</a>
+												<a class="ajax-get layui-btn layui-btn-xs hbutton btn_trash" title="删除" href="{:U('del?id='.$config['id'])}"><i class="layui-icon">&#xe640;</i> 删除</a>
+											</td>
+										</tr>
+									</volist>
+								</tbody>
+							</table>
+						</div>
+						<div class="layui-table-page">
+						{$_page}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</block>
+
+<block name="script">
+</block>
+<block name="jquery_script">
+var table;
+ // handle group checkboxes check/uncheck
+$('.group-checkable', table).change(function() {
+    var set = $('tbody > tr > td:nth-child(1) input[type="checkbox"]', table);
+    var checked = $(this).is(":checked");
+    $(set).each(function() {
+        $(this).attr("checked", checked);
+    });
+    //$.uniform.update(set);
+});
+//点击排序
+$('.list_sort').click(function(){
+	var url = $(this).attr('url');
+	var ids = $('.ids:checked');
+	var param = '';
+	if(ids.length > 0){
+		var str = new Array();
+		ids.each(function(){
+			str.push($(this).val());
+		});
+		param = str.join(',');
+	}
+
+	if(url != undefined && url != ''){
+		window.location.href = url + '/ids/' + param;
+	}
+});
+</block>

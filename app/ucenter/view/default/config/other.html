@@ -1,0 +1,52 @@
+<extend name="base/common"/>
+
+<block name="style">
+    <link href="__CSS__/index.css" rel="stylesheet" type="text/css"/>
+</block>
+
+<block name="body">
+
+<div id="page">
+
+<div class="ucenter-module-hd">
+    <h2>我的第三方绑定信息</h2>
+    <div class="operation">
+    </div>
+</div>
+
+<div class="ucenter-module-layout clearfix" id="ucenter-module-layout">
+    <div class="layui-tab">
+    	<ul class="layui-tab-title">
+    		<li class="layui-this">第三方登录绑定</li>
+    		<li>设置</li>
+    	</ul>
+    	<div class="layui-tab-content">
+    		<div class="layui-tab-item layui-show">
+    			<div class="title" style="font-size: 18px;line-height: 50px;">绑定列表</div>
+    			 {:hook('userconfig')}
+    		</div>
+    		<div class="layui-tab-item">
+    			<button data-role="cleanRemember" class="layui-btn" type="button">清除第三方登录信息</button>
+    		</div>
+    	</div>
+    </div>
+</div>
+</div>
+</block>
+
+<block name="script">
+    <script>
+        //检查两次输入的密码是否一致
+        $(function () {
+            $('[data-role=cleanRemember]').click(function () {
+                if (confirm('是否确认清除记住登录状态？')) {
+                    $.get(U('ucenter/config/cleanRemember'), '', function (res) {
+                        layui.qn.handleAjax(res);
+                    })
+                }
+            })
+
+
+        })
+    </script>
+</block>

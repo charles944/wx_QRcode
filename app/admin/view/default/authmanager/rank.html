@@ -1,0 +1,133 @@
+<extend name="public/base" />
+<block name="body">
+<div class="layui-card qn-header">
+	<div class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">用户权限管理</a>
+		<a href=""><cite>默认头衔配置</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<div class="layui-input-inline">
+			<select name="group"  style="display:block;min-width:140px;margin-bottom:10px;border:1px solid #ddd;padding:10px;">
+				   <volist name="group_list" id="vo">
+						<option value="{:U('AuthManager/configRank',array('id'=>$vo['id']))}" <eq name="vo['id']" value="$this_group['id']">selected</eq> >{$vo.title}</option>
+					</volist>
+				</select>
+			</div>
+			<div class="clearfix"></div>
+			<div class="widget-container fluid-height clearfix">
+				<div class="layui-tab">
+					<php>
+					switch($tab){
+						case 'score':
+							$scoreClass="layui-this";
+							$scoreaClass="btn btn-sm btn-primary";
+							break;
+						case 'rank':
+							$rankClass="layui-this";
+							$rankaClass="btn btn-sm btn-primary";
+							break;
+						default:
+							$scoreaClass = "btn btn-sm btn-primary-outline";
+							$avataraClass = "btn btn-sm btn-primary-outline";
+							$rankaClass = "btn btn-sm btn-primary-outline";
+							$fieldaClass = "btn btn-sm btn-primary-outline";
+							$fieldRegisteraClass = "btn btn-sm btn-primary-outline";
+							break;
+					}
+				</php>
+				<ul class="layui-tab-title">
+				    <li class="{$scoreClass}" onclick="javascript:location.href='{:U('AuthManager/configScore',array('id'=>$this_group['id']))}';" title="{$scoreaClass}">赠送积分配置</li>
+				    <li class="{$rankClass}" onclick="javascript:location.href='{:U('AuthManager/configRank',array('id'=>$this_group['id']))}';" title="{$rankaClass}">关联头衔配置</a></li>
+				</ul>
+					<div class="layui-tab-content">
+						<div class="layui-tab-item layui-show">
+							<div class="explanation" id="explanation">
+								<div class="ex_tit"><i class="sc_icon"></i><h4>配置说明</h4><span id="explanationZoom" title="收起提示"></span></div>
+								<p>此处设置用户升级此用户组后，前台用户名边上显示的头衔图标，比如VIP图标等等</p>
+							</div>
+							<form action="__SELF__" enctype="application/x-www-form-urlencoded" method="POST" class="layui-form auth-form">
+								<notempty name="can_apply">
+									<div class="layui-form-item checkmod">
+										<label class="layui-form-label">用户可申请头衔</label>
+										<div class="layui-input-block">
+											<volist name="can_apply" id="rank" >
+												<div class="rank_check">
+													<input class="rank_row" type="checkbox" lay-skin="primary" name="ranks[]" <eq name="this_group['ranks']" value="$rank['id']">checked="checked"</eq> value="{$rank['id']}" title="<img src='{$rank['logo']|getThumbImageById}'>{$rank['title']}"/>
+												</div>
+											</volist>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</notempty>
+
+								<notempty name="un_apply">
+									<div class="layui-form-item checkmod">
+										<label class="layui-form-label">用户不可申请头衔</label>
+										<div class="layui-input-block">
+											<volist name="un_apply" id="rank" >
+												<div class="rank_check">
+													<input class="auth_rank rank_row" type="checkbox" lay-skin="primary" name="ranks[]" <eq name="this_group['ranks']" value="$rank['id']">checked="checked"</eq> value="{$rank['id']}" title="<img src='{$rank['logo']|getThumbImageById}'>{$rank['title']}"/>
+												</div>
+											</volist>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</notempty>
+								<if condition="count($un_apply)||count($can_apply)">
+									<div class="layui-form-item">
+										<label class="layui-form-label">头衔颁发原因</label>
+										<div class="layui-input-block">
+											<textarea name="reason" style="width: 500px;min-height: 100px;" class="layui-textarea">{$reason}</textarea>
+										</div>
+									</div>
+									<else/>
+									<div class="layui-form-item">
+										<label class="layui-form-label">头衔颁发原因</label>
+										<div class="layui-input-block">
+											请先到 用户》头衔管理》头衔列表 中<a href="{:U('admin/rank/editrank')}" target="_blank" title="立刻去添加头衔" style="color: #B5B4B4;text-decoration: underline;">添加头衔</a>~
+										</div>
+									</div>
+								</if>
+								<input type="hidden" name="id" value="{$this_group.id}" />
+								<div class="layui-form-item">
+									<label class="layui-form-label"></label>
+									<div class="layui-input-inline" style="width:300px">
+										<button type="submit" class="layui-btn layui-btn-sm ajax-post" target-form="auth-form">确 定</button>
+										<button class="layui-btn layui-btn-sm layui-btn-primary" onclick="javascript:history.back(-1);return false;">返 回</button>
+									</div>
+									<div class="layui-form-mid layui-word-aux">
+										<span style="color: #BABABA;margin: 11px;">请先保存以上配置后再切换到其它界面</span>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<style>
+					.rank_check{
+						float: left;
+					}
+					.rank_check img{
+						margin-right: 5px;
+						width: 18px;
+						height: 18px;
+					}
+				</style>
+			</div>
+		</div>
+	</div>
+</div>
+</block>
+<block name="script">
+    <script type="text/javascript" charset="utf-8">
+        +function($){
+			$('select[name="group"]').change(function(){
+                location.href = this.value;
+            });
+        }(jQuery);
+    </script>
+</block>
